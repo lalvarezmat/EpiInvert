@@ -2,6 +2,6 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 EpiInvertC <- function(i_original0, last_incidence_date, festive_days, si_distr0, shift_si_distr = 0L, max_time_interval = 50L, mean_si = 12.267893, sd_si = 5.667547, shift_si = -5., Rt_regularization_weight = 5., seasonality_regularization_weight = 5.) {
-    .Call(`_EpiInvertNew_EpiInvertC`, i_original0, last_incidence_date, festive_days, si_distr0, shift_si_distr, max_time_interval, mean_si, sd_si, shift_si, Rt_regularization_weight, seasonality_regularization_weight)
+    .Call(`_EpiInvert_EpiInvertC`, i_original0, last_incidence_date, festive_days, si_distr0, shift_si_distr, max_time_interval, mean_si, sd_si, shift_si, Rt_regularization_weight, seasonality_regularization_weight)
 }
 

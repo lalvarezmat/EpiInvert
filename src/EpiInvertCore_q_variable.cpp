@@ -3,6 +3,7 @@
  see http://creativecommons.org/licenses/by-nc-sa/3.0/es/deed.en
  */
 
+///
 
 /**
  * @file EpiInvertCore.cpp
@@ -13,7 +14,7 @@
 
 #define PRINT true
 
-#include "EpiInvertCore_q_variable.h"
+#include "EpiInvertCore_q_variable.h" //
 
 
 ///----------------------------------------------------------------------------------------------------

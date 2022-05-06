@@ -1,9 +1,9 @@
-plot.EpiInvert <- function(x, what = c("all", "incid", "R", "SI"),date_start="1000-01-01",date_end="3000-01-01"){
-
-  library(ggplot2)
-  library(dplyr)
-  library(gridExtra)
-  library(grid)
+plot <- function(x, what = "all",date_start="1000-01-01",date_end="3000-01-01"){
+  
+  #library(ggplot2)
+  #library(dplyr)
+ #library(gridExtra)
+  #library(grid)
 
   if(what == "R"){
 
@@ -12,7 +12,7 @@ plot.EpiInvert <- function(x, what = c("all", "incid", "R", "SI"),date_start="10
       Rt = x$Rt,
       Rt_CI95 = x$Rt_CI95
     )
-    d <- filter(d2,date >= as.Date(date_start) & date <= as.Date(date_end))
+    d <- dplyr::filter(d2,date >= as.Date(date_start) & date <= as.Date(date_end))
 
     g <- ggplot(d, aes(x=date, y=Rt)) +
       geom_line() +

@@ -12,7 +12,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 
 // EpiInvertC
 List EpiInvertC(NumericVector i_original0, String last_incidence_date, CharacterVector festive_days, NumericVector si_distr0, int shift_si_distr, int max_time_interval, double mean_si, double sd_si, double shift_si, double Rt_regularization_weight, double seasonality_regularization_weight);
-RcppExport SEXP _EpiInvertNew_EpiInvertC(SEXP i_original0SEXP, SEXP last_incidence_dateSEXP, SEXP festive_daysSEXP, SEXP si_distr0SEXP, SEXP shift_si_distrSEXP, SEXP max_time_intervalSEXP, SEXP mean_siSEXP, SEXP sd_siSEXP, SEXP shift_siSEXP, SEXP Rt_regularization_weightSEXP, SEXP seasonality_regularization_weightSEXP) {
+RcppExport SEXP _EpiInvert_EpiInvertC(SEXP i_original0SEXP, SEXP last_incidence_dateSEXP, SEXP festive_daysSEXP, SEXP si_distr0SEXP, SEXP shift_si_distrSEXP, SEXP max_time_intervalSEXP, SEXP mean_siSEXP, SEXP sd_siSEXP, SEXP shift_siSEXP, SEXP Rt_regularization_weightSEXP, SEXP seasonality_regularization_weightSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -33,11 +33,11 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_EpiInvertNew_EpiInvertC", (DL_FUNC) &_EpiInvertNew_EpiInvertC, 11},
+    {"_EpiInvert_EpiInvertC", (DL_FUNC) &_EpiInvert_EpiInvertC, 11},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_EpiInvertNew(DllInfo *dll) {
+RcppExport void R_init_EpiInvert(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

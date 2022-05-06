@@ -4,7 +4,7 @@ using namespace std;
 
 
 #include "EpiInvertCore_q_variable.h"
-
+///
 
 // [[Rcpp::export]]
 List EpiInvertC(
@@ -21,10 +21,10 @@ List EpiInvertC(
     double seasonality_regularization_weight=5.
 ){
   clock_t t=clock();
-
+  
   vector<double> i_original(i_original0.size());
   for(int k=0;k<i_original.size();k++) i_original[k]=i_original0[k];
-
+  
   vector<double> si_distr;
   if(si_distr0.size()>0){
     si_distr=vector<double>(si_distr0.size());
@@ -33,7 +33,7 @@ List EpiInvertC(
       //printf("si_distr[%d]=%lf\n",k,si_distr[k]);
     }
   }
-
+  
   /// INPUT VARIABLES
   string last_incidence_dateC=string(last_incidence_date.get_cstring());/** DATE OF THE LAST DATA IN THE FORMAT YYYY-MM-DD */;
   vector <string> festive_daysC /** VECTOR OF FESTIVE OR ANOMALOUS DAYS IN THE FORMAT YYYY-MM-DD*/;
@@ -41,9 +41,9 @@ List EpiInvertC(
     if(strlen(festive_days[k])==10 && (festive_days[k][0]=='2' || festive_days[k][0]=='1'))
       festive_daysC.push_back(string(festive_days[k]));
   }
-
+  
   //vector<double> si_distr;
-
+  
   //int shift_si_distr /** SHIFT OF THE NON-PARAMETRIC SERIAL INTERVAL */;
   /// OUTPUTS
   vector<double> i_festive /** FESTIVE BIAS CORRECTED INCIDENCE CURVE*/;
@@ -60,7 +60,7 @@ List EpiInvertC(
   vector<double> epsilon /** ERROR DISTRIBUTION GIVEN BY  (i_bias_free[k] - i_restored[k])/i_restored[k]^a */;
   /// INPUT PARAMETERS
   int NweeksToKeepIncidenceSum=2 /** WE CONSTRAINT ALL THE ESTIMATED INCIDENCE CURVE TO KEEP THE ADDITION OF THE ORIGINAL INCIDENCE IN INTERVALS OF SIZE NweeksToKeepIncidenceSum*7 DAYS*/;
-
+  
   /// CHECK INPUT VALUES
   printf("Last Incidence Values\n");
   for(int k=i_original.size()-6;k<i_original.size();k++) printf("i[%d]=%1.0lf, ",k,i_original[k]);
@@ -79,8 +79,8 @@ List EpiInvertC(
   for(int k=si_distr.size()-6;k<(int) si_distr.size();k++){
     if(k>=0) { printf("si_distr[%d]=%lf, ",k,si_distr[k]); }
   }
-
-
+  
+  
   printf("shift_si_distr=%d\n",shift_si_distr);
   printf("max_time_interval=%d\n",max_time_interval);
   printf("mean_si=%lf\n",mean_si);
@@ -88,11 +88,11 @@ List EpiInvertC(
   printf("shift_si=%lf\n",shift_si);
   printf("Rt_regularization_weight=%lf\n",Rt_regularization_weight);
   printf("seasonality_regularization_weight=%lf\n",seasonality_regularization_weight);
-
-
-
-
-
+  
+  
+  
+  
+  
   EpiInvertEstimate(
     i_original /** ORIGINAL INCIDENCE CURVE*/,
     last_incidence_dateC /** DATE OF THE LAST DATA IN THE FORMAT YYYY-MM-DD */,
@@ -121,10 +121,10 @@ List EpiInvertC(
     max_time_interval /** MAX SIZE OF THE INCIDENCE DATA USED TO COMPUTE Rt (DEFAULT VALUE: 9999). THIS PARAMETER IS USED TO REDUCE HE COMPUTATIONAL COST OF THE ALGORITHM WHEN WE ARE JUST INTERESTED IN THE LAST PART OF THE SEQUENCE */,
     NweeksToKeepIncidenceSum /** WE CONSTRAINT ALL THE ESTIMATED INCIDENCE CURVE TO KEEP THE ADDITION OF THE ORIGINAL INCIDENCE IN INTERVALS OF SIZE NweeksToKeepIncidenceSum*7 DAYS*/
   );
-
-
+  
+  
   printf("-> POWER OF THE RESTORED INCIDENCE IN THE INCIDENCE MODEL : %lf\n",power_a);
-
+  
   /// WRITE OUTPUT
   if(true){
     FILE *g;
@@ -134,9 +134,9 @@ List EpiInvertC(
       system("pause");
       exit(0);
     }
-
+    
     fprintf(g,"date;festive;i_originalC;i_festive;i_bias_free;i_restored;Rt;Rt_CI95;seasonality;(i_bias_free-i_restored)/i_restored ^ %lf\n",power_a);
-
+    
     for(int k=0;k<(int) i_original.size();k++){
       fprintf(g,"%s;",dates[k].c_str());
       if(festive[k]==false) fprintf(g,"FALSE;");
@@ -145,12 +145,12 @@ List EpiInvertC(
     }
     fclose(g);
   }
-
-
+  
+  
   printf("-> END OF PROGRAM EXECUTION\n");
   t = clock() - t;
   printf("-> EXECUTION TIME : %f SECONDS\n",((float)t)/CLOCKS_PER_SEC);
-
+  
   List results = List::create(
     Named("i_original") = i_original ,
     Named("i_festive") = i_festive ,
