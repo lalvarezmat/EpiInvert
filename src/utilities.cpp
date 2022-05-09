@@ -502,9 +502,9 @@ vector< vector<double> > read_data_multiple(
   k=0;
   while ( ! feof (f) ){
     double x;
-    fscanf(f,"%lf\n",&x);
+    int temp = fscanf(f,"%lf\n",&x);
     //printf("%1.0lf ",x); system("pause");
-    cV[k%cV.size()].push_back(x);
+    if(temp==1) cV[k%cV.size()].push_back(x);
     k++;
   }
   fclose(f);
@@ -592,8 +592,8 @@ void read_data_single(char name[],vector<double> &c){
   
   while ( ! feof (f) ){
     double x;
-    fscanf(f,"%lf\n",&x);
-    c.push_back(x);
+    int temp= fscanf(f,"%lf\n",&x);
+    if(temp==1) c.push_back(x);
     //printf("%1.0lf\n",c[c.size()-1]);
   }
   fclose(f);
@@ -739,10 +739,10 @@ void read_festive_days(
   
   while ( ! feof (f) ){
     char date[200];
-    fscanf(f,"%s\n",date);
+    int temp = fscanf(f,"%s\n",date);
     //printf("%s\n",date);
     string s(date);
-    if(s.length()>7) festive_dates.push_back(s);
+    if(temp==1 && s.length()>7) festive_dates.push_back(s);
   }
   
   //for(int k=0;k<festive_dates.size();k++){  printf("%s\n",festive_dates[k].c_str());   }
@@ -1122,7 +1122,8 @@ int read_si_distr(
   while ( ! feof (f) ){
     double x;
     int k;
-    fscanf(f,"%d  %lf\n",&k,&x);
+    int temp = fscanf(f,"%d  %lf\n",&k,&x);
+    if(temp!=2) continue;
     if(f0==-100){
       f0=-k;
       k1=k;

@@ -3,10 +3,11 @@ title: "EpiInvert DEMO"
 author: "Luis Alvarez"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+
 vignette: >
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{EpiEstim demonstration}
-  %\usepackage[utf8]{inputenc}
+  %\VignetteIndexEntry{Demo}
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteEncoding{UTF-8}
 ---
   
 ```{r setup, echo = TRUE,message = FALSE }
@@ -24,7 +25,7 @@ knitr::opts_chunk$set(
   comment = "#>", 
   fig.width = 8, 
   fig.height = 8, 
-  fig.path = "figs-demo/"
+  fig.path = "../inst/doc/figs-demo/"
 )
 
 ```
