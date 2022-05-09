@@ -2,21 +2,22 @@
 % Please edit documentation in R/EpiInvert.R
 \name{EpiInvert}
 \alias{EpiInvert}
-\title{\code{EpiInvert} estimates the reproduction number Rt and a 
-restored incidence curve from the original 
-daily incidence curve and the serial interval distribution.}
+\title{\code{EpiInvert} estimates the reproduction number Rt and a restored 
+incidence curve from the original daily incidence curve and the serial 
+interval distribution. EpiInvert also corrects the festive and weekly biases 
+present in the registered  daily incidence.}
 \usage{
 EpiInvert(
   incid,
   last_incidence_date,
   festive_days = rep("1000-01-01", 2),
-  config = EpiInvert::make_config()
+  config = EpiInvert::select_params()
 )
 }
 \arguments{
-\item{incid}{The original incidence curve (a numeric vector).}
+\item{incid}{The original daily incidence curve (a numeric vector).}
 
-\item{last_incidence_date}{The date of the last value of the incidende curve
+\item{last_incidence_date}{The date of the last value of the incidence curve
 in the format YYYY-MM-DD.}
 
 \item{festive_days}{The festive or anomalous dates in the format YYYY-MM-DD 
@@ -24,16 +25,16 @@ in the format YYYY-MM-DD.}
 value is perturbed.}
 
 \item{config}{An object of class \code{estimate_R_config}, as returned by 
-function \code{make_config}. The element of config are : 
+function \code{select_params}. The element of config are : 
 
 \itemize{
  \item{si_distr}{: a numeric vector with the distribution of the serial 
- interval. If this vector is empty, the serial interval is estimated using 
- a parametric shifted log-normal (the default value is an empty vector)}
+ interval (the default value is an empty vector). If this vector is empty, 
+ the serial interval is estimated using a parametric shifted log-normal }
  \item{shift_si_distr}{: shift of the above user provided serial interval. This shift can be negative, which 
  means that secondary cases can show symptoms before the primary cases (the default value is 0) }
- \item{max_time_interval}{:Maximum number of days in the past used by 
- EpiInvert (the default value is 150. The computational cost strongly depends on this value) }
+ \item{max_time_interval}{: Maximum number of days used by 
+ EpiInvert (the default value is 150, which means that EpiInvert uses the last 150 days. The computational cost strongly depends on this value) }
  \item{mean_si}{: mean of the parametric shifted log-normal to approximate
   the serial interval (the default value is 12.267893) }
  \item{sd_si}{: standard deviation of the parametric shifted log-normal to 
@@ -53,7 +54,7 @@ function \code{make_config}. The element of config are :
   components:
   \itemize{
 
-  \item{i_original}{: the original daily incidence time series}
+  \item{i_original}{: the original daily incidence curve}
 
   \item{i_festive}{: the incidence after correction of the festive days bias}
 
@@ -66,7 +67,7 @@ function \code{make_config}. The element of config are :
   \item{Rt}{: the reproduction number Rt obtained by inverting the renewal 
   equation}
 
-  \item{Rt_CI95}{: 95% confidence interval radius for the value of Rt taking 
+  \item{Rt_CI95}{: 95\% confidence interval radius for the value of Rt taking 
   into account the variation of Rt when more days are added to the estimation. 
   }
 
@@ -80,7 +81,7 @@ function \code{make_config}. The element of config are :
   \item{epsilon}{: normalized error curve obtained as 
    (i_bias_free-i_restored)/i_restored^a}
 
-  \item{powr_a}{: the power, a, which appears in the above expression of the 
+  \item{power_a}{: the power, a, which appears in the above expression of the 
   normalized error }
 
   \item{si_distr}{: values of the distribution of the serial interval used in
@@ -93,98 +94,86 @@ function \code{make_config}. The element of config are :
 }
 }
 \description{
-\code{EpiInvert} estimates the reproduction number Rt and a 
-restored incidence curve from the original 
-daily incidence curve and the serial interval distribution.
+\code{EpiInvert} estimates the reproduction number Rt and a restored 
+incidence curve from the original daily incidence curve and the serial 
+interval distribution. EpiInvert also corrects the festive and weekly biases 
+present in the registered  daily incidence.
 }
 \details{
 EpiInvert estimates the reproduction number Rt and a 
-restored incidence curve from the original 
-daily incidence time series and the serial interval distribution.
+restored incidence curve by inverting the renewal equation : 
+
+\deqn{{i(t) = \sum_k i(t-k)R(t-k)\Phi(k)}}
+
+using a variational 
+formulation. The theoretical foundations of the method can be found 
+in references [1] and [2].
 }
 \examples{
-## load data on pandemic flu in a school in 2009
-data("Flu2009")
+## load data on COVID-19 daily incidence up to 2022-05-05 for France, 
+## and Germany (taken from the official government data ) and for UK and 
+## the USA taken from reference [3]
+data(incidence)
 
-## estimate the reproduction number (method "non_parametric_si")
-## when not specifying t_start and t_end in config, they are set to estimate
-## the reproduction number on sliding weekly windows                          
-res <- estimate_R(incid = Flu2009$incidence, 
-                  method = "non_parametric_si",
-                  config = make_config(list(si_distr = Flu2009$si_distr)))
+## EpiInvert execution for USA with no festive days specification. 
+res <- EpiInvert(incidence$USA,"2022-05-05")
+
+## Plot of the results
 plot(res)
 
-## the second plot produced shows, at each each day,
-## the estimate of the reproduction number over the 7-day window 
-## finishing on that day.
+## load data of festive days for France, Germany, UK and the USA
+data(festives)
 
-## to specify t_start and t_end in config, e.g. to have biweekly sliding
-## windows      
-t_start <- seq(2, nrow(Flu2009$incidence)-13)   
-t_end <- t_start + 13                 
-res <- estimate_R(incid = Flu2009$incidence, 
-                  method = "non_parametric_si",
-                  config = make_config(list(
-                      si_distr = Flu2009$si_distr, 
-                      t_start = t_start, 
-                      t_end = t_end)))
-plot(res)
+## EpiInvert execution for France with festive days specification using
+## 365 days in the past 
+res <- EpiInvert(incidence$FRA,"2022-05-05",festives$FRA,
+                 select_params(list(max_time_interval = 365)))
 
-## the second plot produced shows, at each each day,
-## the estimate of the reproduction number over the 14-day window 
-## finishing on that day.
+## Plot of the incidence between "2021-12-01" and "2022-01-31"
+plot(res,"incid","2021-12-01","2022-01-31")
 
-## example with an incidence object
+## load data of a serial interval
+data("si_distr_data")
 
-## create fake data
-library(incidence)
-data <- c(0,1,1,2,1,3,4,5,5,5,5,4,4,26,6,7,9)
-location <- sample(c("local","imported"), length(data), replace=TRUE)
-location[1] <- "imported" # forcing the first case to be imported
-
-## get incidence per group (location)
-incid <- incidence(data, groups = location)
-
-## Estimate R with assumptions on serial interval
-res <- estimate_R(incid, method = "parametric_si",
-                  config = make_config(list(
-                  mean_si = 2.6, std_si = 1.5)))
-plot(res)
-## the second plot produced shows, at each each day,
-## the estimate of the reproduction number over the 7-day window
-## finishing on that day.
-
-## estimate the reproduction number (method "parametric_si")
-res <- estimate_R(Flu2009$incidence, method = "parametric_si",
-                  config = make_config(list(mean_si = 2.6, std_si = 1.5)))
-plot(res)
-## the second plot produced shows, at each each day,
-## the estimate of the reproduction number over the 7-day window
-## finishing on that day.
-
-## estimate the reproduction number (method "uncertain_si")
-res <- estimate_R(Flu2009$incidence, method = "uncertain_si",
-                  config = make_config(list(
-                  mean_si = 2.6, std_mean_si = 1,
-                  min_mean_si = 1, max_mean_si = 4.2,
-                  std_si = 1.5, std_std_si = 0.5,
-                  min_std_si = 0.5, max_std_si = 2.5,
-                  n1 = 100, n2 = 100)))
-plot(res)
-## the bottom left plot produced shows, at each each day,
-## the estimate of the reproduction number over the 7-day window
-## finishing on that day.
-
+## EpiInvert execution for Germany using the uploaded serial interval shifted
+## -2 days
+res <- EpiInvert(incidence$DEU,"2022-05-05",festives$DEU,
+       EpiInvert::select_params(list(si_distr = si_distr_data,
+       shift_si_distr=-2)))
+       
+## Plot of the serial interval used (including the shift)
+plot(res,"SI")     
+       
+## EpiInvert execution for UK changing the default values of the parametric
+## serial interval (using a shifted log-normal) 
+res <- EpiInvert(incidence$UK,"2022-05-05",festives$UK,
+       EpiInvert::select_params(list(mean_si = 11,sd_si=6,shift_si=-1)))
+       
+## Plot of the reproduction number Rt including an empiric 95\\% confidence 
+## interval of the variation of Rt. To calculate Rt on each day t, EpiInvert 
+## uses the past days (t'<=t) and the future days (t'>t) when available. 
+## Therefore, the EpiInvert estimate of Rt varies when there are more days 
+## available. This confidence interval reflects the expected variation of Rt 
+## as a function of the number of days after t available.
+plot(res,"R")
 
 }
 \references{
 {
-Cori, A. et al. A new framework and software to estimate time-varying
-reproduction numbers during epidemics (AJE 2013).
-Wallinga, J. and P. Teunis. Different epidemic curves for severe acute
-respiratory syndrome reveal similar impacts of control measures (AJE 2004).
-Reich, N.G. et al. Estimating incubation period distributions with coarse
-data (Statis. Med. 2009)
+
+[1] Alvarez, L.; Colom, M.; Morel, J.D.; Morel, J.M. Computing the daily 
+reproduction number of COVID-19 by inverting the renewal
+equation using a variational technique. Proc. Natl. Acad. Sci. USA, 2021.
+
+[2] Alvarez, Luis, Jean-David Morel, and Jean-Michel Morel. "Modeling 
+COVID-19 Incidence by the Renewal Equation after Removal of Administrative 
+Bias and Noise" Biology 11, no. 4: 540. 2022. 
+
+[3] Ritchie, H. et al. Coronavirus Pandemic (COVID-19), OurWorldInData.org. 
+Available online: 
+https://ourworldindata.org/coronavirus-source-data 
+(accessed on 5 May 2022).
+
 }
 }
 \author{
