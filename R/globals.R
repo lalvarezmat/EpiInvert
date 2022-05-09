@@ -1,0 +1,15 @@
+utils::globalVariables(c(
+  "Rt",
+  "Rt_CI95",
+  "date",
+  "i_original",
+  "i_festive",
+  "i_bias_free",
+  "i_restored",
+  "seasonality",
+  "epsilon",
+  "rgb",
+  "values",
+  "incidence",
+  "si_distr"
+  ))

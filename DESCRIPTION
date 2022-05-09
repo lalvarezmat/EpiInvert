@@ -1,13 +1,33 @@
-Package: EpiInvertNew
+Package: EpiInvert
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Estimate epidemic reproduction number and a restored incidence curve 
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Luis Alvarez [aut, cre] (<https://sites.google.com/site/luisalvarezsite/home>),Jean-David Morel [ctb] <https://people.epfl.ch/jean-david.morel?lang=en>,Jean-Michel Morel  [ctb] <https://sites.google.com/site/jeanmichelmorelcmlaenscachan/>
+Authors@R: c(person("Luis", "Alvarez", email = "lalvarez@ulpgc.es", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-8443-9162")), 
+  person("Jean-David", "Morel", role = "ctb", comment = c(ORCID = "0000-0002-7122-9924")),
+  person("Jean-Michel", "Morel", role = "ctb", comment = c(ORCID = "0000-0002-6108-897X"))
+  )
+Maintainer: Luis Alvarez <lalvarez@ulpgc.es>
+Description: Estimation of the reproduction number and a restored incidence curve
+    by inverting a renewal equation as described in Alvarez et al. (2021) 
+    <https://doi.org/10.1073/pnas.2105112118> and Alvarez et al. (2022) 
+    <https://doi.org/10.3390/biology11040540>.
+License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
-Imports: Rcpp (>= 1.0.8.3)
+Imports: 
+   Rcpp (>= 1.0.8.3)
 LinkingTo: Rcpp
+Suggests: 
+    knitr,
+    ggplot2,
+    grid,
+    dplyr,
+    testthat (>= 3.0.0),
+    rmarkdown
+Config/testthat/edition: 3
+Depends: 
+    R (>= 2.10)
+LazyLoad: yes
+RoxygenNote: 7.1.2
+VignetteBuilder: rmarkdown

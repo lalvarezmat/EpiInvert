@@ -1,10 +1,31 @@
+#' @title 
+#' \code{plot} the results obtained by EpiInvert
+#'
+#' @param x an object of class \code{estimate_EpiInvert}.
+#'
+#' @param what one of the following drawing options: 
+#' 
+#'  \itemize{
+#'  \item{all}{: a plot combining the main EpiInvert results}
+#'  \item{R}{: a plot of the reproduction number Rt estimation }
+#'  \item{incid}{: a plot combining the obtained incidence curves }
+#'  \item{SI}{: the serial interval used in the EpiInvert estimation }
+#'  
+#' }
+#' 
+#' @param date_start the start date to plot 
+#' 
+#' @param date_end the final date to plot 
+#' 
+#' @return a plot.
+#' 
+#' @seealso \code{\link{EpiInvert}} 
+
+## #' @importFrom ggplot2 ggplot aes geom_line
+
+#' @export
 plot <- function(x, what = "all",date_start="1000-01-01",date_end="3000-01-01"){
   
-  #library(ggplot2)
-  #library(dplyr)
- #library(gridExtra)
-  #library(grid)
-
   if(what == "R"){
 
     d2 <- data.frame(
@@ -12,24 +33,23 @@ plot <- function(x, what = "all",date_start="1000-01-01",date_end="3000-01-01"){
       Rt = x$Rt,
       Rt_CI95 = x$Rt_CI95
     )
-    d <- dplyr::filter(d2,date >= as.Date(date_start) & date <= as.Date(date_end))
+   
+    d <- dplyr::filter(d2,date >= as.Date(date_start,format="%Y-%m-%d") & 
+                         date <= as.Date(date_end,format="%Y-%m-%d"))
 
-    g <- ggplot(d, aes(x=date, y=Rt)) +
-      geom_line() +
-      scale_x_date(date_labels = '%Y-%m-%d') +
-      theme(axis.title.x=element_blank(),axis.title.y=element_blank())+
-      geom_ribbon(aes(ymin = Rt - Rt_CI95, ymax = Rt + Rt_CI95), fill=I(rgb(0.7, 0.7, 0.7)))+
-      geom_line(aes(y = Rt))+geom_hline(yintercept=1)+
-      geom_text(x = -Inf, y = Inf, label='Rt',hjust = -0.1, vjust = 1.5)
+    g <- ggplot2::ggplot(d, ggplot2::aes(x=date, y=Rt)) +
+      ggplot2::geom_line() +
+      ggplot2::scale_x_date(date_labels = '%Y-%m-%d') +
+      ggplot2::theme(axis.title.x= 
+              ggplot2::element_blank(),axis.title.y= ggplot2::element_blank())+
+      ggplot2::geom_ribbon(ggplot2::aes(ymin = Rt - Rt_CI95, ymax = Rt + Rt_CI95), 
+                           fill=I(rgb(0.7, 0.7, 0.7)))+
+      ggplot2::geom_line(ggplot2::aes(y = Rt))+ 
+      ggplot2::geom_hline(yintercept=1)+
+      ggplot2::geom_text(x = -Inf, y = Inf, label='Rt',hjust=-0.5, vjust=1.5)
 
-    #ggplot(d, aes(x=date, y=Rt)) + geom_line() +
-    #geom_ribbon(aes(ymin = Rt - Rt_CI95, ymax = Rt + Rt_CI95), fill=I(rgb(0.7, 0.7, 0.7)))+geom_line(aes(y = Rt))+geom_hline(yintercept=1)
-    #scale_x_date(date_labels = '%Y-%m-%d')+theme(axis.title.y=element_blank())+
-    #labs(x='', y='normalized noise') +
-    # geom_text(x = -Inf, y = Inf, label=paste('Rt'),hjust = -0.1, vjust = 1.5)
-
-    p <- ggplotGrob(g)
-    grid.draw(rbind(p))
+    p <- ggplot2::ggplotGrob(g)
+    grid::grid.draw(rbind(p))
 
   }
 
@@ -47,7 +67,7 @@ plot <- function(x, what = "all",date_start="1000-01-01",date_end="3000-01-01"){
       Rt_CI95 = x$Rt_CI95
     )
 
-    d <- filter(d2,date >= as.Date(date_start) & date <= as.Date(date_end))
+    d <-dplyr::filter(d2,date >= as.Date(date_start) & date <= as.Date(date_end))
 
     N <- length(d$date)
     m=data.frame( date = as.Date(d$date),
@@ -62,13 +82,17 @@ plot <- function(x, what = "all",date_start="1000-01-01",date_end="3000-01-01"){
                               rep("4. restored",N))
     )
 
-    g <- ggplot(m,aes(date,values,col=incidence))+geom_line()+
-      scale_color_manual(values=c("black","green","blue","red"))+
-      scale_x_date(date_labels = '%Y-%m-%d')+theme(axis.title.y=element_blank(),axis.title.x=element_blank())+geom_line(size=0.7)
+    g <- ggplot2::ggplot(m,ggplot2::aes(date,values,col=incidence))+
+      ggplot2::geom_line()+
+      ggplot2::scale_color_manual(values=c("black","green","blue","red"))+
+      ggplot2::scale_x_date(date_labels = '%Y-%m-%d')+
+      ggplot2::theme(axis.title.y=ggplot2::element_blank(),
+                     axis.title.x=ggplot2::element_blank())+
+      ggplot2::geom_line(size=0.7)
 
 
-    p <- ggplotGrob(g)
-    grid.draw(rbind(p))
+    p <- ggplot2::ggplotGrob(g)
+    grid::grid.draw(rbind(p))
   }
   else if(what == "SI"){
     days <- c(x$shift_si_distr)
@@ -84,10 +108,14 @@ plot <- function(x, what = "all",date_start="1000-01-01",date_end="3000-01-01"){
     )
 
 
-    g<-ggplot(dsi, aes(x=days, y=si_distr)) + geom_line() +theme(axis.title.y=element_blank())+labs(x='days', y='') +
-      geom_text(x = -Inf, y = Inf, label='serial interval distribution',hjust = -0.1, vjust = 1.5)
-    p <- ggplotGrob(g)
-    grid.draw(rbind(p))
+    g<-ggplot2::ggplot(dsi, ggplot2::aes(x=days, y=si_distr)) + 
+	ggplot2::geom_line() +
+	ggplot2::theme(axis.title.y=ggplot2::element_blank())+
+	ggplot2::labs(x='days', y='') +
+      ggplot2::geom_text(x = -Inf, y = Inf, 
+	  label='serial interval distribution',hjust = -0.1, vjust = 1.5)
+    p <- ggplot2::ggplotGrob(g)
+    grid:: grid.draw(rbind(p))
 
   }
 
@@ -104,28 +132,78 @@ plot <- function(x, what = "all",date_start="1000-01-01",date_end="3000-01-01"){
       Rt_CI95 = x$Rt_CI95
     )
 
-    d <- filter(d2,date >= as.Date(date_start) & date <= as.Date(date_end))
+    d <- dplyr::filter(d2,date >= as.Date(date_start) & date <= as.Date(date_end))
+    
 
-    g1 <- ggplot(d, aes(x=date, y=i_original)) + geom_line() + theme(axis.title.x=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.title.y=element_blank())+
-      scale_y_continuous(labels = function(x) format(x, scientific = TRUE)) +
-      geom_text(x = -Inf, y = Inf, label='original incidence',hjust = -0.1, vjust = 1.5)
-    g2 <- ggplot(d, aes(x=date, y=i_festive)) + geom_line() + theme(axis.title.x=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.title.y=element_blank())+
-      scale_y_continuous(labels = function(x) format(x, scientific = TRUE)) + geom_text(x = -Inf, y = Inf, label='festive bias free incidence',hjust = -0.1, vjust = 1.5)
-    g3 <- ggplot(d, aes(x=date, y=i_bias_free)) + geom_line() + theme(axis.title.x=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.title.y=element_blank())+ scale_y_continuous(labels = function(x) format(x, scientific = TRUE))+ geom_text(x = -Inf, y = Inf, label='weekly + festive biases free incidence',hjust = -0.1, vjust = 1.5)
-    g4 <- ggplot(d, aes(x=date, y=i_restored)) + geom_line() + theme(axis.title.x=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.title.y=element_blank())+ scale_y_continuous(labels = function(x) format(x, scientific = TRUE)) + geom_text(x = -Inf, y = Inf, label='restored incidence',hjust = -0.1, vjust = 1.5)
-    g5 <- ggplot(d, aes(x=date, y=Rt)) + geom_line() + theme(axis.title.x=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.title.y=element_blank())+geom_ribbon(aes(ymin = Rt - Rt_CI95, ymax = Rt + Rt_CI95), fill=I(rgb(0.7, 0.7, 0.7)))+geom_line(aes(y = Rt))+geom_hline(yintercept=1)+ geom_text(x = -Inf, y = Inf, label='Rt',hjust = -0.1, vjust = 1.5)
-    g6 <- ggplot(d, aes(x=date, y=seasonality)) + geom_line() + theme(axis.title.x=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.title.y=element_blank()) + geom_text(x = -Inf, y = Inf, label='seasonality',hjust = -0.1, vjust = 1.5)
-    g7 <- ggplot(d, aes(x=date, y=epsilon)) + geom_line() + scale_x_date(date_labels = '%Y-%m-%d')+theme(axis.title.y=element_blank())+labs(x='', y='normalized noise') + geom_text(x = -Inf, y = Inf, label=paste('normalized noise ( a = ',trunc(100*x$power_a)/100,')'),hjust = -0.1, vjust = 1.5)
+    g1 <- ggplot2::ggplot(d, ggplot2::aes(x=date, y=i_original)) + 
+	ggplot2::geom_line() + ggplot2::theme(axis.title.x=ggplot2::element_blank(),
+	  axis.text.x=ggplot2::element_blank(),
+	  axis.ticks.x=ggplot2::element_blank(),
+	  axis.title.y=ggplot2::element_blank())+
+    ggplot2::scale_y_continuous(labels = function(x) format(x, scientific = TRUE)) +
+    ggplot2::geom_text(x = -Inf, y = Inf, 
+	  label='original incidence',hjust = -0.11, vjust = 1.5)
+    
+	g2 <- ggplot2::ggplot(d, ggplot2::aes(x=date, y=i_festive)) + 
+	  ggplot2::geom_line() + 
+	  ggplot2::theme(axis.title.x=ggplot2::element_blank(),
+	  axis.text.x=ggplot2::element_blank(),
+	  axis.ticks.x=ggplot2::element_blank(),
+	  axis.title.y=ggplot2::element_blank())+
+	  ggplot2::scale_y_continuous(labels = function(x) format(x, scientific = TRUE)) + 
+	  ggplot2::geom_text(x = -Inf, y = Inf, label='festive bias free incidence',
+	  hjust = -0.11, vjust = 1.5)
+	  
+    g3 <- ggplot2::ggplot(d, ggplot2::aes(x=date, y=i_bias_free)) + 
+	  ggplot2::geom_line() + 
+	  ggplot2::theme(axis.title.x=ggplot2::element_blank(),
+	  axis.text.x=ggplot2::element_blank(),axis.ticks.x=ggplot2::element_blank(),
+	  axis.title.y=ggplot2::element_blank())+ 
+	  ggplot2::scale_y_continuous(labels = function(x) format(x, scientific = TRUE))+ 
+	  ggplot2::geom_text(x = -Inf, y = Inf, 
+	  label='weekly + festive biases free incidence',hjust = -0.07, vjust = 1.5)
+	  
+    g4 <- ggplot2::ggplot(d, ggplot2::aes(x=date, y=i_restored)) + 
+	  ggplot2::geom_line() + ggplot2::theme(axis.title.x=ggplot2::element_blank(),
+	  axis.text.x=ggplot2::element_blank(),
+	  axis.ticks.x=ggplot2::element_blank(),axis.title.y=ggplot2::element_blank())+ 
+	  ggplot2::scale_y_continuous(labels = function(x) format(x, scientific = TRUE)) + 
+	  ggplot2::geom_text(x = -Inf, y = Inf, 
+	  label='restored incidence',hjust = -0.12, vjust = 1.5)
+	  
+    g5 <- ggplot2::ggplot(d, ggplot2::aes(x=date, y=Rt)) + 
+	  ggplot2::geom_line() + ggplot2::theme(axis.title.x=ggplot2::element_blank(),
+	  axis.text.x=ggplot2::element_blank(),axis.ticks.x=ggplot2::element_blank(),
+	  axis.title.y=ggplot2::element_blank())+
+	  ggplot2::geom_ribbon(ggplot2::aes(ymin = Rt - Rt_CI95, ymax = Rt + Rt_CI95), 
+	  fill=I(rgb(0.7, 0.7, 0.7)))+
+	  ggplot2::geom_line(ggplot2::aes(y = Rt))+
+	  ggplot2::geom_hline(yintercept=1)+ 
+	  ggplot2::geom_text(x = -Inf, y = Inf, label='Rt',hjust = -0.9, vjust = 1.5)
+	  
+    g6 <- ggplot2::ggplot(d, ggplot2::aes(x=date, y=seasonality)) + 
+	  ggplot2::geom_line() + ggplot2::theme(axis.title.x=ggplot2::element_blank(),
+	  axis.text.x=ggplot2::element_blank(),
+	  axis.ticks.x=ggplot2::element_blank(),
+	  axis.title.y=ggplot2::element_blank()) + 
+	  ggplot2::geom_text(x = -Inf, y = Inf, label='seasonality',hjust = -0.2, vjust = 1.5)
+	  
+    g7 <- ggplot2::ggplot(d, ggplot2::aes(x=date, y=epsilon)) + 
+	  ggplot2::geom_line() + 
+	  ggplot2::scale_x_date(date_labels = '%Y-%m-%d')+
+	  ggplot2::theme(axis.title.y=ggplot2::element_blank())+
+    ggplot2::labs(x='', y='normalized noise') + 
+	  ggplot2::geom_text(x = -Inf, y = Inf, label=paste('normalized noise ( a = ',trunc(100*x$power_a)/100,')'),hjust = -0.1, vjust = 1.5)
 
 
-    p1 <- ggplotGrob(g1)
-    p2 <- ggplotGrob(g2)
-    p3 <- ggplotGrob(g3)
-    p4 <- ggplotGrob(g4)
-    p5 <- ggplotGrob(g5)
-    p6 <- ggplotGrob(g6)
-    p7 <- ggplotGrob(g7)
-    grid.draw(rbind(p1,p2,p3,p4,p5,p6,p7))
+    p1 <- ggplot2::ggplotGrob(g1)
+    p2 <- ggplot2::ggplotGrob(g2)
+    p3 <- ggplot2::ggplotGrob(g3)
+    p4 <- ggplot2::ggplotGrob(g4)
+    p5 <- ggplot2::ggplotGrob(g5)
+    p6 <- ggplot2::ggplotGrob(g6)
+    p7 <- ggplot2::ggplotGrob(g7)
+    grid::grid.draw(rbind(p1,p2,p3,p4,p5,p6,p7))
   }
   else{
     stop('The drawing option is not recognized')

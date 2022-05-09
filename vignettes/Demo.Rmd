@@ -1,0 +1,69 @@
+---
+title: "EpiInvert DEMO"
+author: "Luis Alvarez"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{EpiEstim demonstration}
+  %\usepackage[utf8]{inputenc}
+---
+  
+```{r setup, echo = TRUE,message = FALSE }
+library(rmarkdown)
+library(EpiInvert)
+library(ggplot2)
+library(dplyr)
+library(grid)
+```  
+  
+```{r, echo = FALSE}
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>", 
+  fig.width = 8, 
+  fig.height = 8, 
+  fig.path = "figs-demo/"
+)
+
+```
+
+## Overview
+
+This vignette provides a short demonstration of the package. 
+We consider a dataset containing information on pandemic influenza.
+The dataset contains:
+
+1. the daily incidence of onset of acute respiratory illness (ARI, defined as at
+least two symptoms among fever, cough, sore throat, and runny nose) amongst 
+children in a school in Pennsylvania during the 2009 H1N1 influenza pandemic 
+(see Cauchemez et al., PNAS, 2011),
+
+2. the discrete daily distribution of the serial interval (time interval between
+symptoms onset in a case and in their infector) for influenza, 
+assuming a shifted Gamma distribution with mean 2.6 days, standard deviation 1.5
+days and shift 1 day (as in Ferguson et al., Nature, 2005).
+
+3. interval-censored serial interval data from the 2009 outbreak of H1N1 
+influenza in San Antonio, Texas, USA (from Morgan et al., EID 2010).
+
+
+```{r}
+## load data on COVID-19 daily incidence up to 2022-05-05 for France, 
+## and Germany (taken from the official government data ) and for UK and 
+## the USA taken from reference [3]
+data(incidence)
+
+tail(incidence)
+
+## EpiInvert execution for USA with no festive days specification. 
+res <- EpiInvert(incidence$USA,"2022-05-05")
+```
+```{r fig1, fig.width = 6, fig.align = "center"}
+
+##Plot of the results
+
+plot(res)
+
+```

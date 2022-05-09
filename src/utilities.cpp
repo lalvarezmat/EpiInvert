@@ -11,6 +11,10 @@
  * @author Luis Alvarez <lalvarez@ulpgc.es>
  */
 
+#ifndef R_COMPILE
+#define R_COMPILE
+#endif // R_COMPILE
+
 
 #include "utilities.h"
 
@@ -36,7 +40,7 @@ double linear_regression(
 {
   int N=x.size();
   if( ((int) y.size())!=N || N<2) return -1e10;
-
+  
   /// AUXILIARY VARIABLES
   double suma_x=0,suma_y=0,suma_xy=0,suma_x2=0;
   for(int k=0;k<N;k++){
@@ -50,19 +54,19 @@ double linear_regression(
   if(denominador==0.) return -1e10;
   m=(N*suma_xy-suma_x*suma_y)/denominador;
   n=(suma_x2*suma_y-suma_xy*suma_x)/denominador;
-
+  
   /// CORRELATION FACTOR
   double mx,my,sx,sy,r=0;
   basic_statistics(x,mx,sx);
   basic_statistics(y,my,sy);
-
+  
   for(int k=0;k<N;k++){
     r+=(x[k]-mx)*(y[k]-my);
   }
   r/=(x.size()*sx*sy);
   return r;
-
-
+  
+  
 }
 
 /// ------------------------------------------------------------------------------------------
@@ -73,7 +77,9 @@ void fprintf_demo_failure(
   FILE * f;
   f = fopen ("demo_failure.txt", "w");
   if(f==NULL){
+#ifndef R_COMPILE
     printf("We can not open demo_failure.txt");
+#endif
     return;
   }
   fprintf(f,"%s\n",mes);
@@ -87,15 +93,15 @@ void basic_statistics(
     vector<double> &i /** INPUT DATA IN VECTOR FORMAT*/,
     double &mean /** OUTPUT MEAN */,
     double &sd /** OUTPUT STANDARD DEVIATION */){
-
+  
   if(i.size()==0) return;
   mean=sd=0;
   for(int k=0;k<(int) i.size();k++) mean+=i[k];
   mean/=i.size();
-
+  
   for(int k=0;k<(int) i.size();k++) sd+=(i[k]-mean)*(i[k]-mean);
   sd=sqrt(sd/i.size());
-
+  
 }
 
 /// ------------------------------------------------------------------------------------------
@@ -104,7 +110,7 @@ void basic_statistics(
     vector < vector<double> > &i /** INPUT DATA IN MATRIX FORMAT*/,
     double &mean /** OUTPUT MEAN */,
     double &sd /** OUTPUT STANDARD DEVIATION */){
-
+  
   mean=sd=0;
   int N=0;
   for(int k=0;k<(int) i.size();k++){
@@ -115,15 +121,15 @@ void basic_statistics(
   }
   if(N==0) return;
   mean/=N;
-
+  
   for(int k=0;k<(int) i.size();k++){
     for(int m=0;m<(int) i[k].size();m++){
       sd+=(i[k][m]-mean)*(i[k][m]-mean);
     }
   }
-
+  
   sd=sqrt(sd/N);
-
+  
 }
 
 /// ------------------------------------------------------------------------------------------
@@ -136,7 +142,7 @@ double percentil(
   double a,paso;
   vector<double> y=x;
   int n=x.size();
-
+  
   l=0;
   ir=n-1;
   for (;;) {
@@ -157,7 +163,7 @@ double percentil(
       }
       if (y[l] > y[l+1]) {
         paso=y[l]; y[l]=y[l+1]; y[l+1]=paso;
-
+        
       }
       i=l+1;
       j=ir;
@@ -184,17 +190,20 @@ vector< vector<double> > read_matrix(
 {
   /// DATA SEQUENCE
   vector< vector<double> > cV0(1);
-
+  
   /// READING THE DATA SEQUENCE
   FILE *f;
   f=fopen (name , "r");
-
+  
   if(f==NULL) {
+#ifndef R_COMPILE
     printf("\nproblems reading file %s\n",name);
+#endif
+    
     //system("pause");
-    exit(-1);
+    return vector< vector<double> >();
   }
-
+  
   char c='0';
   char s[200];
   int k=0;
@@ -220,12 +229,12 @@ vector< vector<double> > read_matrix(
     }
   }
   if(cV0[cV0.size()-1].size()==0) cV0.resize(cV0.size()-1);
-
-
+  
+  
   for(int m=0;m<(int) cV0.size();m++){
     if(cV0[m][cV0[m].size()-1]==0) cV0[m].resize(cV0[m].size()-1);
   }
-
+  
   return cV0;
 }
 
@@ -238,7 +247,7 @@ vector<double> last_week_regression_interpolation(
   int m=d.size()-4;
   P.push_back((d[m-3]+d[m+3]+d[m-2]+d[m+2]+d[m-1]+d[m+1]+d[m])/7.);
   P.push_back((3.*(d[m+3]-d[m-3])+2.*(d[m+2]-d[m-2])+d[m+1]-d[m-1])/28.);
-
+  
   return P;
 }
 
@@ -265,13 +274,13 @@ vector< double > linear_system_solution(
     vector< vector<long double> > &A  /** MATRIX */,
     vector< long double > &b) /** INDEPENDENT VECTOR */
 {
-
+  
   vector< double >  u(b.size());
-
+  
   for(int k=0;k<(int) b.size()-1;k++){
     long double max=fabs(A[k][k]);
     if(max==0) return vector<double>();
-
+    
     for(int j=k+1;j<(int) b.size();j++){
       if(A[j][k]!=0){
         long double mul=-A[j][k]/A[k][k];
@@ -281,7 +290,7 @@ vector< double > linear_system_solution(
       }
     }
   }
-
+  
   if(A[b.size()-1][b.size()-1]==0.){
     if(b[b.size()-1]!=0) return vector<double>();
     else u[b.size()-1]=1.;
@@ -295,7 +304,7 @@ vector< double > linear_system_solution(
     for(int l=k+1;l<(int) b.size();l++) sum+= A[k][l]*u[l];
     u[k]=(b[k]-sum)/A[k][k];
   }
-
+  
   return(u);
 }
 
@@ -309,14 +318,17 @@ vector<double>  read_country(
   //printf("%s\n",C);
   FILE *f;
   f=fopen ("owid-covid-data.csv", "r");
-
+  
   if(f==NULL){
     char mes[300];
+#ifndef R_COMPILE
     sprintf(mes,"%s not found. Maybe the data file owid-covid-data.csv is not in this repository\n or there is an error in the country acronim or your own file data is not available",C);
     printf("\n%s\n\n",mes);
     fprintf_demo_failure(mes);
     //system("pause");
-    exit(0);
+#endif
+    
+    return  vector<double>();
   }
   char c='0';
   char s[200];
@@ -330,7 +342,7 @@ vector<double>  read_country(
       continue;
     }
     s[k]='\0';
-
+    
     /// IF THE FIRST STRING IS NOT THE SAME THAT THE SPECIFIED COUNTRY, WE CONTINUE WITH THE NEXT LINE
     if( strcmp(s,C)!=0){
       while(c!='\n' && !feof (f)){
@@ -354,8 +366,8 @@ vector<double>  read_country(
       c=getc(f);
     }
     date[k]='\0';
-
-
+    
+    
     /// LOOKING FOR THE NEW DAILY CASE POSITION
     c=getc(f);
     while(c!=',')  c=getc(f);
@@ -366,23 +378,29 @@ vector<double>  read_country(
       c=getc(f);
     }
     s[k]='\0';
-
+    
     /// ADDING THE NEW DAILY VALUE TO THE VECTOR
     //printf("%s\n",s);
     if(k>0) i.push_back(atof(s));
     else i.push_back(0.);
     k=0;
-
+    
   }
+#ifndef R_COMPILE
   printf("last date : %s, last incidence : %1.0lf\n",date,i[i.size()-1]);
-
+#endif
+  
+  
   //system("pause");
   if(i.size()==0){
+#ifndef R_COMPILE
     char mes[300];
     sprintf(mes,"%s not found. It can be a problem with the country acronym\n (if you are taking the data from owid-covid-data.csv) \n or the file does not exist",C);
     printf("%s\n",mes);
     fprintf_demo_failure(mes);
-    exit(0);
+#endif
+    
+    return vector<double>();
   }
   return i;
 }
@@ -398,9 +416,9 @@ vector< vector<double> > read_data_multiple(
     const char name[] /** FILE NAME OR ACRONIM OF THE COUNTRY IN THE FILE owid-covid-data.csv*/,
                    time_t &current_day /** OUTPUT LAST DATE OF AVAILABLE DATA */)
 {
-
+  
   vector< vector<double> > cV /** OUTPUT MATRIX WITH THE DATA INFORMATION*/;
-
+  
   /// WE TRY TO OPEN THE FILE WITH THE DATA
   FILE *f;
   f=fopen (name , "r");
@@ -415,15 +433,18 @@ vector< vector<double> > read_data_multiple(
       cV.push_back(c);
       return cV;
     }
+#ifndef R_COMPILE
     char mes[300];
     printf("Problems reading %s\n",name);
     sprintf(mes,"Problems reading %s\n",name);
     printf("%s\n",mes);
     fprintf_demo_failure(mes);
-    exit(0);
+#endif
+    
+    return vector< vector<double> >();
     //return vector< vector<double> >();
   }
-
+  
   /// WE CHECK IF THE FILE CONTAINS DATE INFORMATION (WE LOOK FOR THE CHARACTER ';' USED TO SEPARATE DATA FROM DATES)
   bool data_with_dates=false;
   char c=getc(f);
@@ -435,22 +456,22 @@ vector< vector<double> > read_data_multiple(
     c=getc(f);
   }
   fclose(f);
-
+  
   f=fopen (name , "r");
-
-
+  
+  
   /// WE READ THE DATA IF IT INCLUDES DATE INFORMATION OR THE FILE DOES NOT EXIST
   if(data_with_dates==true){
     cV.push_back(read_data_single_and_date(name,current_day));
     return cV;
   }
-
-
+  
+  
   time(&current_day);
   current_day-=3600*24;
   current_day=((int) current_day/86400)*86400;
-
-
+  
+  
   /// WE READ THE DATA FROM THE FILE
   c='0';
   char s[200];
@@ -460,7 +481,7 @@ vector< vector<double> > read_data_multiple(
     if(c==' '){
       if(k==0) break;
       s[k]='\0';
-
+      
       cV.push_back(vector<double>(1,atof(s)));
       k=0;
       continue;
@@ -477,7 +498,7 @@ vector< vector<double> > read_data_multiple(
       //      }
     }
   }
-
+  
   k=0;
   while ( ! feof (f) ){
     double x;
@@ -487,33 +508,42 @@ vector< vector<double> > read_data_multiple(
     k++;
   }
   fclose(f);
-
+  
   if(cV.size()==0){
+#ifndef R_COMPILE
     char mes[300];
     printf("Problems reading %s\n",name);
     sprintf(mes,"Problems reading the data in %s\n",name);
     printf("%s\n",mes);
     fprintf_demo_failure(mes);
-    exit(0);
+#endif
+    
+    return vector< vector<double> >();
   }
-
+  
   if(cV[0].size()<20){
     char mes[300];
+#ifndef R_COMPILE
     sprintf(mes,"Sorry lacunary data. The country  has only %d samples\n",(int) cV[0].size());
     fprintf_demo_failure(mes);
-    exit(0);
+#endif
+    
+    return vector< vector<double> >();
   }
-
+  
   for(int k=1;k<(int) cV.size();k++){
     if(cV[0].size()!=cV[k].size()){
       cV[k].push_back(0.);
       if(cV[0].size()!=cV[k].size()){
+#ifndef R_COMPILE
         char mes[300];
         printf("Problems with the data file in %s\n",name);
         sprintf(mes,"Problems with the data file in %s\n",name);
         printf("%s\n",mes);
         fprintf_demo_failure(mes);
-        exit(0);
+#endif
+        
+        return vector< vector<double> >();
       }
     }
   }
@@ -559,7 +589,7 @@ void read_data_single(char name[],vector<double> &c){
   if(f==NULL){
     return;
   }
-
+  
   while ( ! feof (f) ){
     double x;
     fscanf(f,"%lf\n",&x);
@@ -587,7 +617,7 @@ vector<double> back_percentil(vector<double> &i,int radius){
 ///--------------------------------------------------------------------------------
 /// FUNCTION TO CONVERT A CHAR ARRAY WITH THE FORMAT "YYYY-MM-DD" TO time_t
 time_t string2date(const char *date){
-
+  
   struct tm t;
   t.tm_year=0;
   t.tm_mon=0;
@@ -596,10 +626,10 @@ time_t string2date(const char *date){
   t.tm_min=0;
   t.tm_hour=0;
   t.tm_isdst=-1;
-
+  
   time_t time=mktime(&t);
-
-
+  
+  
   /// YEAR
   char c[10];
   int k=0,n=0;
@@ -612,7 +642,7 @@ time_t string2date(const char *date){
   if(k==(int) strlen(date) || t.tm_year<0 || t.tm_year>200){
     return time;
   }
-
+  
   /// MONTH
   k++;
   n=0;
@@ -625,7 +655,7 @@ time_t string2date(const char *date){
   if(k==(int) strlen(date) || t.tm_mon<0 || t.tm_mon>11){
     return time;
   }
-
+  
   /// DAY
   n=0;
   k++;
@@ -638,9 +668,9 @@ time_t string2date(const char *date){
   if(t.tm_mday<0 || t.tm_mday>31){
     return time;
   }
-
+  
   return mktime(&t);
-
+  
 }
 
 ///--------------------------------------------------------------------------------
@@ -654,14 +684,17 @@ vector<double>  read_data_single_and_date(
   FILE *f;
   f=fopen (filename, "r");
   if(f==NULL){
+#ifndef R_COMPILE
     char mes[300];
     printf("Problems reading %s\n",filename);
     sprintf(mes,"Problems reading %s\n",filename);
     printf("%s\n",mes);
     fprintf_demo_failure(mes);
-    exit(0);
+#endif
+    
+    return vector<double>();
   }
-
+  
   char c='0';
   char s[200];
   int k=0;
@@ -697,10 +730,13 @@ void read_festive_days(
   FILE *f;
   f=fopen (name , "r");
   if(f==NULL){
+#ifndef R_COMPILE
     printf("Problems reading file %s\n",name);
+#endif
+    
     return;
   }
-
+  
   while ( ! feof (f) ){
     char date[200];
     fscanf(f,"%s\n",date);
@@ -708,7 +744,7 @@ void read_festive_days(
     string s(date);
     if(s.length()>7) festive_dates.push_back(s);
   }
-
+  
   //for(int k=0;k<festive_dates.size();k++){  printf("%s\n",festive_dates[k].c_str());   }
   fclose(f);
 }
@@ -724,7 +760,7 @@ vector<int> daily_festive_day_initialization(
   //printf("festive_dates.size()=%d, current_time=%d, i_size=%d\n",festive_dates.size(),(int) current_time,i_size);
   if(festive_dates.size()==0 || current_time<=0 || i_size==0) return vector<int> ();
   vector<int> h(i_size,0);
-
+  
   for(int k=0;k<(int) festive_dates.size();k++){
     time_t t2=current_time-string2date(festive_dates[k].c_str());
     if(t2<0) continue;
@@ -735,13 +771,15 @@ vector<int> daily_festive_day_initialization(
   //  for(int k=0;k<h.size();k++) printf("%d\n",h[k]);
   //  system("pause");
   return h;
-
+  
 }
+
+
 
 /// FUNCTION TO GET ONE OF THE STORED FESTIVE DAY SEQUENCES
 vector<string> get_stored_festive_days(vector<double> &i){
   vector<string> fd;
-
+  
   /// WE COMPUTE THE MEAN AND SD OF THE DALY INCIDENCE THE FIRST YEAR
   if(i.size()<365) return fd;
   vector<double> i2=i;
@@ -749,11 +787,13 @@ vector<string> get_stored_festive_days(vector<double> &i){
   double mean,sd;
   basic_statistics(i2,mean,sd);
   //printf("mean=%lf, sd=%lf\n",mean,sd);
-
-
+  
+  
   /// DETECTING USA
   if( fabs(mean-67356)<1000 && fabs(sd-72005)<1000){
+#ifndef R_COMPILE
     printf("-> Festive days : USA detected\n"); //system("pause");
+#endif
     fd.push_back(string("2020-01-01"));
     fd.push_back(string("2020-01-20"));
     fd.push_back(string("2020-02-17"));
@@ -795,7 +835,10 @@ vector<string> get_stored_festive_days(vector<double> &i){
   }
   /// DETECTING FRANCE
   if( (fabs(mean-8250)<100 && fabs(sd-12188)<100) ||  (fabs(mean-8486)<100 && fabs(sd-13664)<100) ){
+#ifndef R_COMPILE
     printf("-> Festive days : FRANCE detected\n"); //system("pause");
+#endif
+    
     fd.push_back(string("2020-01-01"));
     fd.push_back(string("2020-04-10"));
     fd.push_back(string("2020-04-13"));
@@ -808,7 +851,7 @@ vector<string> get_stored_festive_days(vector<double> &i){
     fd.push_back(string("2020-11-01"));
     fd.push_back(string("2020-11-11"));
     fd.push_back(string("2020-12-25"));
-
+    
     fd.push_back(string("2021-01-01"));
     fd.push_back(string("2021-04-02"));
     fd.push_back(string("2021-04-05"));
@@ -821,7 +864,7 @@ vector<string> get_stored_festive_days(vector<double> &i){
     fd.push_back(string("2021-11-01"));
     fd.push_back(string("2021-11-11"));
     fd.push_back(string("2021-12-25"));
-
+    
     fd.push_back(string("2022-01-01"));
     fd.push_back(string("2022-04-15"));
     fd.push_back(string("2022-04-18"));
@@ -838,7 +881,9 @@ vector<string> get_stored_festive_days(vector<double> &i){
   }
   /// DETECTING GERMANY
   if( (fabs(mean-5885)<100 && fabs(sd-8199)<100) || (fabs(mean-5903)<100 && fabs(sd-8836)<100) ){
+#ifndef R_COMPILE
     printf("-> Festive days : GERMANY detected\n"); //system("pause");
+#endif
     fd.push_back(string("2020-01-01"));
     fd.push_back(string("2020-04-10"));
     fd.push_back(string("2020-04-13"));
@@ -847,7 +892,7 @@ vector<string> get_stored_festive_days(vector<double> &i){
     fd.push_back(string("2020-06-01"));
     fd.push_back(string("2020-10-03"));
     fd.push_back(string("2020-12-25"));
-
+    
     fd.push_back(string("2021-01-01"));
     fd.push_back(string("2021-04-02"));
     fd.push_back(string("2021-04-05"));
@@ -856,7 +901,7 @@ vector<string> get_stored_festive_days(vector<double> &i){
     fd.push_back(string("2021-05-24"));
     fd.push_back(string("2021-10-03"));
     fd.push_back(string("2021-12-25"));
-
+    
     fd.push_back(string("2022-01-01"));
     fd.push_back(string("2022-04-15"));
     fd.push_back(string("2022-04-18"));
@@ -869,7 +914,10 @@ vector<string> get_stored_festive_days(vector<double> &i){
   }
   /// DETECTING SPAIN
   if( (fabs(mean-13032)<100 && fabs(sd-22625)<100) || (fabs(mean-7515)<100 && fabs(sd-12590)<100)  ){
+#ifndef R_COMPILE
     printf("-> Festive days : SPAIN detected\n"); //system("pause");
+#endif
+    
     fd.push_back(string("2020-01-01"));
     fd.push_back(string("2020-01-06"));
     fd.push_back(string("2020-04-10"));
@@ -881,7 +929,7 @@ vector<string> get_stored_festive_days(vector<double> &i){
     fd.push_back(string("2020-12-06"));
     fd.push_back(string("2020-12-08"));
     fd.push_back(string("2020-12-25"));
-
+    
     fd.push_back(string("2021-01-01"));
     fd.push_back(string("2021-01-06"));
     fd.push_back(string("2021-04-01"));
@@ -892,7 +940,7 @@ vector<string> get_stored_festive_days(vector<double> &i){
     fd.push_back(string("2021-12-06"));
     fd.push_back(string("2021-12-08"));
     fd.push_back(string("2021-12-25"));
-
+    
     fd.push_back(string("2022-01-01"));
     fd.push_back(string("2022-01-06"));
     fd.push_back(string("2022-04-15"));
@@ -903,14 +951,15 @@ vector<string> get_stored_festive_days(vector<double> &i){
     fd.push_back(string("2022-12-06"));
     fd.push_back(string("2022-12-08"));
     fd.push_back(string("2022-12-25"));
-
+    
     return fd;
   }
-
-
+  
+  
   return fd;
-
+  
 }
+
 
 
 double evaluation_init_extrapolation_14(int t,vector <double> &C)
@@ -931,7 +980,7 @@ double linear_regression_14(
     vector <double> &C /** linear regression interpolation coefficients */)
 {
   if(i.size()<14) return -1.;
-
+  
   double suma_x=0,suma_y=0,suma_xy=0,suma_x2=0;
   int N=14;
   for(int k=0;k<N;k++){
@@ -940,16 +989,16 @@ double linear_regression_14(
     suma_xy+=k*i[k];
     suma_x2+=k*k;
   }
-
+  
   double denominador=N*suma_x2-suma_x*suma_x;
   if(denominador==0.) return -1.;
-
+  
   C.clear();
   C.push_back((suma_x2*suma_y-suma_xy*suma_x)/denominador);
   C.push_back((N*suma_xy-suma_x*suma_y)/denominador);
-
+  
   //printf("C[0]=%lf C[1]=%lf\n",C[0],C[1]);
-
+  
   double error=0;
   for(int k=0;k<14;k++){
     double y = evaluation_init_extrapolation_14(k,C);
@@ -958,7 +1007,7 @@ double linear_regression_14(
   }
   //printf("error=%e\n",error);
   return sqrt(error/14.);
-
+  
 }
 
 double exponential_approximation_14(
@@ -966,7 +1015,7 @@ double exponential_approximation_14(
     vector <double> &C /** exponential approximation interpolation coefficients */)
 {
   if(i.size()<14) return -1.;
-
+  
   double a,b,suma_x=0,suma_y=0,suma_xy=0,suma_x2=0;
   int N=14;
   for(int k=0;k<N;k++){
@@ -976,27 +1025,27 @@ double exponential_approximation_14(
     suma_xy+=k*y;
     suma_x2+=k*k;
   }
-
+  
   double denominador=N*suma_x2-suma_x*suma_x;
   if(denominador==0.) return -1.;
-
+  
   C.clear();
   a=(N*suma_xy-suma_x*suma_y)/denominador;
   b=(suma_x2*suma_y-suma_xy*suma_x)/denominador;
-
+  
   C.push_back(exp(b));
   C.push_back(a);
-
-
+  
+  
   double c=0;
   for(int k=0;k<14;k++){
     c+=i[k]-C[0]*exp(C[1]*k);
   }
   C.push_back(c/14.);
-
+  
   //printf("C[0]=%lf C[1]=%lf C[2]=%lf\n",C[0],C[1],C[2]);
-
-
+  
+  
   double error=0;
   for(int k=0;k<14;k++){
     double y = evaluation_init_extrapolation_14(k,C);
@@ -1004,9 +1053,9 @@ double exponential_approximation_14(
     error+=(y-i[k])*(y-i[k]);
   }
   //printf("error=%e\n",error);
-
+  
   return sqrt(error/14.);
-
+  
 }
 
 ///----------------------------------------------------------------------------------------------------
@@ -1017,10 +1066,10 @@ int parametric_si_distr(
     double shift,
     vector<double> &si_distr /** output vector with the serial interval*/)
 {
-
+  
   int k0=round(shift);
   double variance = sd*sd;
-
+  
   double sigma=log(variance/(mean*mean)+1);
   double mu=log(mean)-sigma/2.;
   //printf("mu=%lf sigma=%lf\n",mu,sigma);
@@ -1038,7 +1087,7 @@ int parametric_si_distr(
     si_distr.push_back(aux2);
     sum+=aux2;
   }
-
+  
   for(int k=0;k< (int) si_distr.size();k++){
     si_distr[k]/=sum;
     //printf("%lf\n",si_distr[k]);
@@ -1046,7 +1095,7 @@ int parametric_si_distr(
   //printf("k0=%d\n",k0);
   //system("pause");
   return k0;
-
+  
 }
 
 ///----------------------------------------------------------------------------------------------------
@@ -1059,12 +1108,15 @@ int read_si_distr(
   int k1=0,f0=-100;
   f=fopen (name , "r");
   if(f==NULL){
+#ifndef R_COMPILE
     printf("Problems reading the serial interval file : %s\n",name);
     char mes[300];
     sprintf(mes,"Problems reading the serial interval file : %s\n",name);
     printf("%s\n",mes);
     fprintf_demo_failure(mes);
-    exit(0);
+#endif
+    
+    return -10000;
   }
   si_distr.clear();
   while ( ! feof (f) ){
@@ -1082,21 +1134,24 @@ int read_si_distr(
     si_distr.push_back(x);
   }
   fclose(f);
-
+  
   if(si_distr.size()<5){
+#ifndef R_COMPILE
     printf("The size of the serial interval is : %d (too small)\n",(int) si_distr.size());
     char mes[300];
     sprintf(mes,"The size of the serial interval is : %d (too small) \n",(int) si_distr.size());
     printf("%s\n",mes);
     fprintf_demo_failure(mes);
-    exit(0);
+#endif
+    
+    return -10000;
   }
-
+  
   /// NORMALIZATION OF THE SERIAL INTERVAL
   double sum=0;
   for(int k=0;k<(int) si_distr.size();k++) sum+=si_distr[k];
   //printf("sum=%lf\n",sum);
   for(int k=0;k<(int) si_distr.size();k++) si_distr[k]/=sum;
-
+  
   return f0;
 }
