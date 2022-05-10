@@ -73,22 +73,26 @@ $~$
 $\text{1. original incidence}\ (i^0_t)$
 
 $\text{2. festive bias free incidence}\ (i^f_t):$  
-The registration of daily cases is perturbed in the festive days. We correct this perturbation using the variational model by modifying the original incidence values in the festive days and the next 2 days. 
+
+The registration of daily cases is biased in the festive days. We correct this bias modifying the original incidence values in the festive days and the next 2 days. 
 
 $\text{3. weekly + festive biases free incidence}\ (i^b_t=q_ti^f_t):$  
-We use 
-7-day quasi-periodic multiplicative factors to correct the administrative weekly
-bias in the registration of daily cases. 
+
+We use 7-day quasi-periodic multiplicative factors to correct the administrative weekly bias in the registration of daily cases. 
 
 $\text{4. restored incidence}\ (i^r_t=\sum_k i^b_{t-k}R_{t-k}\Phi_k):$  
+
 We compute a restored incidence curve by application of the renewal equation
 
 $\text{5. Rt}\ (R_t):$  
+
 Time varying reproduction number computed using the variational model. 
 
 $\text{6. seasonality}\ (q_t):$ 
+
 7-day quasi-periodic multiplicative factors to correct the administrative weekly bias in the registration of daily cases.
 
 $\text{6. normalized noise}\ (\epsilon_t=\frac{i^b_t-i^r_t}{(i^r_t)^a}):$ 
+
 We compute the difference between the bias corrected incidence curve and its expected value using the renewal equation noramlized by a power of the incidence. 
 
