@@ -18,7 +18,13 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of EpiInvert is to ...
+EpiInvert estimates a time varying epidemic reproduction number and a restored 
+incidence curve by inverting a renewal equation through a variational model as 
+described in 
+[PNAS, 2021](https://www.pnas.org/doi/10.1073/pnas.2105112118) and 
+[Biology, 2022](https://www.mdpi.com/2079-7737/11/4/540). 
+EpiInvert also corrects the administrative weekly bias in the daily registration 
+of cases and the bias introduced by the festive days.
 
 ## Installation
 
@@ -30,26 +36,59 @@ You can install the development version of EpiInvert from [GitHub](https://githu
 ```
 
 ## Example
+We attach some required package
+```{r, echo = TRUE,message = FALSE }
+library(EpiInvert)
+library(ggplot2)
+library(dplyr)
+library(grid)
+```  
 
-This is a basic example which shows you how to solve a common problem:
+We load data on COVID-19 daily incidence up to 2022-05-05 for France, 
+Germany, the USA and UK: 
+```{r}
+data(incidence)
+tail(incidence)
+```
+We load some festive days for the same countries: 
+```{r}
+data(festives)
+head(festives)
+```
 
-## ```{r example}
-## library(EpiInvert)
-## ## basic example code
-## ```
+We execute EpiInvert using Germany data:
+```{r,echo = TRUE, message = FALSE,results = FALSE}
+res <- EpiInvert(incidence$DEU,"2022-05-05",festives$DEU)
+```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+We plot the results: 
+```{r fig1, fig.width = 6, fig.height = 10, fig.align = "center"}
+plot(res)
 
-## ```{r cars}
-## summary(cars)
-## ```
+```
+The main outcomes of EpiInvert, illustrated in this figure, are : 
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/v1/examples>.
+$~$
 
-## You can also embed plots, for example:
+$\text{1. original incidence}\ (i^0_t)$
 
-## ```{r pressure, echo = FALSE}
-## plot(pressure)
-## ```
+$\text{2. festive bias free incidence}\ (i^f_t):$  
+The registration of daily cases is perturbed in the festive days. We correct this perturbation using the variational model by modifying the original incidence values in the festive days and the next 2 days. 
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+$\text{3. weekly + festive biases free incidence}\ (i^b_t=q_ti^f_t):$  
+We use 
+7-day quasi-periodic multiplicative factors to correct the administrative weekly
+bias in the registration of daily cases. 
+
+$\text{4. restored incidence}\ (i^r_t=\sum_k i^b_{t-k}R_{t-k}\Phi_k):$  
+We compute a restored incidence curve by application of the renewal equation
+
+$\text{5. Rt}\ (R_t):$  
+Time varying reproduction number computed using the variational model. 
+
+$\text{6. seasonality}\ (q_t):$ 
+7-day quasi-periodic multiplicative factors to correct the administrative weekly bias in the registration of daily cases.
+
+$\text{6. normalized noise}\ (\epsilon_t=\frac{i^b_t-i^r_t}{(i^r_t)^a}):$ 
+We compute the difference between the bias corrected incidence curve and its expected value using the renewal equation noramlized by a power of the incidence. 
+

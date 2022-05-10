@@ -6,7 +6,13 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of EpiInvert is to …
+EpiInvert estimates a time varying epidemic reproduction number and a
+restored incidence curve by inverting a renewal equation through a
+variational model as described in [PNAS,
+2021](https://www.pnas.org/doi/10.1073/pnas.2105112118) and [Biology,
+2022](https://www.mdpi.com/2079-7737/11/4/540). EpiInvert also corrects
+the administrative weekly bias in the daily registration of cases and
+the bias introduced by the festive days.
 
 ## Installation
 
@@ -20,24 +26,84 @@ You can install the development version of EpiInvert from
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+We attach some required package
 
-## `{r example} ## library(EpiInvert) ## ## basic example code ##`
+``` r
+library(EpiInvert)
+library(ggplot2)
+library(dplyr)
+library(grid)
+```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+We load data on COVID-19 daily incidence up to 2022-05-05 for France,
+Germany, the USA and UK:
 
-## `{r cars} ## summary(cars) ##`
+``` r
+data(incidence)
+tail(incidence)
+#>           date   FRA    DEU    USA    UK
+#> 830 2022-04-30 49482  11718  23349     0
+#> 831 2022-05-01 36726   4032  16153     0
+#> 832 2022-05-02  8737 113522  81644    32
+#> 833 2022-05-03 67017 106631  61743 35518
+#> 834 2022-05-04 47925  96167 114308 16924
+#> 835 2022-05-05 44225  85073  72158 12460
+```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
+We load some festive days for the same countries:
 
-## You can also embed plots, for example:
+``` r
+data(festives)
+head(festives)
+#>          USA        DEU        FRA         UK
+#> 1 2020-01-01 2020-01-01 2020-01-01 2020-01-01
+#> 2 2020-01-20 2020-04-10 2020-04-10 2020-04-10
+#> 3 2020-02-17 2020-04-13 2020-04-13 2020-04-13
+#> 4 2020-05-25 2020-05-01 2020-05-01 2020-05-08
+#> 5 2020-06-21 2020-05-21 2020-05-08 2020-05-25
+#> 6 2020-07-03 2020-06-01 2020-05-21 2020-06-21
+```
 
-## `{r pressure, echo = FALSE} ## plot(pressure) ##`
+We execute EpiInvert using Germany data:
 
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+``` r
+res <- EpiInvert(incidence$DEU,"2022-05-05",festives$DEU)
+```
+
+We plot the results:
+
+``` r
+plot(res)
+```
+
+<img src="man/figures/README-fig1-1.png" width="100%" style="display: block; margin: auto;" />
+The main outcomes of EpiInvert, illustrated in this figure, are :
+
+![\~](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;~ "~")
+
+![\\text{1. original incidence}\\ (i^0_t)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B1.%20original%20incidence%7D%5C%20%28i%5E0_t%29 "\text{1. original incidence}\ (i^0_t)")
+
+![\\text{2. festive bias free incidence}\\ (i^f_t):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B2.%20festive%20bias%20free%20incidence%7D%5C%20%28i%5Ef_t%29%3A "\text{2. festive bias free incidence}\ (i^f_t):")  
+The registration of daily cases is perturbed in the festive days. We
+correct this perturbation using the variational model by modifying the
+original incidence values in the festive days and the next 2 days.
+
+![\\text{3. weekly + festive biases free incidence}\\ (i^b_t=q_ti^f_t):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B3.%20weekly%20%2B%20festive%20biases%20free%20incidence%7D%5C%20%28i%5Eb_t%3Dq_ti%5Ef_t%29%3A "\text{3. weekly + festive biases free incidence}\ (i^b_t=q_ti^f_t):")  
+We use 7-day quasi-periodic multiplicative factors to correct the
+administrative weekly bias in the registration of daily cases.
+
+![\\text{4. restored incidence}\\ (i^r_t=\\sum_k i^b\_{t-k}R\_{t-k}\\Phi_k):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B4.%20restored%20incidence%7D%5C%20%28i%5Er_t%3D%5Csum_k%20i%5Eb_%7Bt-k%7DR_%7Bt-k%7D%5CPhi_k%29%3A "\text{4. restored incidence}\ (i^r_t=\sum_k i^b_{t-k}R_{t-k}\Phi_k):")  
+We compute a restored incidence curve by application of the renewal
+equation
+
+![\\text{5. Rt}\\ (R_t):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B5.%20Rt%7D%5C%20%28R_t%29%3A "\text{5. Rt}\ (R_t):")  
+Time varying reproduction number computed using the variational model.
+
+![\\text{6. seasonality}\\ (q_t):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B6.%20seasonality%7D%5C%20%28q_t%29%3A "\text{6. seasonality}\ (q_t):")
+7-day quasi-periodic multiplicative factors to correct the
+administrative weekly bias in the registration of daily cases.
+
+![\\text{6. normalized noise}\\ (\\epsilon_t=\\frac{i^b_t-i^r_t}{(i^r_t)^a}):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B6.%20normalized%20noise%7D%5C%20%28%5Cepsilon_t%3D%5Cfrac%7Bi%5Eb_t-i%5Er_t%7D%7B%28i%5Er_t%29%5Ea%7D%29%3A "\text{6. normalized noise}\ (\epsilon_t=\frac{i^b_t-i^r_t}{(i^r_t)^a}):")
+We compute the difference between the bias corrected incidence curve and
+its expected value using the renewal equation noramlized by a power of
+the incidence.
