@@ -86,7 +86,12 @@ We compute a restored incidence curve by application of the renewal equation
 
 $\text{5. Rt}\ (R_t):$  
 
-Time varying reproduction number computed using the variational model. 
+Time varying reproduction number computed using the variational model. To 
+calculate Rt on each day t, EpiInvert uses the past days (t'<=t) and the future 
+days (t'>t) when available. Therefore, the EpiInvert estimate of Rt varies when 
+there are more days available. In the above plot of Rt we show an empiric  95%% 
+confidence interval of the expected variation of Rt as a function of the number 
+of days after t available.
 
 $\text{6. seasonality}\ (q_t):$ 
 
