@@ -35,8 +35,11 @@ library(dplyr)
 library(grid)
 ```
 
-We load data on COVID-19 daily incidence up to 2022-05-05 for France,
-Germany, the USA and UK:
+We load data on COVID-19 daily incidence up to 2022-05-05 for
+[France](https://www.santepubliquefrance.fr/dossiers/coronavirus-covid-19/coronavirus-chiffres-cles-et-evolution-de-la-covid-19-en-france-et-dans-le-monde),
+[Germany](https://experience.arcgis.com/experience/478220a4c454480e823b17327b2bf1d4),
+[the USA](https://ourworldindata.org/coronavirus-source-data) and
+[UK](https://ourworldindata.org/coronavirus-source-data):
 
 ``` r
 data(incidence)
@@ -116,5 +119,5 @@ administrative weekly bias in the registration of daily cases.
 ![\\text{6. normalized noise}\\ (\\epsilon_t=\\frac{i^b_t-i^r_t}{(i^r_t)^a}):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B6.%20normalized%20noise%7D%5C%20%28%5Cepsilon_t%3D%5Cfrac%7Bi%5Eb_t-i%5Er_t%7D%7B%28i%5Er_t%29%5Ea%7D%29%3A "\text{6. normalized noise}\ (\epsilon_t=\frac{i^b_t-i^r_t}{(i^r_t)^a}):")
 
 We compute the difference between the bias corrected incidence curve and
-its expected value using the renewal equation noramlized by a power of
+its expected value using the renewal equation normalized by a power of
 the incidence.

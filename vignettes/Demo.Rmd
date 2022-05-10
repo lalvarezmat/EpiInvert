@@ -1,24 +1,17 @@
 ---
-title: "EpiInvert DEMO"
-author: "Luis Alvarez"
+title: "EpiInvert"
+author: "Luis Alvarez, Jean-David Morel and Jean-Michel Morel"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 
 vignette: >
-  %\VignetteIndexEntry{Demo}
+  %\VignetteIndexEntry{EpiInvert}
   %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}
 ---
   
-```{r setup, echo = TRUE,message = FALSE }
-library(rmarkdown)
-library(EpiInvert)
-library(ggplot2)
-library(dplyr)
-library(grid)
-```  
   
-```{r, echo = FALSE}
+```{r setup, echo = FALSE}
 
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -32,39 +25,242 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-This vignette provides a short demonstration of the package. 
-We consider a dataset containing information on pandemic influenza.
-The dataset contains:
+Using the daily incidence curve and a collection of festive or anomalous days 
+EpiInvert estimates a time varying reproduction number and a restored 
+incidence curve by inverting the renewal equation : 
 
-1. the daily incidence of onset of acute respiratory illness (ARI, defined as at
-least two symptoms among fever, cough, sore throat, and runny nose) amongst 
-children in a school in Pennsylvania during the 2009 H1N1 influenza pandemic 
-(see Cauchemez et al., PNAS, 2011),
+$(1) \ \ \ \ i_t=\sum_k i_{t-k}R_{t-k}\Phi_k$
 
-2. the discrete daily distribution of the serial interval (time interval between
-symptoms onset in a case and in their infector) for influenza, 
-assuming a shifted Gamma distribution with mean 2.6 days, standard deviation 1.5
-days and shift 1 day (as in Ferguson et al., Nature, 2005).
+through a variational model as described in 
+[PNAS, 2021](https://www.pnas.org/doi/10.1073/pnas.2105112118) and 
+[Biology, 2022](https://www.mdpi.com/2079-7737/11/4/540). 
 
-3. interval-censored serial interval data from the 2009 outbreak of H1N1 
-influenza in San Antonio, Texas, USA (from Morgan et al., EID 2010).
+We assume that a festive or anomalous day is any day where we know "a priori" 
+that the registered number of cases is biased. Typically, in those days, 
+we observe a sharp decrease in the number of registered incidence that is 
+compensated by increased incidence numbers in the next few days. We correct such
+bias by redistributing the number of cases in the festive day and the next 2 days. 
 
+On top of the festive day bias, there is an strong administrative weekly bias 
+introduced by the way the countries registered the new cases each day of the week. 
+We correct this weekly bias using 7-day quasi-periodic multiplicative correction
+factors. We use the following notation : 
+
+$(2) \ \ \ \ i^f_t \ \ \text{is the festive day bias free incidence}$
+
+$(3) \ \ \ \ q_t \ \ \text{ is the 7-day quasi-periodic multiplicative correction factor}$
+
+$(4) \ \ \ \ i^b_t=i^f_tq_t \ \ \text{is the festive + weekly biases free incidence}$
+
+Once the festive day and weekly biases are corrected in the incidence curve we 
+model the diference between the incidence curve and its expected value using 
+the renewal equation by: 
+
+$(5) \ \ \ \ i^b_{t}=i^r_t+\varepsilon_{t}(i_{t}^r)^a$
+
+where 
+
+$(6) \ \ \ \ i^r_t=\sum_k i^b_{t-k}R_{t-k}\Phi_k$
+
+In fact, roughly speaking, we could say that the proposed variational model is 
+based on estimating all the variables involved in order to minimize the 
+difference between the incidence and its expected value using the renewal equation. 
+
+
+We compute experimentally, the power a in the equation (5)  by linear 
+regression (in t) applied to
+ 
+
+$(7) \ \ \ \ (log(|i^b_{t}-i^r_t|),log(i^r_t))$
+
+The normalized error of the model is given by : 
+
+$(8) \ \ \ \ \epsilon_t=\frac{i^b_t-i^r_t}{(i^r_t)^a}$
+
+In [Biology, 2022](https://www.mdpi.com/2079-7737/11/4/540), we show, 
+experimentally, that this normalized error is well approximated by an 
+exponential distributed white noise. 
+
+To model the serial interval, EpiInvert allows a shifted log-normal parametric 
+formulation. The shift can be negative, reflecting the fact 
+that secondary cases may present symptoms earlier than the primary case. The 
+user can also provides a non-parametric serial interval given by a numeric vector. 
+
+## Package installation
+
+You can install the development version of EpiInvert from [GitHub](https://github.com/) with:
+
+```{r, eval=FALSE}
+ install.packages("devtools")
+ devtools::install_github("lalvarezmat/EpiInvert")
+```
+
+## Examples
+We attach some required package
+```{r, echo = TRUE,message = FALSE }
+library(EpiInvert)
+library(ggplot2)
+library(dplyr)
+library(grid)
+```  
+
+We load stored data on COVID-19 daily incidence up to 2022-05-05 for 
+[France](https://www.santepubliquefrance.fr/dossiers/coronavirus-covid-19/coronavirus-chiffres-cles-et-evolution-de-la-covid-19-en-france-et-dans-le-monde), 
+[Germany](https://experience.arcgis.com/experience/478220a4c454480e823b17327b2bf1d4), 
+[the USA](https://ourworldindata.org/coronavirus-source-data) 
+and [UK](https://ourworldindata.org/coronavirus-source-data): 
 
 ```{r}
-## load data on COVID-19 daily incidence up to 2022-05-05 for France, 
-## and Germany (taken from the official government data ) and for UK and 
-## the USA taken from reference [3]
 data(incidence)
-
 tail(incidence)
-
-## EpiInvert execution for USA with no festive days specification. 
-res <- EpiInvert(incidence$USA,"2022-05-05")
 ```
-```{r fig1, fig.width = 6, fig.align = "center"}
 
-##Plot of the results
+We load some festive days for the same countries: 
+```{r}
+data(festives)
+head(festives)
+```
 
+
+### Example 1
+We execute EpiInvert using Germany data. The first parameter is a numeric vector 
+with the daily incidence, the second parameter is the date of the last incidence 
+value and the third parameter is a character vector with the festive days (this
+parameter is not mandatory)
+```{r,echo = TRUE, message = FALSE,results = FALSE}
+res <- EpiInvert(incidence$DEU,"2022-05-05",festives$DEU)
+```
+
+We plot the results: 
+```{r fig1, fig.width = 6, fig.height = 10, fig.align = "center"}
 plot(res)
 
 ```
+
+EpiInvert return a list with the following elements: 
+
+* i_original : the original daily incidence curve. Notice that EpiInvert does not 
+allow missing values. On days when a country does not report data, a zero must
+be registered as the value associated with the incidence of that day.
+
+* i_festive : the festive days bias free incidence (see equation (2)).
+
+* i_bias_free : the festive days and weekly biases free incidence (see equation (4)).
+
+* i_restored : the restored incidence (see equation (6)).
+
+* Rt : time varying reproduction number. 
+
+* Rt_CI95 : to estimate Rt on each day t, EpiInvert uses the past days (t'<=t) and the future 
+days (t'>t) when available. Therefore, the EpiInvert estimate of Rt varies when 
+there are more days available. Rt_CI95 represents the radius of an empiric  95% 
+confidence interval of the expected variation of Rt as a function of the number 
+of days after t available (see the plot of Rt above).
+
+* seasonality : the 7-day quasi-periodic multiplicative correction factors 
+(see equations (3)-4).
+
+* dates : the date associated to each incidence value. 
+
+* festive : a boolean vector to indicate the days considered as festive 
+
+* epsilon : the normalized error given by equation (8) 
+
+* power_a : the power a in equation (8) 
+
+* si_distr : numeric vector with the serial interval distribution used, it can be 
+computed from the shifted parametric log-normal or it can be uploaded by the 
+user 
+
+* shift_si_distr : shift of the serial interval used. 
+
+### Example 2
+
+EpiInvert execution for France using 365 days in the past. If your are not 
+constrained by the computational cost of the algorithm, you can choose a large 
+value of this parameter (for instance 9999), to ensure that EpiInvert will use
+the whole available sequence in the estimation. 
+
+```{r,echo = TRUE, message = FALSE,results = FALSE}
+res <- EpiInvert(incidence$FRA,"2022-05-05",festives$FRA,
+                 select_params(list(max_time_interval = 365)))
+```
+
+Plot of the incidence between "2021-12-15" and "2022-01-15". We observe that 
+the festive days bias correction only modify the original incidence in the 
+festive days and the following 2 days. 
+
+```{r fig2, fig.width = 7, fig.height = 4, fig.align = "center"}
+ plot(res,"incid","2021-12-15","2022-01-15")
+
+```
+
+### Example 3
+
+EpiInvert execution for UK using a non-parametric serial interval shifted -2 days
+
+load data of a serial interval
+
+```{r,echo = TRUE, message = FALSE,results = FALSE}
+data("si_distr_data")
+head(si_distr_data)
+```
+
+```{r,echo = TRUE, message = FALSE,results = FALSE}
+res <- EpiInvert(incidence$UK,"2022-05-05",festives$UK,
+       select_params(list(si_distr = si_distr_data,
+       shift_si_distr=-2)))
+```
+
+
+Plot of the serial interval used (including the shift)
+
+```{r fig3, fig.width = 4, fig.height = 4, fig.align = "center"}
+ plot(res,"SI")
+
+```
+
+### Example 4
+
+EpiInvert execution for the USA changing the default values of the parametric
+serial interval (using a shifted log-normal) 
+
+
+```{r,echo = TRUE, message = FALSE,results = FALSE}
+res <- EpiInvert(incidence$USA,"2022-05-05",festives$USA,
+       select_params(list(mean_si = 11,sd_si=6,shift_si=-1)))
+```
+
+Plot of the reproduction number Rt including an empiric 95\% confidence 
+interval of the variation of EpiInvert Rt estimation as a function of 
+the number of future days available.
+
+
+```{r fig4, fig.width = 7, fig.height = 4, fig.align = "center"}
+ plot(res,"R")
+
+```
+
+
+### Updated version of the incidence curves
+To load an updated version of the incidence file we use in these examples you can 
+execute:  
+
+```{r}
+incidence <- read.csv(url("https://www.ctim.es/covid19/incidence.csv"))
+tail(incidence)
+```
+
+you can introduce in the EpiInvert call the last date of the incidence using 
+the dates included in the incidence file: 
+
+```{r,echo = TRUE, message = FALSE,results = FALSE}
+res <- EpiInvert(incidence$USA,incidence$date[length(incidence$date)],festives$USA)
+```
+
+```{r fig5, fig.width = 6, fig.height = 10, fig.align = "center"}
+ plot(res)
+
+```
+
+
