@@ -105,7 +105,7 @@ Time varying reproduction number computed using the variational model.
 To calculate Rt on each day t, EpiInvert uses the past days (t’\<=t) and
 the future days (t’\>t) when available. Therefore, the EpiInvert
 estimate of Rt varies when there are more days available. In the above
-plot of Rt we show an empiric 95%% confidence interval of the expected
+plot of Rt we show an empiric 95% confidence interval of the expected
 variation of Rt as a function of the number of days after t available.
 
 ![\\text{6. seasonality}\\ (q_t):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B6.%20seasonality%7D%5C%20%28q_t%29%3A "\text{6. seasonality}\ (q_t):")
