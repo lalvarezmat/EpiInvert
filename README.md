@@ -86,20 +86,29 @@ The main outcomes of EpiInvert, illustrated in this figure, are :
 
 ![\\text{1. original incidence}\\ (i^0_t)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B1.%20original%20incidence%7D%5C%20%28i%5E0_t%29 "\text{1. original incidence}\ (i^0_t)")
 
+------------------------------------------------------------------------
+
 ![\\text{2. festive bias free incidence}\\ (i^f_t):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B2.%20festive%20bias%20free%20incidence%7D%5C%20%28i%5Ef_t%29%3A "\text{2. festive bias free incidence}\ (i^f_t):")
-: the registration of daily cases is biased in the festive days. We
+
+The registration of daily cases is biased in the festive days. We
 correct this bias modifying the original incidence values in the festive
 days and the next 2 days.
 
+------------------------------------------------------------------------
+
 ![\\text{3. weekly + festive biases free incidence}\\ (i^b_t=q_ti^f_t):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B3.%20weekly%20%2B%20festive%20biases%20free%20incidence%7D%5C%20%28i%5Eb_t%3Dq_ti%5Ef_t%29%3A "\text{3. weekly + festive biases free incidence}\ (i^b_t=q_ti^f_t):")
-we use 7-day quasi-periodic multiplicative factors
-![q_t](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;q_t "q_t")
-to correct the administrative weekly bias in the registration of daily
-cases.
+
+We use 7-day quasi-periodic multiplicative factors to correct the
+administrative weekly bias in the registration of daily cases.
+
+------------------------------------------------------------------------
 
 ![\\text{4. restored incidence}\\ (i^r_t=\\sum_k i^b\_{t-k}R\_{t-k}\\Phi_k):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B4.%20restored%20incidence%7D%5C%20%28i%5Er_t%3D%5Csum_k%20i%5Eb_%7Bt-k%7DR_%7Bt-k%7D%5CPhi_k%29%3A "\text{4. restored incidence}\ (i^r_t=\sum_k i^b_{t-k}R_{t-k}\Phi_k):")
+
 We compute a restored incidence curve by application of the renewal
 equation
+
+------------------------------------------------------------------------
 
 ![\\text{5. Rt}\\ (R_t):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B5.%20Rt%7D%5C%20%28R_t%29%3A "\text{5. Rt}\ (R_t):")
 
@@ -110,12 +119,16 @@ estimate of Rt varies when there are more days available. In the above
 plot of Rt we show an empiric 95% confidence interval of the expected
 variation of Rt as a function of the number of days after t available.
 
+------------------------------------------------------------------------
+
 ![\\text{6. seasonality}\\ (q_t):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B6.%20seasonality%7D%5C%20%28q_t%29%3A "\text{6. seasonality}\ (q_t):")
 
 7-day quasi-periodic multiplicative factors to correct the
 administrative weekly bias in the registration of daily cases.
 
-![\\text{6. normalized noise}\\ (\\epsilon_t=\\frac{i^b_t-i^r_t}{(i^r_t)^a}):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B6.%20normalized%20noise%7D%5C%20%28%5Cepsilon_t%3D%5Cfrac%7Bi%5Eb_t-i%5Er_t%7D%7B%28i%5Er_t%29%5Ea%7D%29%3A "\text{6. normalized noise}\ (\epsilon_t=\frac{i^b_t-i^r_t}{(i^r_t)^a}):")
+------------------------------------------------------------------------
+
+![\\text{7. normalized noise}\\ (\\epsilon_t=\\frac{i^b_t-i^r_t}{(i^r_t)^a}):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B7.%20normalized%20noise%7D%5C%20%28%5Cepsilon_t%3D%5Cfrac%7Bi%5Eb_t-i%5Er_t%7D%7B%28i%5Er_t%29%5Ea%7D%29%3A "\text{7. normalized noise}\ (\epsilon_t=\frac{i^b_t-i^r_t}{(i^r_t)^a}):")
 
 We compute the difference between the bias corrected incidence curve and
 its expected value using the renewal equation normalized by a power of
