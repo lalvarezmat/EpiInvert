@@ -23,9 +23,7 @@ List EpiInvertC(
   clock_t t=clock();
   
   vector<double> i_original(i_original0.size());
-  for(int k=0;k<i_original.size();k++) i_original[k]=i_original0[k];
-  
- 
+  for(int k=0;k<(int) i_original.size();k++) i_original[k]=i_original0[k];
   
   /// INPUT VARIABLES
   string last_incidence_dateC=string(last_incidence_date.get_cstring());/** DATE OF THE LAST DATA IN THE FORMAT YYYY-MM-DD */;
@@ -35,12 +33,6 @@ List EpiInvertC(
       festive_daysC.push_back(string(festive_days[k]));
   }
   
-  
-  
-  
-  //vector<double> si_distr;
-  
-  //int shift_si_distr /** SHIFT OF THE NON-PARAMETRIC SERIAL INTERVAL */;
   /// OUTPUTS
   vector<double> i_festive /** FESTIVE BIAS CORRECTED INCIDENCE CURVE*/;
   vector<double> i_bias_free /** BIAS FREE INCIDENCE CURVE*/;
@@ -54,12 +46,13 @@ List EpiInvertC(
   int iter_alternate_optimization /** NUMBER OF ITERATIONS OF THE ALTERNATE ALGORITHM TO COMPUTE Rt AND seasonality */;
   double power_a /** ESTIMATED POWER  IN THE RELATION i_bias_free[k] = i_restored[k] + epsilon[k]*i_restored[k]^a */;
   vector<double> epsilon /** ERROR DISTRIBUTION GIVEN BY  (i_bias_free[k] - i_restored[k])/i_restored[k]^a */;
-  /// INPUT PARAMETERS
+  
+  /// FIXED INPUT PARAMETERS
   int NweeksToKeepIncidenceSum=2 /** WE CONSTRAINT ALL THE ESTIMATED INCIDENCE CURVE TO KEEP THE ADDITION OF THE ORIGINAL INCIDENCE IN INTERVALS OF SIZE NweeksToKeepIncidenceSum*7 DAYS*/;
   
   Rprintf("EpiInvert parameters used: \n");
   Rprintf("Incidence tail : " );
-  for(int k=i_original.size()-6;k<i_original.size();k++) Rprintf("i[%d]=%1.0lf, ",k,i_original[k]);
+  for(int k=i_original.size()-6;k<(int)i_original.size();k++) Rprintf("i[%d]=%1.0lf, ",k,i_original[k]);
   Rprintf("\n");
   if(strlen(last_incidence_dateC.c_str())!=10 || last_incidence_dateC.c_str()[4]!='-' || last_incidence_dateC.c_str()[7]!='-'){
     stop("EpiInvert second argument must be a date in the format YYYY-MM-DD");
@@ -78,7 +71,7 @@ List EpiInvertC(
   if(si_distr0.size()>0){
     si_distr=vector<double>(si_distr0.size());
     Rprintf("First values of non parametric serial interval:   ");
-    for(int k=0;k<si_distr.size();k++){
+    for(int k=0;k<(int) si_distr.size();k++){
       si_distr[k]=si_distr0[k];
       if(k<5) Rprintf("%lf,",si_distr[k]);
     }
@@ -124,30 +117,6 @@ List EpiInvertC(
   );
   
   
-  //Rprintf("-> POWER OF THE RESTORED INCIDENCE IN THE INCIDENCE MODEL : %lf\n",power_a);
-  
-  // /// WRITE OUTPUT
-  // if(false){
-  //   FILE *g;
-  //   g=fopen ("EpiInvertEstimateResults.csv", "w");
-  //   if(g==NULL){
-  //     stop("roblems opening Rt.csv. Maybe it is already opened ?");
-  //    
-  //   }
-  //   
-  //   fprintf(g,"date;festive;i_originalC;i_festive;i_bias_free;i_restored;Rt;Rt_CI95;seasonality;(i_bias_free-i_restored)/i_restored ^ %lf\n",power_a);
-  //   
-  //   for(int k=0;k<(int) i_original.size();k++){
-  //     fprintf(g,"%s;",dates[k].c_str());
-  //     if(festive[k]==false) fprintf(g,"FALSE;");
-  //     else fprintf(g,"TRUE;");
-  //     fprintf(g,"%lf; %lf; %lf; %lf; %lf; %lf; %lf; %lf\n",i_original[k],i_festive[k],i_bias_free[k],i_restored[k],Rt[k],Rt_CI95[k],seasonality[k],epsilon[k]);
-  //   }
-  //   fclose(g);
-  // }
-  // 
-  
-  //Rprintf("-> END OF PROGRAM EXECUTION\n");
   t = clock() - t;
   Rprintf("EXECUTION TIME : %f SECONDS\n",((float)t)/CLOCKS_PER_SEC);
   
