@@ -38,6 +38,7 @@ plot <- function(x, what = "all",date_start="1000-01-01",date_end="3000-01-01"){
 
     g <- ggplot2::ggplot(d, ggplot2::aes(x=date, y=Rt)) +
       ggplot2::geom_line() +
+      ggplot2::ylim(0,1.02*max(d$Rt)) +
       ggplot2::scale_x_date(date_labels = '%Y-%m-%d') +
       ggplot2::theme(axis.title.x= 
       ggplot2::element_blank(),axis.title.y= ggplot2::element_blank())+
@@ -108,6 +109,7 @@ plot <- function(x, what = "all",date_start="1000-01-01",date_end="3000-01-01"){
 
     g<-ggplot2::ggplot(dsi, ggplot2::aes(x=days, y=si_distr)) + 
 	     ggplot2::geom_line() +
+       ggplot2::ylim(0,1.02*max(x$si_distr)) +
        ggplot2::theme(axis.title.y=ggplot2::element_blank())+
  	     ggplot2::labs(x='days', y='') +
        ggplot2::geom_text(x = -Inf, y = Inf, 
@@ -132,13 +134,16 @@ plot <- function(x, what = "all",date_start="1000-01-01",date_end="3000-01-01"){
 
     d <- dplyr::filter(d2,date >= as.Date(date_start) & date <= as.Date(date_end))
     
+    maxI <- max(d$i_original)
 
     g1 <- ggplot2::ggplot(d, ggplot2::aes(x=date, y=i_original)) + 
-	     ggplot2::geom_line() + ggplot2::theme(axis.title.x=ggplot2::element_blank(),
+	     ggplot2::geom_line() + 
+       ggplot2::theme(axis.title.x=ggplot2::element_blank(),
 	       axis.text.x=ggplot2::element_blank(),
 	       axis.ticks.x=ggplot2::element_blank(),
 	       axis.title.y=ggplot2::element_blank())+
-       ggplot2::scale_y_continuous(labels = function(x) format(x, scientific = TRUE)) +
+       ggplot2::scale_y_continuous(labels = function(x) format(x, scientific = TRUE),
+                                   limits = c(0, 1.2*maxI)) +
        ggplot2::geom_text(x = -Inf, y = Inf, 
 	       label='original incidence',hjust = -0.11, vjust = 1.5)
     
@@ -148,7 +153,8 @@ plot <- function(x, what = "all",date_start="1000-01-01",date_end="3000-01-01"){
   	  axis.text.x=ggplot2::element_blank(),
   	  axis.ticks.x=ggplot2::element_blank(),
   	  axis.title.y=ggplot2::element_blank())+
-  	  ggplot2::scale_y_continuous(labels = function(x) format(x, scientific = TRUE)) + 
+  	  ggplot2::scale_y_continuous(labels = function(x) format(x, scientific = TRUE),
+  	                              limits = c(0, 1.2*maxI)) + 
   	  ggplot2::geom_text(x = -Inf, y = Inf, label='festive bias free incidence',
   	  hjust = -0.11, vjust = 1.5)
   	  
@@ -157,7 +163,8 @@ plot <- function(x, what = "all",date_start="1000-01-01",date_end="3000-01-01"){
   	  ggplot2::theme(axis.title.x=ggplot2::element_blank(),
   	  axis.text.x=ggplot2::element_blank(),axis.ticks.x=ggplot2::element_blank(),
   	  axis.title.y=ggplot2::element_blank())+ 
-  	  ggplot2::scale_y_continuous(labels = function(x) format(x, scientific = TRUE))+ 
+  	  ggplot2::scale_y_continuous(labels = function(x) format(x, scientific = TRUE),
+  	                              limits = c(0, 1.2*maxI))+ 
   	  ggplot2::geom_text(x = -Inf, y = Inf, 
   	  label='weekly + festive biases free incidence',hjust = -0.07, vjust = 1.5)
   	  
@@ -165,11 +172,13 @@ plot <- function(x, what = "all",date_start="1000-01-01",date_end="3000-01-01"){
   	  ggplot2::geom_line() + ggplot2::theme(axis.title.x=ggplot2::element_blank(),
   	  axis.text.x=ggplot2::element_blank(),
   	  axis.ticks.x=ggplot2::element_blank(),axis.title.y=ggplot2::element_blank())+ 
-  	  ggplot2::scale_y_continuous(labels = function(x) format(x, scientific = TRUE)) + 
+  	  ggplot2::scale_y_continuous(labels = function(x) format(x, scientific = TRUE),
+  	                              limits = c(0, 1.2*maxI)) + 
   	  ggplot2::geom_text(x = -Inf, y = Inf, 
   	  label='restored incidence',hjust = -0.12, vjust = 1.5)
   	  
     g5 <- ggplot2::ggplot(d, ggplot2::aes(x=date, y=Rt)) + 
+      ggplot2::ylim(0,1.2*max(d$Rt)) +
   	  ggplot2::geom_line() + ggplot2::theme(axis.title.x=ggplot2::element_blank(),
   	  axis.text.x=ggplot2::element_blank(),axis.ticks.x=ggplot2::element_blank(),
   	  axis.title.y=ggplot2::element_blank())+
@@ -180,6 +189,7 @@ plot <- function(x, what = "all",date_start="1000-01-01",date_end="3000-01-01"){
   	  ggplot2::geom_text(x = -Inf, y = Inf, label='Rt',hjust = -0.9, vjust = 1.5)
   	  
     g6 <- ggplot2::ggplot(d, ggplot2::aes(x=date, y=seasonality)) + 
+      ggplot2::ylim(0,1.2*max(d$seasonality)) +
   	  ggplot2::geom_line() + ggplot2::theme(axis.title.x=ggplot2::element_blank(),
   	  axis.text.x=ggplot2::element_blank(),
   	  axis.ticks.x=ggplot2::element_blank(),
@@ -187,6 +197,7 @@ plot <- function(x, what = "all",date_start="1000-01-01",date_end="3000-01-01"){
   	  ggplot2::geom_text(x = -Inf, y = Inf, label='seasonality',hjust = -0.2, vjust = 1.5)
   	  
     g7 <- ggplot2::ggplot(d, ggplot2::aes(x=date, y=epsilon)) + 
+      ggplot2::ylim(min(d$epsilon),1.2*max(d$epsilon)) +
   	  ggplot2::geom_line() + 
   	  ggplot2::scale_x_date(date_labels = '%Y-%m-%d')+
   	  ggplot2::theme(axis.title.y=ggplot2::element_blank())+
