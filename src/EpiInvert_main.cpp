@@ -2,7 +2,7 @@
 using namespace Rcpp;
 using namespace std; 
 
-
+ 
 #include "EpiInvertCore_q_variable.h"
 
 

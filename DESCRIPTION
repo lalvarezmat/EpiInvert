@@ -1,13 +1,20 @@
 Package: EpiInvert
-Type: Package
-Title: Estimate Epidemic Reproduction Number and a Restored Incidence Curve 
 Version: 0.1.0
-Author: Luis Alvarez [aut, cre] (<https://sites.google.com/site/luisalvarezsite/home>),Jean-David Morel [ctb] <https://people.epfl.ch/jean-david.morel?lang=en>,Jean-Michel Morel  [ctb] <https://sites.google.com/site/jeanmichelmorelcmlaenscachan/>
+Type: Package
+Title: Estimation of Time Varying Reproduction Numbers and Restored Incidence Curves 
+  Using Variational Techniques
+Authors@R: c(person("Luis", "Alvarez", email = "lalvarez@ulpgc.es", role = c("aut", "cre"), 
+  comment = c(ORCID = "0000-0002-8443-9162")), 
+  person("Jean-David", "Morel", role = "ctb", comment = c(ORCID = "0000-0002-7122-9924")),
+  person("Jean-Michel", "Morel", role = "ctb", comment = c(ORCID = "0000-0002-6108-897X"))
+  )
 Maintainer: Luis Alvarez <lalvarez@ulpgc.es>
-Description: Estimation of the reproduction number and a restored incidence curve
-    by inverting a renewal equation as described in Alvarez et al. (2021) 
-    <doi:10.1073/pnas.2105112118> and Alvarez et al. (2022) 
-    <doi:10.3390/biology11040540>.
+Description: Estimation,  by inverting a renewal equation,  
+  of time-varying reproduction numbers and restored incidence curves with 
+  festive days and weekly biases corrected as described in 
+  Alvarez et al. (2021) <doi:10.1073/pnas.2105112118> and 
+  Alvarez et al. (2022) <doi:10.3390/biology11040540>.
+URL: https://github.com/lalvarezmat/EpiInvert
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true

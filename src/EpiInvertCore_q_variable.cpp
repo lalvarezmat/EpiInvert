@@ -123,9 +123,6 @@ vector <double> initial_incidence_growth_estimation(
   vector<double> Ce; /// vector with the parameters of the exponential approximation (i[t]=Ce[0]*e^(Ce[1]*t)+Ce[2])
   double error2=exponential_approximation_14(i,Ce);
   
-  //  printf("%lf %lf %lf %lf\n",error1,error2,evaluation_init_extrapolation_14(1,Cl),evaluation_init_extrapolation_14(1,Ce));
-  //  system("pause");
-  
   /// WE LOOK FOR THE BEST APPROXIMATION TTT
   if(error1<error2 && evaluation_init_extrapolation_14(0,Cl)>0 && evaluation_init_extrapolation_14(-5,Cl)>0){
     //printf("linear regression has a lower error\n");
@@ -214,8 +211,6 @@ void  LinearSystemRt( //III
     const vector<double> &i0 /** DAILY TESTED POSITIVE */,
     int NweeksToKeepIncidenceSum /** WE CONSTRAINT ALL THE ESTIMATED INCIDENCE CURVE TO KEEP THE ADDITION OF THE ORIGINAL INCIDENCE IN INTERVALS OF SIZE NweeksToKeepIncidenceSum*7 DAYS*/)
 {
-  
-  
   /// INDEPENDENT TERM OF THE LINEAR SYSTEM
   vector<long double> b;
   for(int k=0; k<(int) i.size();k++){
@@ -243,7 +238,6 @@ void  LinearSystemRt( //III
     }
   }
   
-  
   /// INSTANTANEOUS REPRODUCTION NUMBER (CORI ET AL.)
   if(RenewalEquationModel==INST){
     for(int n=0;n<(int) A.size();n++){
@@ -260,7 +254,6 @@ void  LinearSystemRt( //III
     b[k]/=nf[k];
     for(int m=0;m<(int) b.size();m++) A[k][m]/=nf[k];
   }
-  
   
   /// SOLUTION COMPUTATION
   vector < vector<long double> > B(A[0].size(),vector<long double>(A[0].size(),0.));
@@ -338,10 +331,7 @@ void  LinearSystemRt( //III
   
   /// WE REMOVE FROM THE SOLUTION THE LAGRANGE MULTIPLIERS.
   R.resize(i.size());
-  
-  
 }
-
 
 /// ----------------------------------------------------------------------------------------------------------
 /// COMPUTATION OF it USING A LINEAR SYSTEM TAKING INTO ACCOUNT THE FESTIVE DAYS. IT MODIFIES THE VALUES OF VECTOR i
@@ -485,7 +475,6 @@ void Rt_estimation( //III
   /// COMPUTATION OF THE APPROXIMATION OF THE INITIAL GROWTH OF THE INCIDENCE CURVE FOR EXTRAPOLATION PURPOSES
   if(Pi.size()==0) Pi=initial_incidence_growth_estimation(c);
   
-  
   /// COMPUTATION OF Rt
   LinearSystemRt(d,Pi,si_distr,k0,w,RenewalEquationModel,R,nf,i0,NweeksToKeepIncidenceSum);  //III
   
@@ -500,7 +489,6 @@ void Rt_estimation( //III
       }
     }
     if(recompute==false) break;
-    //printf("%d\n",k);
     LinearSystemRt(d,Pi,si_distr,k0,w,RenewalEquationModel,R,nf,i0,NweeksToKeepIncidenceSum);
   }
   
@@ -514,9 +502,7 @@ void Rt_estimation( //III
 #endif
     return;
   }
-  
 }
-
 
 ///----------------------------------------------------------------------------------------------------
 /// ESTIMATION OF THE WEEKLY BIAS CORRECTION FACTORS (IT RETURNS A VECTOR WITH THE FACTORS
@@ -573,7 +559,6 @@ vector<double> periodic_7days(
     b[i.size()]+=i0[t];
   }
   
-  
   for(int t=0;t<(int) i.size();t++){
     for(int j=0;j<(int) i.size();j++){
       A[t][j]/=nf[t];
@@ -607,7 +592,6 @@ vector<double> periodic_7days(
     b.push_back(sum);
   }
   
-  
   /// q Regularity ///NEW
   double aux=1e2;
   for(int t=0;t<(int) i.size();t++){
@@ -633,13 +617,6 @@ vector<double> periodic_7days(
     }
   }
   
-  //  for(int t=0;t<21;t++){
-  //    B[t][t]+=aux;
-  //    b[t]+=aux;
-  //  }
-  
-  
-  
   /// SOLUTION COMPUTATION
   vector<double> u=linear_system_solution(B,b);
   
@@ -648,10 +625,8 @@ vector<double> periodic_7days(
   }
   u.resize(u.size()-1); /// we remove from the solution the Lagrange multiplier.
   
-  
   return u;
 }
-
 
 ///----------------------------------------------------------------------------------------------------
 /// COMPUTATION OF THE EPIESTIM ESTIMATION OF Rt
@@ -673,7 +648,6 @@ vector<double> EpiEstim(
     c[k]/=tau;
   }
   
-  
   vector<double> Epi(c.size(),0.);
   for(int n=0;n<(int) c.size();n++){
     double den=1./(b*tau);
@@ -690,7 +664,6 @@ vector<double> EpiEstim(
   }
   return Epi;
 }
-
 
 
 ///----------------------------------------------------------------------------------------------------
@@ -755,7 +728,6 @@ double Rt_q_estimation(
         if(daily_festive_day[k]==1 && k+2<(int) daily_festive_day.size()) daily_festive_day2[k+2]=1;
         //if(daily_festive_day[k]==1 && k+3<(int) daily_festive_day.size()) daily_festive_day2[k+3]=1; ///NEW
         //if(daily_festive_day[k]==1 && k+4<(int) daily_festive_day.size()) daily_festive_day2[k+4]=1; ///NEW
-        
       }
       
       LinearSystem_it(i,iBiasCor,u,si_distr,f0,RenewalEquationModel,R,nf,daily_festive_day2);
@@ -788,7 +760,6 @@ double Rt_q_estimation(
     
     /// R UPDATE USING THE NEW WEEKLY BIAS CORRECTION FACTORS
     Rt_estimation(iBiasCor,Pi,si_distr,f0,Rt_regularization_weight,nf,RenewalEquationModel,R,iBiasCor,NweeksToKeepIncidenceSum);
-    
   }
 #ifndef R_COMPILE
   printf("\n");
@@ -829,7 +800,6 @@ void EpiInvertEstimate(
     const int NweeksToKeepIncidenceSum /** WE CONSTRAINT ALL THE ESTIMATED INCIDENCE CURVE TO KEEP THE ADDITION OF THE ORIGINAL INCIDENCE IN INTERVALS OF SIZE NweeksToKeepIncidenceSum*7 DAYS*/
 ){
   
-  
   /// RENEWAL EQUATION MODEL
   bool RenewalEquationModel = CASE;
   
@@ -840,21 +810,7 @@ void EpiInvertEstimate(
   if(si_distr.size()==0){
     shift_si_np = parametric_si_distr(mean_si,sd_si,shift_si,si_distr);
   }
-  
-  ///
   int k0=-shift_si_np;
-  
-  //printf("\nk0=%d si_distr[8]=%lf\n",k0,si_distr[8]);
-  
-  //  vector<double> si_distr2;
-  //  int shift_si_np2=read_si_distr("Ma.txt",si_distr2);
-  //  printf("%d %d\n\n",shift_si_np,shift_si_np2);
-  //  for(int k=0;k<si_distr.size() && k<si_distr2.size();k++){
-  //    printf("%lf;%lf\n",si_distr[k],si_distr2[k]);
-  //  }
-  //
-  //  system("pause");
-  
   
   /// VECTOR TO STORE ALL INITIAL DATA SEQUENCES CORRESPONDING TO SEVERAL COUNTRIES (IN GENERAL WE USE A SINGLE COUNTRY BUT WE CAN ALSO ACCUMULATE THE DATA OF SEVERAL CONTRIES)
   vector< vector<double> >  iV0;
@@ -880,32 +836,6 @@ void EpiInvertEstimate(
   
   /// CURRENT DAY
   time_t current_day = string2date(last_incidence_date.c_str());
-  
-  //  /// WE STORE THE VALUE OF THE CURRENT DAY AS INTEGER
-  //  int current_day_int=current_day;
-  
-  
-  //  /// WE MANAGE THE FESTIVE DAYS IN THE CASE IT IS NOT PROVIDED BY A USER FILE
-  //  if(current_day_int==-1){ /// we use an stored sequence of festive days (only implemented for the USA, France, Germany and Spain.
-  //      vector <string> festive_days2=get_stored_festive_days(iV0[0]);
-  //      for(int k=0;k<festive_days2.size();k++) festive_days.push_back(festive_days2[k]);
-  //  }
-  //  if(festive_days.size()==0){
-  //    if(current_day_int>=0){ /// we use as single festive day "current_day_int" days before the current day.
-  //      time_t t2=current_day-current_day_int*86400;
-  //      struct tm * timeinfo;
-  //      timeinfo = localtime (&t2);
-  //      char buffer [80];
-  //      strftime (buffer,80,"%Y-%m-%d",timeinfo);
-  //      festive_days.clear();
-  //      string st(buffer);
-  //      festive_days.push_back(st);
-  //    }
-  //    else if(current_day_int==-1){ /// we use an stored sequence of festive days (only implemented for the USA, France, Germany and Spain.
-  //      festive_days.clear();
-  //      festive_days=get_stored_festive_days(iV0[0]);
-  //    }
-  //  }
   
   ///FROM THE FESTIVE DAY SEQUENCE WE BUILT AN INDEX VECTOR WHICH ASSOCIATES THE VALUE 1 TO A FESTIVE DAY AND 0 OTHERWISE
   vector<int> daily_festive_day=daily_festive_day_initialization(current_day, i_festive.size(),festive_days);
@@ -946,8 +876,6 @@ void EpiInvertEstimate(
     
     /// WE USE THE DATA UP TO m DAYS IN ADVANCE WITH RESPECT TO THE LAST AVAILABLE DAY (USED TO COMPUTE THE Rt VARIABILITY)
     i0n=m==0?i_festive:data_pre_processing(iV0,m,max_time_interval);
-    
-    //for(int k=0;k<i0n.size();k++) printf("i[%d]=%1.0lf\n",k,i0n[k]); ///MMM
     
     ///FROM THE FESTIVE DAY SEQUENCE WE BUILT AN INDEX VECTOR WHICH ASSOCIATES THE VALUE 1 TO A FESTIVE DAY AND 0 OTHERWISE
     vector<int> daily_festive_day2=daily_festive_day_initialization(current_day-m*86400, i0n.size(),festive_days);
@@ -1028,8 +956,8 @@ void EpiInvertEstimate(
     log_i_rest.push_back(log(i_restored[k]));
     log_abs_dif.push_back(log(fabs(i_bias_free[k]-i_restored[k])));
   }
-  double b,r;
-  r=linear_regression(log_i_rest,log_abs_dif,a,b);
+  double b;
+  linear_regression(log_i_rest,log_abs_dif,a,b);
   //printf("a=%lf  b=%lf r=%lf size=%d\n",a,b,r, (int) log_i_rest.size());
   
   vector<double> x,y,error(log_i_rest.size());
@@ -1042,9 +970,7 @@ void EpiInvertEstimate(
       y.push_back(log_abs_dif[k]);
     }
   }
-  r=linear_regression(x,y,a,b);
-  //printf("a=%lf  b=%lf r=%lf size=%d\n",a,b,r, (int) x.size());
-  
+  linear_regression(x,y,a,b);
   
   epsilon=vector<double>(i_bias_free.size(),0.);
   
@@ -1064,11 +990,7 @@ void EpiInvertEstimate(
     dates[k]=string(buffer);
     festive[k]=daily_festive_day[k]==0?false:true;
   }
-  
-  
 }
-
-
 
 
 ///----------------------------------------------------------------------------------------
@@ -1123,7 +1045,6 @@ int EpiInvert(
   i0=data_pre_processing(iV0,0,max_time_interval);
   
   i1=i0;
-  
   
   /// WE MANAGE THE FESTIVE DAYS IN THE CASE IT IS NOT PROVIDED BY A USER FILE
   if(current_day_int==-1){ /// we use an stored sequence of festive days (only implemented for the USA, France, Germany and Spain.
@@ -1409,7 +1330,6 @@ void IncidenceExtrapolationByLearningMedian5Weeks(
     if(m<(int) i.size()) i[m]=p;
     else i.push_back(p);
   }
-  
 }
 
 /// ------------------------------------------------------------------------------------------

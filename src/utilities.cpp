@@ -320,8 +320,9 @@ vector<double>  read_country(
   f=fopen ("owid-covid-data.csv", "r");
   
   if(f==NULL){
-    char mes[300];
+    
 #ifndef R_COMPILE
+    char mes[300];
     sprintf(mes,"%s not found. Maybe the data file owid-covid-data.csv is not in this repository\n or there is an error in the country acronim or your own file data is not available",C);
     printf("\n%s\n\n",mes);
     fprintf_demo_failure(mes);
@@ -522,8 +523,9 @@ vector< vector<double> > read_data_multiple(
   }
   
   if(cV[0].size()<20){
-    char mes[300];
+    
 #ifndef R_COMPILE
+    char mes[300];
     sprintf(mes,"Sorry lacunary data. The country  has only %d samples\n",(int) cV[0].size());
     fprintf_demo_failure(mes);
 #endif
