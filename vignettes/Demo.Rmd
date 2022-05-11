@@ -96,7 +96,7 @@ You can install the development version of EpiInvert from [GitHub](https://githu
 ```
 
 ## Examples
-We attach some required package
+We attach some required packages
 ```{r, echo = TRUE,message = FALSE }
 library(EpiInvert)
 library(ggplot2)
@@ -158,15 +158,15 @@ confidence interval of the expected variation of Rt as a function of the number
 of days after t available (see the plot of Rt above).
 
 * seasonality : the 7-day quasi-periodic multiplicative correction factors 
-(see equations (3)-4).
+(see equations (3)-(4).
 
-* dates : the date associated to each incidence value. 
+* dates : the date associated with each incidence value. 
 
 * festive : a boolean vector to indicate the days considered as festive 
 
 * epsilon : the normalized error given by equation (8) 
 
-* power_a : the power a in equation (8) 
+* power_a : the power a in equation (8). Notice that this value strongly depends on the size of the incidence curve used by the EpiInvert estimation. As we shall see later, this size is an EpiInvert parameter. The estimated value of a only has sense in the case of a large incidence sequence. 
 
 * si_distr : numeric vector with the serial interval distribution used, it can be 
 computed from the shifted parametric log-normal or it can be uploaded by the 
@@ -201,8 +201,8 @@ EpiInvert execution for UK using a non-parametric serial interval shifted -2 day
 
 load data of a serial interval
 
-```{r,echo = TRUE, message = FALSE,results = FALSE}
-data("si_distr_data")
+```{r,echo = TRUE, message = FALSE,results = TRUE}
+data(si_distr_data)
 head(si_distr_data)
 ```
 
@@ -262,5 +262,6 @@ res <- EpiInvert(incidence$USA,incidence$date[length(incidence$date)],festives$U
  plot(res)
 
 ```
+
 
 
