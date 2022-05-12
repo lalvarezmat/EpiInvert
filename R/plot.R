@@ -1,5 +1,5 @@
 #' @title 
-#' \code{plot} the results obtained by EpiInvert
+#' \code{EpiInvert_plot} plots the results obtained by EpiInvert
 #'
 #' @param x an object of class \code{estimate_EpiInvert}.
 #'
@@ -23,7 +23,7 @@
 
 
 #' @export
-plot <- function(x, what = "all",date_start="1000-01-01",date_end="3000-01-01"){
+EpiInvert_plot <- function(x, what = "all",date_start="1000-01-01",date_end="3000-01-01"){
   
   if(what == "R"){
 
@@ -113,7 +113,7 @@ plot <- function(x, what = "all",date_start="1000-01-01",date_end="3000-01-01"){
        ggplot2::theme(axis.title.y=ggplot2::element_blank())+
  	     ggplot2::labs(x='days', y='') +
        ggplot2::geom_text(x = -Inf, y = Inf, 
-	              label='serial interval distribution',hjust = -0.1, vjust = 1.5)
+	     label='serial interval distribution',hjust=-0.1,vjust=1.5)
 
         p <- ggplot2::ggplotGrob(g)
     grid:: grid.draw(rbind(p))

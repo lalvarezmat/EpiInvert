@@ -66,7 +66,7 @@ res <- EpiInvert(incidence$DEU,"2022-05-05",festives$DEU)
 
 We plot the results: 
 ```{r fig1, fig.width = 6, fig.height = 10, fig.align = "center"}
-plot(res)
+EpiInvert_plot(res)
 
 ```
 The main outcomes of EpiInvert, illustrated in this figure, are : 

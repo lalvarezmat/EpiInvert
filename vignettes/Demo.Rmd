@@ -133,7 +133,7 @@ res <- EpiInvert(incidence$DEU,"2022-05-05",festives$DEU)
 
 We plot the results: 
 ```{r fig1, fig.width = 6, fig.height = 10, fig.align = "center"}
-plot(res)
+EpiInvert_plot(res)
 
 ```
 
@@ -191,7 +191,7 @@ the festive days bias correction only modify the original incidence in the
 festive days and the following 2 days. 
 
 ```{r fig2, fig.width = 7, fig.height = 4, fig.align = "center"}
- plot(res,"incid","2021-12-15","2022-01-15")
+ EpiInvert_plot(res,"incid","2021-12-15","2022-01-15")
 
 ```
 
@@ -216,7 +216,7 @@ res <- EpiInvert(incidence$UK,"2022-05-05",festives$UK,
 Plot of the serial interval used (including the shift)
 
 ```{r fig3, fig.width = 4, fig.height = 4, fig.align = "center"}
- plot(res,"SI")
+ EpiInvert_plot(res,"SI")
 
 ```
 
@@ -237,7 +237,7 @@ the number of future days available.
 
 
 ```{r fig4, fig.width = 7, fig.height = 4, fig.align = "center"}
- plot(res,"R")
+ EpiInvert_plot(res,"R")
 
 ```
 
@@ -259,7 +259,7 @@ res <- EpiInvert(incidence$USA,incidence$date[length(incidence$date)],festives$U
 ```
 
 ```{r fig5, fig.width = 6, fig.height = 10, fig.align = "center"}
- plot(res)
+ EpiInvert_plot(res)
 
 ```
 
