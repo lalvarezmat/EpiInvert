@@ -119,7 +119,7 @@ data(incidence)
 res <- EpiInvert(incidence$USA,"2022-05-05")
 
 ## Plot of the results
-plot(res)
+EpiInvert_plot(res)
 
 ## load data of festive days for France, Germany, UK and the USA
 data(festives)
@@ -130,7 +130,7 @@ res <- EpiInvert(incidence$FRA,"2022-05-05",festives$FRA,
                  select_params(list(max_time_interval = 365)))
 
 ## Plot of the incidence between "2021-12-01" and "2022-01-31"
-plot(res,"incid","2021-12-01","2022-01-31")
+EpiInvert_plot(res,"incid","2021-12-01","2022-01-31")
 
 ## load data of a serial interval
 data("si_distr_data")
@@ -142,7 +142,7 @@ res <- EpiInvert(incidence$DEU,"2022-05-05",festives$DEU,
        shift_si_distr=-2)))
        
 ## Plot of the serial interval used (including the shift)
-plot(res,"SI")     
+EpiInvert_plot(res,"SI")     
        
 ## EpiInvert execution for UK changing the default values of the parametric
 ## serial interval (using a shifted log-normal) 
@@ -155,7 +155,7 @@ res <- EpiInvert(incidence$UK,"2022-05-05",festives$UK,
 ## Therefore, the EpiInvert estimate of Rt varies when there are more days 
 ## available. This confidence interval reflects the expected variation of Rt 
 ## as a function of the number of days after t available.
-plot(res,"R")
+EpiInvert_plot(res,"R")
 
 }
 \references{
