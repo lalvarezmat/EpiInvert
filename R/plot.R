@@ -87,7 +87,8 @@ EpiInvert_plot <- function(x, what = "all",date_start="1000-01-01",date_end="300
       ggplot2::scale_color_manual(values=c("black","green","blue","red"))+
       ggplot2::scale_x_date(date_labels = '%Y-%m-%d')+
       ggplot2::theme(axis.title.y=ggplot2::element_blank(),
-                     axis.title.x=ggplot2::element_blank())+
+                     axis.title.x=ggplot2::element_blank(),
+                     legend.position="bottom")+
       ggplot2::geom_line(size=0.7)
 
 
