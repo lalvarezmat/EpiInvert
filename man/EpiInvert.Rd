@@ -115,39 +115,45 @@ in references [1] and [2].
 ## the USA taken from reference [3]
 data(incidence)
 
-## EpiInvert execution for USA with no festive days specification. 
-res <- EpiInvert(incidence$USA,"2022-05-05")
+## EpiInvert execution for USA with no festive days specification
+## using the incidence 70 days in the past
+res <- EpiInvert(incidence$USA,
+"2022-05-05",
+"1000-01-01",
+select_params(list(max_time_interval = 70))
+)
 
 ## Plot of the results
-EpiInvert_plot(res)
+## EpiInvert_plot(res)
 
 ## load data of festive days for France, Germany, UK and the USA
 data(festives)
 
 ## EpiInvert execution for France with festive days specification using
-## 365 days in the past 
+## 70 days in the past 
 res <- EpiInvert(incidence$FRA,"2022-05-05",festives$FRA,
-                 select_params(list(max_time_interval = 365)))
+                 select_params(list(max_time_interval = 70)))
 
-## Plot of the incidence between "2021-12-01" and "2022-01-31"
-EpiInvert_plot(res,"incid","2021-12-01","2022-01-31")
+## Plot of the incidence between "2022-04-01" and "2022-05-01"
+## EpiInvert_plot(res,"incid","2022-04-01","2022-05-01")
 
 ## load data of a serial interval
 data("si_distr_data")
 
 ## EpiInvert execution for Germany using the uploaded serial interval shifted
-## -2 days
+## -2 days, using the incidence 70 days in the past
 res <- EpiInvert(incidence$DEU,"2022-05-05",festives$DEU,
        EpiInvert::select_params(list(si_distr = si_distr_data,
-       shift_si_distr=-2)))
+       shift_si_distr=-2,max_time_interval = 70)))
        
 ## Plot of the serial interval used (including the shift)
-EpiInvert_plot(res,"SI")     
+## EpiInvert_plot(res,"SI")     
        
 ## EpiInvert execution for UK changing the default values of the parametric
-## serial interval (using a shifted log-normal) 
+## serial interval (using a shifted log-normal) using 70 days in the past
 res <- EpiInvert(incidence$UK,"2022-05-05",festives$UK,
-       EpiInvert::select_params(list(mean_si = 11,sd_si=6,shift_si=-1)))
+       EpiInvert::select_params(list(mean_si = 11,sd_si=6,shift_si=-1,max_time_interval = 70))
+       )
        
 ## Plot of the reproduction number Rt including an empiric 95\\% confidence 
 ## interval of the variation of Rt. To calculate Rt on each day t, EpiInvert 
@@ -155,7 +161,7 @@ res <- EpiInvert(incidence$UK,"2022-05-05",festives$UK,
 ## Therefore, the EpiInvert estimate of Rt varies when there are more days 
 ## available. This confidence interval reflects the expected variation of Rt 
 ## as a function of the number of days after t available.
-EpiInvert_plot(res,"R")
+## EpiInvert_plot(res,"R")
 
 }
 \references{
