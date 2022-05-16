@@ -29,11 +29,11 @@ EpiInvert_plot <- function(x, what = "all",date_start="1000-01-01",date_end="300
   
   theme_graphs <-ggplot2::theme_bw()+
     ggplot2::theme(
-      plot.margin = unit(c(0.1,0.1,0.1,0.1), "cm"),
-      panel.spacing = unit(0, "lines"),
-      axis.title = ggplot2::element_blank()
-    )
-  theme_graphs_no_xlab<-theme_graphs+theme(axis.text.x = ggplot2::element_blank(),axis.ticks.x = ggplot2::element_blank() )
+    plot.margin = ggplot2::unit(c(0.1,0.1,0.1,0.1), "cm"),
+    panel.spacing = ggplot2::unit(0, "lines"),
+    axis.title = ggplot2::element_blank()
+  )
+  theme_graphs_no_xlab<-theme_graphs+ggplot2::theme(axis.text.x = ggplot2::element_blank(),axis.ticks.x = ggplot2::element_blank() )
   
   
   if (what == "R") {
@@ -129,7 +129,7 @@ EpiInvert_plot <- function(x, what = "all",date_start="1000-01-01",date_end="300
     
     g7 <- ggplot2::ggplot() + 
       ggplot2::ylim(min(d$epsilon), 1.2 * max(d$epsilon)) + 
-      ggplot2::geom_line(data=d,aes(x = date, y = epsilon)) + 
+      ggplot2::geom_line(data=d,ggplot2::aes(x = date, y = epsilon)) + 
       ggplot2::scale_x_date(date_labels = "%Y-%m-%d") + 
       theme_graphs+
       ggplot2::labs(x = "", y = "normalized noise") + 
