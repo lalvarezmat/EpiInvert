@@ -35,15 +35,15 @@ through a variational model as described in
 [PNAS, 2021](https://www.pnas.org/doi/10.1073/pnas.2105112118) and 
 [Biology, 2022](https://www.mdpi.com/2079-7737/11/4/540). 
 
-We assume that a festive or anomalous day is any day where we know "a priori" 
+A festive or anomalous day is any day where we know "a priori" 
 that the registered number of cases is biased. Typically, in those days, 
-we observe a sharp decrease in the number of registered incidence that is 
-compensated by increased incidence numbers in the next few days. We correct such
-bias by redistributing the number of cases in the festive day and the next 2 days. 
+one observes a sharp decrease in the number of registered incidence that is 
+compensated by increased incidence numbers in the next few days. This bias is corrected
+by redistributing the number of cases in the festive day and the next 2 days. 
 
-On top of the festive day bias, there is an strong administrative weekly bias 
+On top of the festive day bias, there is a strong administrative weekly bias 
 introduced by the way the countries registered the new cases each day of the week. 
-We correct this weekly bias using 7-day quasi-periodic multiplicative correction
+This weekly bias is corrected using 7-day quasi-periodic multiplicative correction
 factors. We use the following notation : 
 
 $(2) \ \ \ \ i^f_t \ \ \text{is the festive day bias free incidence}$
@@ -52,39 +52,39 @@ $(3) \ \ \ \ q_t \ \ \text{ is the 7-day quasi-periodic multiplicative correctio
 
 $(4) \ \ \ \ i^b_t=i^f_tq_t \ \ \text{is the festive + weekly biases free incidence}$
 
-Once the festive day and weekly biases are corrected in the incidence curve we 
-model the diference between the incidence curve and its expected value using 
-the renewal equation by: 
+Once the festive day and weekly biases are corrected in the incidence curve 
+the difference between the incidence curve and its expected value using 
+the renewal equation is modeled  by
 
 $(5) \ \ \ \ i^b_{t}=i^r_t+\varepsilon_{t}(i_{t}^r)^a$
 
 where 
 
-$(6) \ \ \ \ i^r_t=\sum_k i^b_{t-k}R_{t-k}\Phi_k$
+$(6) \ \ \ \ i^r_t=\sum_k i^b_{t-k}R_{t-k}\Phi_k.$
 
-In fact, roughly speaking, we could say that the proposed variational model is 
+In a nutshell, the proposed variational model is 
 based on estimating all the variables involved in order to minimize the 
 difference between the incidence and its expected value using the renewal equation. 
 
 
-We compute experimentally, the power a in the equation (5)  by linear 
+The power a in the equation (5)  is computed experimentally  by linear 
 regression (in t) applied to
  
 
-$(7) \ \ \ \ (log(|i^b_{t}-i^r_t|),log(i^r_t))$
+$(7) \ \ \ \ (log(|i^b_{t}-i^r_t|),log(i^r_t)).$
 
-The normalized error of the model is given by : 
+The normalized error of the model is given by 
 
-$(8) \ \ \ \ \epsilon_t=\frac{i^b_t-i^r_t}{(i^r_t)^a}$
+$(8) \ \ \ \ \epsilon_t=\frac{i^b_t-i^r_t}{(i^r_t)^a}.$
 
-In [Biology, 2022](https://www.mdpi.com/2079-7737/11/4/540), we show, 
-experimentally, that this normalized error is well approximated by an 
+In [Biology, 2022](https://www.mdpi.com/2079-7737/11/4/540), it is shown 
+experimentally that this normalized error is well approximated by an 
 exponential distributed white noise. 
 
 To model the serial interval, EpiInvert allows a shifted log-normal parametric 
 formulation. The shift can be negative, reflecting the fact 
 that secondary cases may present symptoms earlier than the primary case. The 
-user can also provides a non-parametric serial interval given by a numeric vector. 
+user can also provide a non-parametric serial interval given by a numeric vector. 
 
 ## Package installation
 
@@ -104,7 +104,7 @@ library(dplyr)
 library(grid)
 ```  
 
-We load stored data on COVID-19 daily incidence up to 2022-05-05 for 
+Loading stored data on COVID-19 daily incidence up to 2022-05-05 for 
 [France](https://www.santepubliquefrance.fr/dossiers/coronavirus-covid-19/coronavirus-chiffres-cles-et-evolution-de-la-covid-19-en-france-et-dans-le-monde), 
 [Germany](https://experience.arcgis.com/experience/478220a4c454480e823b17327b2bf1d4), 
 [the USA](https://ourworldindata.org/coronavirus-source-data) 
@@ -115,7 +115,7 @@ data(incidence)
 tail(incidence)
 ```
 
-We load some festive days for the same countries: 
+Loading some festive days for the same countries: 
 ```{r}
 data(festives)
 head(festives)
@@ -123,7 +123,7 @@ head(festives)
 
 
 ### Example 1
-We execute EpiInvert using Germany data. The first parameter is a numeric vector 
+We show the execution of EpiInvert using Germany data. The first parameter is a numerical vector 
 with the daily incidence, the second parameter is the date of the last incidence 
 value and the third parameter is a character vector with the festive days (this
 parameter is not mandatory)
@@ -131,7 +131,7 @@ parameter is not mandatory)
 res <- EpiInvert(incidence$DEU,"2022-05-05",festives$DEU)
 ```
 
-We plot the results: 
+Plotting the results: 
 ```{r fig1, fig.width = 6, fig.height = 10, fig.align = "center"}
 EpiInvert_plot(res)
 
@@ -153,7 +153,7 @@ be registered as the value associated with the incidence of that day.
 
 * Rt_CI95 : to estimate Rt on each day t, EpiInvert uses the past days (t'<=t) and the future 
 days (t'>t) when available. Therefore, the EpiInvert estimate of Rt varies when 
-there are more days available. Rt_CI95 represents the radius of an empiric  95% 
+more days are available. Rt_CI95 represents the radius of an empiric  95% 
 confidence interval of the expected variation of Rt as a function of the number 
 of days after t available (see the plot of Rt above).
 
@@ -162,11 +162,11 @@ of days after t available (see the plot of Rt above).
 
 * dates : the date associated with each incidence value. 
 
-* festive : a boolean vector to indicate the days considered as festive 
+* festive : a Boolean vector to indicate the days considered as festive 
 
 * epsilon : the normalized error given by equation (8) 
 
-* power_a : the power a in equation (8). Notice that this value strongly depends on the size of the incidence curve used by the EpiInvert estimation. As we shall see later, this size is an EpiInvert parameter. The estimated value of a only has sense in the case of a large incidence sequence. 
+* power_a : the power a in equation (8). Note that this value strongly depends on the size of the incidence curve used by the EpiInvert estimation. As we shall see later, this size is an EpiInvert parameter. The estimated value of a only has sense in the case of a large incidence sequence. 
 
 * si_distr : numeric vector with the serial interval distribution used, it can be 
 computed from the shifted parametric log-normal or it can be uploaded by the 
@@ -176,7 +176,7 @@ user
 
 ### Example 2
 
-EpiInvert execution for France using 365 days in the past. If your are not 
+EpiInvert execution for France using 365 days in the past. If you are not 
 constrained by the computational cost of the algorithm, you can choose a large 
 value of this parameter (for instance 9999), to ensure that EpiInvert will use
 the whole available sequence in the estimation. 
@@ -186,8 +186,8 @@ res <- EpiInvert(incidence$FRA,"2022-05-05",festives$FRA,
                  select_params(list(max_time_interval = 365)))
 ```
 
-Plot of the incidence between "2021-12-15" and "2022-01-15". We observe that 
-the festive days bias correction only modify the original incidence in the 
+Plot of the incidence between "2021-12-15" and "2022-01-15". Observe that 
+the festive days bias correction only modifies the original incidence in the 
 festive days and the following 2 days. 
 
 ```{r fig2, fig.width = 7, fig.height = 4, fig.align = "center"}
@@ -201,7 +201,7 @@ EpiInvert execution for UK using a non-parametric serial interval shifted -2 day
 
 load data of a serial interval
 
-```{r,echo = TRUE, message = FALSE,results = TRUE}
+```{r,echo = TRUE, message = FALSE,results =TRUE}
 data(si_distr_data)
 head(si_distr_data)
 ```
