@@ -158,13 +158,13 @@ confidence interval of the expected variation of Rt as a function of the number
 of days after t available (see the plot of Rt above).
 
 * seasonality : the 7-day quasi-periodic multiplicative correction factors 
-(see equations (3)-(4).
+(see equations (3)-(4)).
 
 * dates : the date associated with each incidence value. 
 
-* festive : a Boolean vector to indicate the days considered as festive 
+* festive : a Boolean vector to indicate the days considered as festive. 
 
-* epsilon : the normalized error given by equation (8) 
+* epsilon : the normalized error given by equation (8). 
 
 * power_a : the power a in equation (8). Note that this value strongly depends on the size of the incidence curve used by the EpiInvert estimation. As we shall see later, this size is an EpiInvert parameter. The estimated value of a only has sense in the case of a large incidence sequence. 
 
