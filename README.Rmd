@@ -25,7 +25,7 @@ described in
 [Biology, 2022](https://www.mdpi.com/2079-7737/11/4/540). 
 EpiInvert also corrects the administrative weekly bias in the daily registration 
 of cases and the bias introduced by the festive days. 
-(see [EpiInvert Vignette](http://www.ctim.es/covid19/EpiInvertVignette.html)
+(see [EpiInvert Vignette](https://ctim.ulpgc.es/covid19/EpiInvertVignette.html)
  for a more detailed description). 
 
 ## Installation
