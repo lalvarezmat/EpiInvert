@@ -32,8 +32,14 @@ incidence curve by inverting the renewal equation :
 $(1) \ \ \ \ i_t=\sum_k i_{t-k}R_{t-k}\Phi_k$
 
 through a variational model as described in 
-[PNAS, 2021](https://www.pnas.org/doi/10.1073/pnas.2105112118) and 
-[Biology, 2022](https://www.mdpi.com/2079-7737/11/4/540). 
+<a href="https://www.pnas.org/doi/10.1073/pnas.2105112118" target="_blank">PNAS, 2021</a>
+ and 
+ <a href="https://www.mdpi.com/2079-7737/11/4/540" target="_blank">Biology, 2022</a>. 
+ See  
+ <a href="http://www.ctim.es/covid19/RtComparison.html" target="_blank">Rt comparison</a>
+ for a comparison with other methods which compute the reproduction number. 
+ 
+ 
 
 A festive or anomalous day is any day where we know "a priori" 
 that the registered number of cases is biased. Typically, in those days, 
@@ -77,7 +83,7 @@ The normalized error of the model is given by
 
 $(8) \ \ \ \ \epsilon_t=\frac{i^b_t-i^r_t}{(i^r_t)^a}.$
 
-In [Biology, 2022](https://www.mdpi.com/2079-7737/11/4/540), it is shown 
+In <a href="https://www.mdpi.com/2079-7737/11/4/540" target="_blank">Biology, 2022</a>, it is shown 
 experimentally that this normalized error is well approximated by an 
 exponential distributed white noise. 
 
@@ -88,7 +94,8 @@ user can also provide a non-parametric serial interval given by a numeric vector
 
 ## Package installation
 
-You can install the development version of EpiInvert from [GitHub](https://github.com/) with:
+You can install the development version of EpiInvert from 
+<a href="https://github.com/" target="_blank">GitHub</a> with:
 
 ```{r, eval=FALSE}
  install.packages("devtools")
@@ -105,10 +112,10 @@ library(grid)
 ```  
 
 Loading stored data on COVID-19 daily incidence up to 2022-05-05 for 
-[France](https://www.santepubliquefrance.fr/dossiers/coronavirus-covid-19/coronavirus-chiffres-cles-et-evolution-de-la-covid-19-en-france-et-dans-le-monde), 
-[Germany](https://experience.arcgis.com/experience/478220a4c454480e823b17327b2bf1d4), 
-[the USA](https://ourworldindata.org/coronavirus-source-data) 
-and [UK](https://ourworldindata.org/coronavirus-source-data): 
+<a href="https://www.santepubliquefrance.fr/dossiers/coronavirus-covid-19/coronavirus-chiffres-cles-et-evolution-de-la-covid-19-en-france-et-dans-le-monde">France</a>, 
+<a href="https://experience.arcgis.com/experience/478220a4c454480e823b17327b2bf1d4">Germany</a>, 
+<a href="https://ourworldindata.org/coronavirus-source-data">the USA</a> and 
+<a href="https://ourworldindata.org/coronavirus-source-data">the UK</a>:
 
 ```{r}
 data(incidence)
