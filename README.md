@@ -12,11 +12,20 @@ variational model as described in [PNAS,
 2021](https://www.pnas.org/doi/10.1073/pnas.2105112118) and [Biology,
 2022](https://www.mdpi.com/2079-7737/11/4/540). EpiInvert also corrects
 the administrative weekly bias in the daily registration of cases and
-the bias introduced by the festive days. (see [EpiInvert
-Vignette](https://ctim.ulpgc.es/covid19/EpiInvertVignette.html) for a
-more detailed description).
+the bias introduced by the festive days.
 
-## Installation
+## Vignettes
+
+-   [EpiInvert](https://ctim.ulpgc.es/covid19/EpiInvertVignette.html) :
+    A detailed description of EpiInvert R package functionalities.
+
+-   [Rt Comparison](https://ctim.ulpgc.es/covid19/RtComparison.html) : A
+    comparative analysis of the methods : EpiInvert,
+    [EpiEstim](https://cran.r-project.org/web/packages/EpiEstim),
+    [Wallinga-Teunis](https://academic.oup.com/aje/article/160/6/509/79472)
+    and [EpiNow2](https://cran.r-project.org/web/packages/EpiNow2).
+
+## EpiInvert Installation
 
 You can install the development version of EpiInvert from
 [GitHub](https://github.com/) with:
@@ -82,56 +91,6 @@ EpiInvert_plot(res)
 ```
 
 <img src="man/figures/README-fig1-1.png" width="100%" style="display: block; margin: auto;" />
-The main outcomes of EpiInvert, illustrated in this figure, are :
 
-![\~](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;~ "~")
-
-![\\text{1. original incidence}\\ (i^0_t)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B1.%20original%20incidence%7D%5C%20%28i%5E0_t%29 "\text{1. original incidence}\ (i^0_t)")
-
-------------------------------------------------------------------------
-
-![\\text{2. festive bias free incidence}\\ (i^f_t):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B2.%20festive%20bias%20free%20incidence%7D%5C%20%28i%5Ef_t%29%3A "\text{2. festive bias free incidence}\ (i^f_t):")
-
-The registration of daily cases is biased in the festive days. This bias
-is corrected by modifying the original incidence values in the festive
-days and the next 2 days.
-
-------------------------------------------------------------------------
-
-![\\text{3. weekly + festive biases free incidence}\\ (i^b_t=q_ti^f_t):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B3.%20weekly%20%2B%20festive%20biases%20free%20incidence%7D%5C%20%28i%5Eb_t%3Dq_ti%5Ef_t%29%3A "\text{3. weekly + festive biases free incidence}\ (i^b_t=q_ti^f_t):")
-
-Uses 7-day quasi-periodic multiplicative factors to correct the
-administrative weekly bias in the registration of daily cases.
-
-------------------------------------------------------------------------
-
-![\\text{4. restored incidence}\\ (i^r_t=\\sum_k i^b\_{t-k}R\_{t-k}\\Phi_k):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B4.%20restored%20incidence%7D%5C%20%28i%5Er_t%3D%5Csum_k%20i%5Eb_%7Bt-k%7DR_%7Bt-k%7D%5CPhi_k%29%3A "\text{4. restored incidence}\ (i^r_t=\sum_k i^b_{t-k}R_{t-k}\Phi_k):")
-
-Computes a restored incidence curve by application of the renewal
-equation
-
-------------------------------------------------------------------------
-
-![\\text{5. Rt}\\ (R_t):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B5.%20Rt%7D%5C%20%28R_t%29%3A "\text{5. Rt}\ (R_t):")
-
-Time varying reproduction number computed using the variational model.
-To calculate Rt on each day t, EpiInvert uses the past days (t’\<=t) and
-the future days (t’\>t) when available. Therefore, the EpiInvert
-estimate of Rt varies when there are more days available. In the above
-plot of Rt we show an empiric 95% confidence interval of the expected
-variation of Rt as a function of the number of available days after t..
-
-------------------------------------------------------------------------
-
-![\\text{6. seasonality}\\ (q_t):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B6.%20seasonality%7D%5C%20%28q_t%29%3A "\text{6. seasonality}\ (q_t):")
-
-7-day quasi-periodic multiplicative factors to correct the
-administrative weekly bias in the registration of daily cases.
-
-------------------------------------------------------------------------
-
-![\\text{7. normalized noise}\\ (\\epsilon_t=\\frac{i^b_t-i^r_t}{(i^r_t)^a}):](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ctext%7B7.%20normalized%20noise%7D%5C%20%28%5Cepsilon_t%3D%5Cfrac%7Bi%5Eb_t-i%5Er_t%7D%7B%28i%5Er_t%29%5Ea%7D%29%3A "\text{7. normalized noise}\ (\epsilon_t=\frac{i^b_t-i^r_t}{(i^r_t)^a}):")
-
-Computes the difference between the bias corrected incidence curve and
-its expected value using the renewal equation normalized by a power of
-the incidence.
+For a detailed description of EpiInvert outcomes see the [EpiInvert
+vignette](https://ctim.ulpgc.es/covid19/EpiInvertVignette.html)
