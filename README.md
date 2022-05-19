@@ -93,4 +93,4 @@ EpiInvert_plot(res)
 <img src="man/figures/README-fig1-1.png" width="100%" style="display: block; margin: auto;" />
 
 For a detailed description of EpiInvert outcomes see the [EpiInvert
-vignette](https://ctim.ulpgc.es/covid19/EpiInvertVignette.html)
+vignette](https://ctim.ulpgc.es/covid19/EpiInvertVignette.html).

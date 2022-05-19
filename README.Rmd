@@ -84,7 +84,7 @@ EpiInvert_plot(res)
 
 ```
 
-For a detailed description of EpiInvert outcomes see the [EpiInvert vignette](https://ctim.ulpgc.es/covid19/EpiInvertVignette.html) 
+For a detailed description of EpiInvert outcomes see the [EpiInvert vignette](https://ctim.ulpgc.es/covid19/EpiInvertVignette.html). 
 
 
 
