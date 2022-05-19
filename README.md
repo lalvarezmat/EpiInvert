@@ -21,9 +21,9 @@ the bias introduced by the festive days.
 
 -   [Rt Comparison](https://ctim.ulpgc.es/covid19/RtComparison.html) : A
     comparative analysis of the methods : EpiInvert,
-    [EpiEstim](https://cran.r-project.org/web/packages/EpiEstim),
+    [EpiEstim](https://CRAN.R-project.org/package=EpiEstim),
     [Wallinga-Teunis](https://academic.oup.com/aje/article/160/6/509/79472)
-    and [EpiNow2](https://cran.r-project.org/web/packages/EpiNow2).
+    and [EpiNow2](https://CRAN.R-project.org/package=EpiNow2).
 
 ## EpiInvert Installation
 
