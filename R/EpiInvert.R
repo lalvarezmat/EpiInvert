@@ -7,7 +7,9 @@
 #' @param incid The original daily incidence curve (a numeric vector).
 #'
 #' @param last_incidence_date The date of the last value of the incidence curve
-#' in the format YYYY-MM-DD.
+#' in the format YYYY-MM-DD. EpiInvert does not 
+#' allow missing values. On days when a country does not report data, a zero must
+#' be registered as the value associated with the incidence of that day.
 #' 
 #' @param festive_days The festive or anomalous dates in the format YYYY-MM-DD 
 #' (a character vector). In these dates we "a priori" expect that the incidence
@@ -19,21 +21,26 @@
 #' \itemize{
 #'  \item{si_distr}{: a numeric vector with the distribution of the serial 
 #'  interval (the default value is an empty vector). If this vector is empty, 
-#'  the serial interval is estimated using a parametric shifted log-normal }
-#'  \item{shift_si_distr}{: shift of the above user provided serial interval. This shift can be negative, which 
-#'  means that secondary cases can show symptoms before the primary cases (the default value is 0) }
+#'  the serial interval is estimated using a parametric shifted log-normal. }
+#'  \item{shift_si_distr}{: shift of the above user provided serial interval. 
+#'  This shift can be negative, which means that secondary cases can show 
+#'  symptoms before the primary cases (the default value is 0). }
 #'  \item{max_time_interval}{: Maximum number of days used by 
-#'  EpiInvert (the default value is 150, which means that EpiInvert uses the last 150 days. The computational cost strongly depends on this value) }
+#'  EpiInvert (the default value is 150, which means that EpiInvert uses the 
+#'  last 150 days. The computational cost strongly depends on this value). }
 #'  \item{mean_si}{: mean of the parametric shifted log-normal to approximate
-#'   the serial interval (the default value is 12.267893) }
+#'   the serial interval (in the case the above si_distr vector is empty),
+#'  (the default value is 12.267893). }
 #'  \item{sd_si}{: standard deviation of the parametric shifted log-normal to 
-#'  approximate the serial interval (the default value is  5.667547) }
+#'  approximate the serial interval (in the case the above si_distr vector is empty),
+#'   (the default value is  5.667547). }
 #'  \item{shift_si=}{: shift of the parametric shifted log-normal to approximate
-#'   the serial interval (the default value is -5) }
+#'   the serial interval (in the case the above si_distr vector is empty),
+#'  (the default value is -5). }
 #'  \item{Rt_regularization_weight}{: regularization weight for Rt in the 
-#'  variational model used by EpiInvert (the default value is 5) }
+#'  variational model used by EpiInvert (the default value is 5). }
 #'  \item{seasonality_regularization_weight}{: regularization weight for the 
-#'  weekly bias correction factors in the variational model used by EpiInvert (the default value is 5)}
+#'  weekly bias correction factors in the variational model used by EpiInvert (the default value is 5).}
 #'  
 #' }
 #' 
@@ -43,35 +50,35 @@
 #'   components:
 #'   \itemize{
 #'
-#'   \item{i_original}{: the original daily incidence curve}
+#'   \item{i_original}{: the original daily incidence curve.}
 #'
-#'   \item{i_festive}{: the incidence after correction of the festive days bias}
+#'   \item{i_festive}{: the incidence after correction of the festive days bias.}
 #'
 #'   \item{i_bias_free}{: the incidence after correction of the festive and 
-#'   weekly biases}
+#'   weekly biases.}
 #'
 #'   \item{i_restored}{: the restored incidence obtained using the renewal 
-#'   equation}
+#'   equation.}
 #'
 #'   \item{Rt}{: the reproduction number Rt obtained by inverting the renewal 
-#'   equation}
+#'   equation.}
 #' 
 #'   \item{Rt_CI95}{: 95\% confidence interval radius for the value of Rt taking 
 #'   into account the variation of Rt when more days are added to the estimation. 
 #'   }
 #' 
-#'   \item{seasonality}{: the weekly bias correction factors}
+#'   \item{seasonality}{: the weekly bias correction factors.}
 #' 
-#'   \item{dates}{: a vector of dates corresponding to the incidence curve }
+#'   \item{dates}{: a vector of dates corresponding to the incidence curve. }
 #' 
 #'   \item{festive}{: boolean associated to each incidence value to check if it 
-#'   has been considered as a festive or anomalous day }
+#'   has been considered as a festive or anomalous day. }
 #' 
 #'   \item{epsilon}{: normalized error curve obtained as 
-#'    (i_bias_free-i_restored)/i_restored^a}
+#'    (i_bias_free-i_restored)/i_restored^a.}
 #' 
 #'   \item{power_a}{: the power, a, which appears in the above expression of the 
-#'   normalized error }
+#'   normalized error. }
 #' 
 #'   \item{si_distr}{: values of the distribution of the serial interval used in
 #'    the EpiInvert estimation.}
@@ -112,7 +119,7 @@
 #' }
 #' @examples
 #' ## load data on COVID-19 daily incidence up to 2022-05-05 for France, 
-#' ## and Germany (taken from the official government data ) and for UK and 
+#' ## and Germany (taken from the official government data) and for UK and 
 #' ## the USA taken from reference [3]
 #' data(incidence)
 #'

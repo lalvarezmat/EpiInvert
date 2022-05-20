@@ -17,10 +17,10 @@ EpiInvert_plot(
 \item{what}{one of the following drawing options: 
 
  \itemize{
- \item{all}{: a plot combining the main EpiInvert results}
- \item{R}{: a plot of the reproduction number Rt estimation }
- \item{incid}{: a plot combining the obtained incidence curves }
- \item{SI}{: the serial interval used in the EpiInvert estimation }
+ \item{all}{: a plot combining the main EpiInvert results.}
+ \item{R}{: a plot of the reproduction number Rt estimation. }
+ \item{incid}{: a plot combining the obtained incidence curves. }
+ \item{SI}{: the serial interval used in the EpiInvert estimation. }
  
 }}
 

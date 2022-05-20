@@ -4,7 +4,7 @@ Type: Package
 Title: Estimation of Time Varying Reproduction Numbers and Restored Incidence Curves 
   Using Variational Techniques
 Authors@R: c(person("Luis", "Alvarez", email = "lalvarez@ulpgc.es", role = c("aut", "cre"), 
-  comment = c(ORCID = "0000-0002-8443-9162")), 
+  comment = c(ORCID = "0000-0002-6953-9587")), 
   person("Jean-David", "Morel", role = "ctb", comment = c(ORCID = "0000-0002-7122-9924")),
   person("Jean-Michel", "Morel", role = "ctb", comment = c(ORCID = "0000-0002-6108-897X"))
   )
