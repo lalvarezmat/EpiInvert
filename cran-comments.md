@@ -1,19 +1,15 @@
-## Resubmission 3
+## submission version 0.1.1
 
-This is the third resubmission of the first version of the package. In this 
-version I have, following the suggestions of Uwe Ligges  (CRAN Teams):
+This is a submission of a new version of the EpiInvert package. The modifications
+in this new version are: 
 
-* Changed the URL address http://www.ctim.es/covid19/EpiInvertVignette.html by
-  https://ctim.ulpgc.es/covid19/EpiInvertVignette.html
+* README.md has been simplified to avoid problems with the render of mathematical 
+formulas.
 
-* Changed the URL address http://www.ctim.es/covid19/RtComparison.html by
-  https://ctim.ulpgc.es/covid19/RtComparison.html
+* The EpiInvert vignette has been moved outside CRAN repository to avoid problems 
+with the render of mathematical formulas.
 
-I checked that the proposed URL address work properly.  
-  
-Now, when executing devtools::check_win_devel() this issue does not appear in 
-the 00check.log file (I'm sorry I didn't notice this issue in the previous post) 
+* Some comments of the function descriptions have been modified.
 
-Thank you for your help.
-Luis Alvarez 
+* None of EpiInvert's functions, examples or tests have been changed in this version.
 
