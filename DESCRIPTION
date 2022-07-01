@@ -1,5 +1,5 @@
 Package: EpiInvert
-Version: 0.1.1
+Version: 0.1.2
 Type: Package
 Title: Estimation of Time Varying Reproduction Numbers and Restored Incidence Curves 
   Using Variational Techniques
@@ -13,7 +13,10 @@ Description: Estimation,  by inverting a renewal equation,
   of time-varying reproduction numbers and restored incidence curves with 
   festive days and weekly biases corrected as described in 
   Alvarez et al. (2021) <doi:10.1073/pnas.2105112118> and 
-  Alvarez et al. (2022) <doi:10.3390/biology11040540>.
+  Alvarez et al. (2022) <doi:10.3390/biology11040540>. EpiInvert can manage 
+  daily incidence data and weekly aggregated incidence data where every 
+  week a single data is communicated with the accumulated incidence in the last 
+  7 days. 
 URL: https://github.com/lalvarezmat/EpiInvert
 License: GPL (>= 2)
 Encoding: UTF-8

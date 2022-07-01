@@ -12,7 +12,10 @@ variational model as described in [PNAS,
 2021](https://www.pnas.org/doi/10.1073/pnas.2105112118) and [Biology,
 2022](https://www.mdpi.com/2079-7737/11/4/540). EpiInvert also corrects
 the administrative weekly bias in the daily registration of cases and
-the bias introduced by the festive days.
+the bias introduced by the festive days. EpiInvert can manage daily
+incidence data and weekly aggregated incidence data where every week a
+single data is communicated with the accumulated incidence in the last 7
+days.
 
 ## Vignettes
 

@@ -11,8 +11,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // EpiInvertC
-List EpiInvertC(NumericVector i_original0, String last_incidence_date, CharacterVector festive_days, NumericVector si_distr0, int shift_si_distr, int max_time_interval, double mean_si, double sd_si, double shift_si, double Rt_regularization_weight, double seasonality_regularization_weight);
-RcppExport SEXP _EpiInvert_EpiInvertC(SEXP i_original0SEXP, SEXP last_incidence_dateSEXP, SEXP festive_daysSEXP, SEXP si_distr0SEXP, SEXP shift_si_distrSEXP, SEXP max_time_intervalSEXP, SEXP mean_siSEXP, SEXP sd_siSEXP, SEXP shift_siSEXP, SEXP Rt_regularization_weightSEXP, SEXP seasonality_regularization_weightSEXP) {
+List EpiInvertC(NumericVector i_original0, String last_incidence_date, CharacterVector festive_days, NumericVector si_distr0, int shift_si_distr, int max_time_interval, double mean_si, double sd_si, double shift_si, double Rt_regularization_weight, double seasonality_regularization_weight, bool incidence_weekly_aggregated);
+RcppExport SEXP _EpiInvert_EpiInvertC(SEXP i_original0SEXP, SEXP last_incidence_dateSEXP, SEXP festive_daysSEXP, SEXP si_distr0SEXP, SEXP shift_si_distrSEXP, SEXP max_time_intervalSEXP, SEXP mean_siSEXP, SEXP sd_siSEXP, SEXP shift_siSEXP, SEXP Rt_regularization_weightSEXP, SEXP seasonality_regularization_weightSEXP, SEXP incidence_weekly_aggregatedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -27,13 +27,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type shift_si(shift_siSEXP);
     Rcpp::traits::input_parameter< double >::type Rt_regularization_weight(Rt_regularization_weightSEXP);
     Rcpp::traits::input_parameter< double >::type seasonality_regularization_weight(seasonality_regularization_weightSEXP);
-    rcpp_result_gen = Rcpp::wrap(EpiInvertC(i_original0, last_incidence_date, festive_days, si_distr0, shift_si_distr, max_time_interval, mean_si, sd_si, shift_si, Rt_regularization_weight, seasonality_regularization_weight));
+    Rcpp::traits::input_parameter< bool >::type incidence_weekly_aggregated(incidence_weekly_aggregatedSEXP);
+    rcpp_result_gen = Rcpp::wrap(EpiInvertC(i_original0, last_incidence_date, festive_days, si_distr0, shift_si_distr, max_time_interval, mean_si, sd_si, shift_si, Rt_regularization_weight, seasonality_regularization_weight, incidence_weekly_aggregated));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_EpiInvert_EpiInvertC", (DL_FUNC) &_EpiInvert_EpiInvertC, 11},
+    {"_EpiInvert_EpiInvertC", (DL_FUNC) &_EpiInvert_EpiInvertC, 12},
     {NULL, NULL, 0}
 };
 

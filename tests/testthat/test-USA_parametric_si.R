@@ -53,7 +53,11 @@ test_that("EpiInvert using USA data", {
   x <- round(res$power_a-0.003,digits=2)
   expect_equal(x,1.05)
   
-  
-
+  # test using weekly aggregated incidence 
+  data(incidence_weekly_aggregated)
+  res <- EpiInvert(incidence_weekly_aggregated$FRA,"2022-05-05",festives$FRA,
+                    select_params(list(incidence_weekly_aggregated = TRUE)))
+  x <- round(res$power_a-0.001,digits=2)
+  expect_equal(x,1.25)
   
 })

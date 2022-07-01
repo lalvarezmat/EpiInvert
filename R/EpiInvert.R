@@ -41,7 +41,9 @@
 #'  variational model used by EpiInvert (the default value is 5). }
 #'  \item{seasonality_regularization_weight}{: regularization weight for the 
 #'  weekly bias correction factors in the variational model used by EpiInvert (the default value is 5).}
-#'  
+#'   \item{incidence_weekly_aggregated}{: a boolean value which determines if we use weekly aggregated 
+#'  incidence. In such case  every week a single data is stored with the accumulated incidence in the last 
+#'  7 days (the default value is FALSE).}
 #' }
 #' 
 #'
@@ -50,7 +52,8 @@
 #'   components:
 #'   \itemize{
 #'
-#'   \item{i_original}{: the original daily incidence curve.}
+#'   \item{i_original}{: the original daily incidence curve. In the case of weekly aggregated incidence, 
+#'   we initialize the original curve assigning each day of the week 1/7 of the weekly aggregated value.}
 #'
 #'   \item{i_festive}{: the incidence after correction of the festive days bias.}
 #'
@@ -223,7 +226,8 @@ EpiInvert <- function(incid,
                         config$sd_si,
                         config$shift_si,
                         config$Rt_regularization_weight,
-                        config$seasonality_regularization_weight
+                        config$seasonality_regularization_weight,
+                        config$incidence_weekly_aggregated
                       )
   
   class(results) <- "estimate_EpiInvert"

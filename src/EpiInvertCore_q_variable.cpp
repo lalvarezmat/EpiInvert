@@ -797,8 +797,18 @@ void EpiInvertEstimate(
     const double Rt_regularization_weight /** REGULARIZATION WEIGHT PARAMETER OF EpiInvert METHOD (DEFAULT VALUE: 5)*/,
     const double seasonality_regularization_weight /** WEIGHT PARAMETER OF THE REGULARIZATION  TERM FOR THE SEASONALITY q (DEFAULT VALUE 5) */,
     const int max_time_interval /** MAX SIZE OF THE INCIDENCE DATA USED TO COMPUTE Rt (DEFAULT VALUE: 9999). THIS PARAMETER IS USED TO REDUCE HE COMPUTATIONAL COST OF THE ALGORITHM WHEN WE ARE JUST INTERESTED IN THE LAST PART OF THE SEQUENCE */,
-    const int NweeksToKeepIncidenceSum /** WE CONSTRAINT ALL THE ESTIMATED INCIDENCE CURVE TO KEEP THE ADDITION OF THE ORIGINAL INCIDENCE IN INTERVALS OF SIZE NweeksToKeepIncidenceSum*7 DAYS*/
+    const int NweeksToKeepIncidenceSum /** WE CONSTRAINT ALL THE ESTIMATED INCIDENCE CURVE TO KEEP THE ADDITION OF THE ORIGINAL INCIDENCE IN INTERVALS OF SIZE NweeksToKeepIncidenceSum*7 DAYS*/,
+    bool weekly_aggregated_incidence /** IF TRUE, EACH INCIDENCE VALUE CORRESPONDS TO THE LAST 7-DAY AGGREGATED INCIDENCE */
 ){
+  /// WE MANAGE THE CASE OF WEEKLY AGGREGATED INCIDENCE
+  if(weekly_aggregated_incidence==true){
+    vector<double> i_original2(7*i_original.size());
+    for(int k=0,m=0;k<i_original.size();k++){
+      double value=i_original[k]/7.;
+      for(int n=0;n<7;n++) i_original2[m++]=value;
+    }
+    i_original=i_original2;
+  }
   
   /// RENEWAL EQUATION MODEL
   bool RenewalEquationModel = CASE;
@@ -940,6 +950,7 @@ void EpiInvertEstimate(
     if(aux95>0) Rt_CI95[k]+=aux95;
   }
   
+  
   /// WE SET THE OUTPUT VARIABLES
   i_restored=iV[0];
   Rt=RtV[0];
@@ -948,6 +959,8 @@ void EpiInvertEstimate(
   iter_alternate_optimization=iter_alternate_optimizationV[0];
   i_bias_free=vector<double>(i_festive.size());
   for(int k=0;k< (int) i_bias_free.size();k++) i_bias_free[k]=i_festive[k]*seasonality[k];
+  
+  //for(int k=0;k<i_restored.size();k++) printf("%lf\n",i_restored[k]);
   
   /// ERROR ANALYSIS
   vector<double> log_i_rest, log_abs_dif;
@@ -981,8 +994,9 @@ void EpiInvertEstimate(
   
   dates=vector<string>(i_original.size());
   festive=vector<bool>(i_original.size());
+  //printf("daily_festive_day.size()=%d, festive.size()=%d\n",daily_festive_day.size(),festive.size());
   for(int k=0;k<(int) i_original.size();k++){
-    time_t t2=current_day-(i_original.size()-1-k)*86400;
+    time_t t2=current_day-(i_original.size()-1-k)*86400+86400/2;
     struct tm * timeinfo;
     timeinfo = localtime (&t2);
     char buffer [80];
@@ -1494,7 +1508,7 @@ void write_files(
     else fprintf(g,";");
     if(current_day<1) fprintf(g,";;");
     else{
-      time_t t2=current_day-(i0.size()-1-k)*86400;
+      time_t t2=current_day-(i0.size()-1-k)*86400+86400/2;
       struct tm * timeinfo;
       timeinfo = localtime (&t2);
       char buffer [80];

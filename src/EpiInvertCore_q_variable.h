@@ -73,7 +73,8 @@ void EpiInvertEstimate(
     const double Rt_regularization_weight=5. /** REGULARIZATION WEIGHT PARAMETER OF EpiInvert METHOD (DEFAULT VALUE: 5)*/,
     const double seasonality_regularization_weight=5. /** WEIGHT PARAMETER OF THE REGULARIZATION  TERM FOR THE SEASONALITY q (DEFAULT VALUE 5) */,
     const int max_time_interval=9999 /** MAX SIZE OF THE INCIDENCE DATA USED TO COMPUTE Rt (DEFAULT VALUE: 9999). THIS PARAMETER IS USED TO REDUCE HE COMPUTATIONAL COST OF THE ALGORITHM WHEN WE ARE JUST INTERESTED IN THE LAST PART OF THE SEQUENCE */,
-    const int NweeksToKeepIncidenceSum=2 /** WE CONSTRAINT ALL THE ESTIMATED INCIDENCE CURVE TO KEEP THE ADDITION OF THE ORIGINAL INCIDENCE IN INTERVALS OF SIZE NweeksToKeepIncidenceSum*7 DAYS*/
+    const int NweeksToKeepIncidenceSum=2 /** WE CONSTRAINT ALL THE ESTIMATED INCIDENCE CURVE TO KEEP THE ADDITION OF THE ORIGINAL INCIDENCE IN INTERVALS OF SIZE NweeksToKeepIncidenceSum*7 DAYS*/,
+    bool weekly_aggregated_incidence=false /** IF TRUE, EACH INCIDENCE VALUE CORRESPONDS TO THE LAST 7-DAY AGGREGATED INCIDENCE */
 );
 /// 14-DAY INCIDENCE EXTRAPOLATION USING A DATABASE OF COVID-19 SEQUENCES
 void IncidenceExtrapolationByLearning(vector<double> &i,const vector< vector <double > > &i42,const vector< vector <double > > &i56,const int NweeksToKeepIncidenceSumeeksBackToForeCast,double sigma,int COMPARISON_TYPE,int index);
