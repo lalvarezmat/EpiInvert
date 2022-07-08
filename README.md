@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# EpiInvert
+# EpiInvert (version 0.2.0, July 2022)
 
 <!-- badges: start -->
 <!-- badges: end -->
