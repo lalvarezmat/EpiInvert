@@ -10,6 +10,20 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// EpiInvertForecastC
+List EpiInvertForecastC(NumericVector i_restored, String last_incidence_date, NumericVector q_bias, NumericMatrix i_restored_database);
+RcppExport SEXP _EpiInvert_EpiInvertForecastC(SEXP i_restoredSEXP, SEXP last_incidence_dateSEXP, SEXP q_biasSEXP, SEXP i_restored_databaseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type i_restored(i_restoredSEXP);
+    Rcpp::traits::input_parameter< String >::type last_incidence_date(last_incidence_dateSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type q_bias(q_biasSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type i_restored_database(i_restored_databaseSEXP);
+    rcpp_result_gen = Rcpp::wrap(EpiInvertForecastC(i_restored, last_incidence_date, q_bias, i_restored_database));
+    return rcpp_result_gen;
+END_RCPP
+}
 // EpiInvertC
 List EpiInvertC(NumericVector i_original0, String last_incidence_date, CharacterVector festive_days, NumericVector si_distr0, int shift_si_distr, int max_time_interval, double mean_si, double sd_si, double shift_si, double Rt_regularization_weight, double seasonality_regularization_weight, bool incidence_weekly_aggregated);
 RcppExport SEXP _EpiInvert_EpiInvertC(SEXP i_original0SEXP, SEXP last_incidence_dateSEXP, SEXP festive_daysSEXP, SEXP si_distr0SEXP, SEXP shift_si_distrSEXP, SEXP max_time_intervalSEXP, SEXP mean_siSEXP, SEXP sd_siSEXP, SEXP shift_siSEXP, SEXP Rt_regularization_weightSEXP, SEXP seasonality_regularization_weightSEXP, SEXP incidence_weekly_aggregatedSEXP) {
@@ -34,6 +48,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_EpiInvert_EpiInvertForecastC", (DL_FUNC) &_EpiInvert_EpiInvertForecastC, 4},
     {"_EpiInvert_EpiInvertC", (DL_FUNC) &_EpiInvert_EpiInvertC, 12},
     {NULL, NULL, 0}
 };

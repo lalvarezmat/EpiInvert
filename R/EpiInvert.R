@@ -235,3 +235,137 @@ EpiInvert <- function(incid,
 
 
 }
+
+
+
+#' @title 
+#' \code{EpiInvertForecast} computes a 28-day forecast of the restored incidence 
+#' curve including confidence interval radius using the percentiles 50,75,90 and 95.
+#' using the weekly seasonality, from the forecasted restored incidence curve we
+#' also estimate a  28-day forecast of the original incidence curve. 
+#'
+#' @param EpiInvert_result output list of the EpiInvert execution including, in particular,  
+#' the restored incidence curve and the seasonality. 
+#'
+#' @param restored_incidence_database a database including 20,000 samples of different
+#' restored incidence curves computed by EpiInvert using real data. Each 
+#' restored incidence curve includes the last 56 values of the sequence. That is
+#' this database can be viewed as a matrix of size 20,000 X 56
+#' 
+#'
+#' @return {
+#'   a list with components:
+#'   \itemize{
+#'   
+#'      \item{dates}{: a vector of dates corresponding to the forecast days. }
+#'   
+#'      \item{i_restored_forecast}{: a numeric vector with the forecast of the 
+#'      restored incidence curve for the next 28 days.}
+#'   
+#'      \item{i_original_forecast}{: a numeric vector with the forecast of the 
+#'      original incidence curve for the next 28 days.}
+#'
+#'      \item{i_restored_forecast_CI50}{: radius of an empiric confidence interval,  
+#'        with percentile 50, for the restored incidence forecast following the 
+#'        number of days passed since the current day. 
+#'      }
+#'   
+#'      \item{i_restored_forecast_CI75}{: radius of an empiric confidence interval,  
+#'         with percentile 75, for the restored incidence forecast following the 
+#'         number of days passed since the current day. 
+#'      }
+#'
+#'     \item{i_restored_forecast_CI90}{: radius of an empiric confidence interval,  
+#'        with percentile 90, for the restored incidence forecast following the 
+#'        number of days passed since the current day. 
+#'     }
+#'
+#'     \item{i_restored_forecast_CI95}{: radius of an empiric confidence interval,  
+#'        with percentile 95, for the restored incidence forecast following the 
+#'        number of days passed since the current day. 
+#'     }
+#' 
+#'   }
+#' }
+#'
+#' @details
+#' EpiInvertForecast estimates a forecast of the restored incidence curve 
+#' using a weighted average of 20,000 restored incidence curves previously 
+#' estimated by EpiInvert and stored in the database "restored_incidence_database". 
+#' The weight, in the average computation, of each restored incidence curve 
+#' of the database depends on the similarity between the current curve in the last
+#' 28 days and the first 28 days of the database curve. Each database curve 
+#' contains 56 days. The first 28 days are used for comparison with the current 
+#' curve and the last 28 days are used for forecasting. 
+#' 
+#' 
+#' 
+#' @author Luis Alvarez \email{lalvarez@ulpgc.es}
+#' @references {
+#' 
+#' [1] Alvarez, L.; Colom, M.; Morel, J.D.; Morel, J.M. Computing the daily 
+#' reproduction number of COVID-19 by inverting the renewal
+#' equation using a variational technique. Proc. Natl. Acad. Sci. USA, 2021.
+#' 
+#' [2] Alvarez, Luis, Jean-David Morel, and Jean-Michel Morel. "Modeling 
+#' COVID-19 Incidence by the Renewal Equation after Removal of Administrative 
+#' Bias and Noise" Biology 11, no. 4: 540. 2022. 
+#' 
+#' [3] Ritchie, H. et al. Coronavirus Pandemic (COVID-19), OurWorldInData.org. 
+#' Available online: 
+#' https://ourworldindata.org/coronavirus-source-data 
+#' (accessed on 5 May 2022).
+#' 
+#' [4] Alvarez, Luis, Jean-David Morel, and Jean-Michel Morel. EpiInvertForecast
+#' Available online: 
+#' https://ctim.ulpgc.es/covid19/EpiInvertForecastPaper.html 
+#' 
+#' }
+#' @examples
+#' ## load data on COVID-19 daily incidence up to 2022-05-05 for France, 
+#' ## and Germany (taken from the official government data) and for UK and 
+#' ## the USA taken from reference [3]
+#' data(incidence)
+#' 
+#' ## load of the database of restored incidence curves. 
+#' data("restored_incidence_database")
+#'
+#' ## EpiInvert execution for USA with no festive days specification
+#' ## using the incidence 90 days in the past
+#' res <- EpiInvert(incidence$USA,
+#' "2022-05-05",
+#' "1000-01-01",
+#' select_params(list(max_time_interval = 90))
+#' )
+#' 
+#' ## EpiInvertForecast execution using the EpiInvert results obtained by USA
+#' forecast <-  EpiInvertForecast(res,restored_incidence_database)
+#'
+#'
+#' 
+#' @useDynLib EpiInvert, .registration=TRUE
+#' @importFrom Rcpp evalCpp
+#' @export
+EpiInvertForecast <- function(EpiInvert_result,restored_incidence_database) {
+  
+  # CHECK IF restored_incidence_database IS NUMERIC 
+  if(is.numeric(restored_incidence_database)!=TRUE){
+    stop("The second argument of EpiInvertForecast() is not numeric")
+  }
+  
+  # LAST DAY OF AVAILABLE DATA
+  str <- EpiInvert_result$dates[length(EpiInvert_result$dates)]
+  
+  # WE CALL THE MAIN Rcpp - C++ FUNCTION TO COMPUTE EpiInvertForeCast 
+  results <- EpiInvertForecastC(
+    EpiInvert_result$i_restored,
+    str,
+    EpiInvert_result$seasonality,
+    restored_incidence_database
+  )
+  
+  return(results)
+  
+  
+}
+

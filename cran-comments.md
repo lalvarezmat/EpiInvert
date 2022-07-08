@@ -1,3 +1,14 @@
+## submission EpiInvert package version 0.2.0
+
+This is a submission of a new version of the EpiInvert package. The modifications
+in this new version are: 
+
+* We include the management of weekly aggregated incidence data where a single 
+accumulated incidence value is stored each week. 
+
+* We include EpiInvertForecast, a procedure for the short time forecast of the 
+restored incidence curve.
+
 ## submission EpiInvert package version 0.1.1
 
 This is a submission of a new version of the EpiInvert package. The modifications

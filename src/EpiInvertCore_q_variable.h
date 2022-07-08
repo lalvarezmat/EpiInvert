@@ -76,6 +76,20 @@ void EpiInvertEstimate(
     const int NweeksToKeepIncidenceSum=2 /** WE CONSTRAINT ALL THE ESTIMATED INCIDENCE CURVE TO KEEP THE ADDITION OF THE ORIGINAL INCIDENCE IN INTERVALS OF SIZE NweeksToKeepIncidenceSum*7 DAYS*/,
     bool weekly_aggregated_incidence=false /** IF TRUE, EACH INCIDENCE VALUE CORRESPONDS TO THE LAST 7-DAY AGGREGATED INCIDENCE */
 );
+/// FORECAST OF THE RESTORED INCIDENCE USING A LEARNING PROCEDURE
+vector<double> IncidenceForecastByLearning(
+    vector<double> &ir /** RESTORED INCIDENCE TO BE FORECASTED */,
+    const string last_incidence_date /** DATE OF THE LAST DATA IN THE FORMAT YYYY-MM-DD */,
+    vector<double> &q /** 7-DAY QUASI-PERIODIC WEKLY BIAS CORRECTION FACTORS */,
+    vector< vector <double > > &ir_database,
+    double lambda /** PARAMETER IN THE WEIGHTED AVERAGE OF INCIDENCE SEQUENCES (IF NEGATIVE WE USE THE PRE-ESTIMATED ONES */,
+                                                                                vector <double> &CI50 /** 50% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
+                                                                                vector <double> &CI75 /** 75% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
+                                                                                vector <double> &CI90 /** 90% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
+                                                                                vector <double> &CI95 /** 95% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
+                                                                                vector <double> &i0_forecast /** FORECAST OF THE ORIGINAL INCIDENCE */,
+                                                                                vector<string> &dates /** DATE ASSOCIATED TO EACH INCIDENCE DATUM */
+);
 /// 14-DAY INCIDENCE EXTRAPOLATION USING A DATABASE OF COVID-19 SEQUENCES
 void IncidenceExtrapolationByLearning(vector<double> &i,const vector< vector <double > > &i42,const vector< vector <double > > &i56,const int NweeksToKeepIncidenceSumeeksBackToForeCast,double sigma,int COMPARISON_TYPE,int index);
 /// 14-DAY INCIDENCE EXTRAPOLATION USING A DATABASE OF COVID-19 SEQUENCES (USING THE MEDIAN IN THE LAST 5 WEEKS ESTIMATION)

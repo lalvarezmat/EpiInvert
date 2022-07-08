@@ -803,7 +803,7 @@ void EpiInvertEstimate(
   /// WE MANAGE THE CASE OF WEEKLY AGGREGATED INCIDENCE
   if(weekly_aggregated_incidence==true){
     vector<double> i_original2(7*i_original.size());
-    for(int k=0,m=0;k<i_original.size();k++){
+    for(int k=0,m=0;k<(int) i_original.size();k++){
       double value=i_original[k]/7.;
       for(int n=0;n<7;n++) i_original2[m++]=value;
     }
@@ -994,7 +994,7 @@ void EpiInvertEstimate(
   
   dates=vector<string>(i_original.size());
   festive=vector<bool>(i_original.size());
-  //printf("daily_festive_day.size()=%d, festive.size()=%d\n",daily_festive_day.size(),festive.size());
+  printf("daily_festive_day.size()=%d, festive.size()=%d\n",(int) daily_festive_day.size(),(int) festive.size());
   for(int k=0;k<(int) i_original.size();k++){
     time_t t2=current_day-(i_original.size()-1-k)*86400+86400/2;
     struct tm * timeinfo;
@@ -1006,6 +1006,112 @@ void EpiInvertEstimate(
   }
 }
 
+/// ----------------------------------------------------------------------------------------
+/// FORECAST OF THE RESTORED INCIDENCE USING A LEARNING PROCEDURE
+/// ----------------------------------------------------------------------------------------
+vector<double> IncidenceForecastByLearning(
+    vector<double> &ir /** RESTORED INCIDENCE TO BE FORECASTED */,
+    const string last_incidence_date /** DATE OF THE LAST DATA IN THE FORMAT YYYY-MM-DD */,
+    vector<double> &q /** 7-DAY QUASI-PERIODIC WEKLY BIAS CORRECTION FACTORS */,
+    vector< vector <double > > &ir_database,
+    double lambda /** PARAMETER IN THE WEIGHTED AVERAGE OF INCIDENCE SEQUENCES (IF NEGATIVE WE USE THE PRE-ESTIMATED ONES */,
+                                                                                vector <double> &CI50 /** 50% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
+                                                                                vector <double> &CI75 /** 75% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
+                                                                                vector <double> &CI90 /** 90% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
+                                                                                vector <double> &CI95 /** 95% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
+                                                                                vector <double> &i0_forecast /** FORECAST OF THE ORIGINAL INCIDENCE */,
+                                                                                vector<string> &dates /** DATE ASSOCIATED TO EACH INCIDENCE DATUM */
+)
+{
+  /// WE CHECK THE INPUT
+  if( ir.size()<28 || q.size()!=ir.size() ) return vector<double>();
+  
+  /// REFERENCE 50% CONFIDENCE INTERVAL RADIUS FOLLOWING THE FORECAST DAY
+  double c50[28]={0.006255,0.013441,0.021658,0.030646,0.040409,0.050759,0.061361,0.072782,0.084843,0.097347,0.110639,0.124296,0.138374,0.152272,
+                  0.167945,0.184022,0.199685,0.217140,0.233783,0.251223,0.268179,0.285905,0.303078,0.320723,0.338981,0.356631,0.375061,0.395746};
+  
+  /// REFERENCE 75% CONFIDENCE INTERVAL RADIUS FOLLOWING THE FORECAST DAY
+  double c75[28]={0.011827,0.025595,0.041293,0.058500,0.076826,0.096090,0.116332,0.137250,0.158701,0.182011,0.205639,0.230744,0.255889,0.281989,
+                  0.309028,0.336673,0.364024,0.390530,0.415894,0.442384,0.469028,0.495365,0.521195,0.544986,0.569276,0.591013,0.613642,0.637042};
+  
+  /// REFERENCE 90% CONFIDENCE INTERVAL RADIUS FOLLOWING THE FORECAST DAY
+  double c90[28]={0.019461,0.042687,0.068754,0.097876,0.130237,0.163747,0.199898,0.236341,0.273170,0.313294,0.352031,0.391994,0.430140,0.471201,
+                  0.510992,0.554118,0.594147,0.634548,0.675460,0.711945,0.744046,0.778956,0.814501,0.846532,0.875080,0.902681,0.930734,0.956083};
+  
+  /// REFERENCE 95% CONFIDENCE INTERVAL RADIUS FOLLOWING THE FORECAST DAY
+  double c95[28]={0.026304,0.056940,0.091862,0.131132,0.173921,0.219955,0.268653,0.321681,0.375793,0.431855,0.487407,0.542593,0.605143,0.669764,
+                  0.732248,0.800724,0.872089,0.944823,1.022891,1.115960,1.209522,1.312310,1.414793,1.504112,1.601459,1.688496,1.817351,1.942769};
+  
+  /// NORMALIZATION OF THE LAST 28 DAYS OR THE RESTORED INCIDENCE
+  vector<double> u(28);
+  double sum=0;
+  for(int k=0;k<28;k++){
+    u[k]=ir[ir.size()-28+k];
+    sum+=u[k];
+  }
+  sum/=28;
+  double u0=u[27];
+  for(int k=0;k<(int) u.size();k++) u[k]/=sum;
+  
+  /// 28-DAY FORECAST OF THE RESTORED INCIDENCE USING A WEIGTHED AVERAGE OF THE RESTORED INCIDENCE DATABASE
+  vector<double> v(56,0.);
+  for(int k=0;k<(int) ir_database.size();k++){
+    /// COMPUTATION OF THE AVERAGE DISTANCE BETWEEN u AND THE DATABASE INSTANCE
+    double L1=0;
+    for(int m=0;m<28;m++) L1+=fabs(u[m]-ir_database[k][m]);
+    L1/=28;
+    /// COMPUTATION OF THE WEIGHT
+    double w=exp(-lambda*L1);
+    /// COMPUTATION OF THE CONTRIBUTION OF THIS DATABASE INSTANCE TO THE FORECAST
+    for(int m=0;m<(int) v.size();m++) v[m]+=w*ir_database[k][m];
+  }
+  
+  /// WE SCALE THE FORECAST TO u[27]=v[27] (THAT IS, WE IMPOSE CONTINUITY IN THE FORECAST ESTIMATION)
+  double v0=v[27];
+  for(int m=0;m<(int) v.size();m++) v[m]*=u0/v0;
+  
+  /// WE STORE THE RESULTS
+  vector<double> ir_forecast(28);
+  i0_forecast=vector<double>(28);
+  CI50=vector<double>(28);
+  CI75=vector<double>(28);
+  CI90=vector<double>(28);
+  CI95=vector<double>(28);
+  dates=vector<string>(28);
+  
+  for(int k=0;k<28;k++){
+    ir_forecast[k]=v[k+28];
+    i0_forecast[k]=ir_forecast[k]/q[q.size()-7+k%7];
+    CI50[k]=c50[k]*ir_forecast[k];
+    CI75[k]=c75[k]*ir_forecast[k];
+    CI90[k]=c90[k]*ir_forecast[k];
+    CI95[k]=c95[k]*ir_forecast[k];
+    time_t current_day = string2date(last_incidence_date.c_str());
+    time_t t2=current_day + (k+1)*86400+86400/2;
+    struct tm * timeinfo;
+    timeinfo = localtime (&t2);
+    char buffer [80];
+    strftime (buffer,80,"%Y-%m-%d",timeinfo);
+    dates[k]=string(buffer);
+  }
+  
+  //  /// TESTING
+  //  FILE *f;
+  //  f=fopen ("forecast.csv", "w");
+  //  fprintf(f,"date;ir_forecast;i0_forecast;CI95_ir_forecast -;CI95_ir_forecast +\n");
+  //  for(int k=0;k<28;k++){
+  //      fprintf(f,";%lf;%lf\n",v[k],ir[ir.size()-28+k]);
+  //  }
+  //  for(int k=0;k<28;k++){
+  //    fprintf(f,"%s;%lf;%lf;%lf;%lf\n",dates[k].c_str(),ir_forecast[k],i0_forecast[k],
+  //            ir_forecast[k]-CI95[k],ir_forecast[k]+CI95[k]);
+  //  }
+  //  fclose(f);
+  
+  
+  return ir_forecast;
+  
+}
 
 ///----------------------------------------------------------------------------------------
 /// EpiInvert ESTIMATION. IT RETURNS THE TIME WHERE Rt STARTS TO BE COMPUTED (A NEGATIVE VALUE IN CASE OF FAILURE)

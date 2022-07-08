@@ -138,6 +138,20 @@ double percentil(
     const int k /** PERCENTIL MULTIPLIES BY THE VECTOR SIZE (k=0.5*x.size() CORRESPONDS TO THE MEDIAN)*/,
     const vector<double> &x /** INPUT VECTOR */)
 {
+  if(k<=0){
+    double xmin=x[0];
+    for(int m=1;m<(int) x.size();m++){
+      if(x[m]<xmin) xmin=x[m];
+    }
+    return xmin;
+  }
+  else if(k>=(int) x.size()-1){
+    double xmax=x[0];
+    for(int m=1;m<(int) x.size();m++){
+      if(x[m]>xmax) xmax=x[m];
+    }
+    return xmax;
+  }
   int i,ir,j,l,mid;
   double a,paso;
   vector<double> y=x;
@@ -760,7 +774,7 @@ vector<int> daily_festive_day_initialization(
                                                vector<string> &festive_dates /** INPUT VECTOR WITH THE STRING OF THE FESTIVE DAYS*/)
 {
   //printf("festive_dates.size()=%d, current_time=%d, i_size=%d\n",festive_dates.size(),(int) current_time,i_size);
-  if(festive_dates.size()==0 || current_time<=0 || i_size==0) return vector<int> ();
+  if(festive_dates.size()==0 || current_time<=0 || i_size==0) return vector<int> (i_size,0);
   vector<int> h(i_size,0);
   
   for(int k=0;k<(int) festive_dates.size();k++){

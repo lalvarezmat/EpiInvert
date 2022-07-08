@@ -5,7 +5,68 @@ using namespace std;
  
 #include "EpiInvertCore_q_variable.h"
 
-
+ // [[Rcpp::export]]
+ List EpiInvertForecastC(
+     NumericVector i_restored,
+     String last_incidence_date,
+     NumericVector q_bias,
+     NumericMatrix i_restored_database
+ )
+ {
+   string last_incidence_dateC=string(last_incidence_date.get_cstring());/** DATE OF THE LAST DATA IN THE FORMAT YYYY-MM-DD */;
+   
+   vector< vector<double> > M(i_restored_database.nrow(),vector<double>(i_restored_database.ncol(),0.));
+   //printf("%d %d\n",i_restored_database.ncol(),i_restored_database.nrow());
+   for(int i=0;i<(int) M.size();i++){
+     for(int j=0;j<(int) M[i].size();j++){
+       M[i][j]=i_restored_database(i,j); 
+     }
+   }
+   
+   vector<double> ir(i_restored.size()),q(q_bias.size());
+   for(int k=0;k<(int) ir.size();k++) ir[k]=i_restored[k];
+   for(int k=0;k<(int) q.size();k++) q[k]=q_bias[k];
+   
+   double lambda=343;
+   vector <double> CI50,CI75,CI90,CI95,i0_forecast;
+   vector<string> dates;
+   
+   //printf("ir.size()=%d, q.size()=%d, M.size()=%d\n",ir.size(),q.size(),M.size()); 
+   //printf("ir[0]=%lf,q[0]=%lf,M[0][0]=%lf\n",ir[0],q[0],M[0][0]); 
+   
+   //return List::create(); 
+   
+   vector<double> v=IncidenceForecastByLearning(
+     ir,
+     last_incidence_dateC,
+     q,
+     M,
+     lambda,
+     CI50,
+     CI75,
+     CI90,
+     CI95,
+     i0_forecast,
+     dates
+   );
+   
+   
+   //printf("M[0][0]=%lf M[0][1]=%lf, M[1][0]=%lf\n",M[0][0],M[0][1],M[1][0]);
+   //printf("%lf  %lf\n",N(0,0),N(0,1));
+   
+   List results = List::create(
+     Named("i_restored_forecast") = v ,
+     Named("i_restored_forecast_CI50") = CI50 ,
+     Named("i_restored_forecast_CI75") = CI75 ,
+     Named("i_restored_forecast_CI90") = CI90 ,
+     Named("i_restored_forecast_CI95") = CI95 ,
+     Named("dates")  = dates,
+     Named("i_original_forecast")  = i0_forecast
+   );
+   return results;
+   
+ }
+     
 // [[Rcpp::export]]
 List EpiInvertC(
     NumericVector i_original0,

@@ -13,9 +13,9 @@ variational model as described in [PNAS,
 2022](https://www.mdpi.com/2079-7737/11/4/540). EpiInvert also corrects
 the administrative weekly bias in the daily registration of cases and
 the bias introduced by the festive days. EpiInvert can manage daily
-incidence data and weekly aggregated incidence data where every week a
-single data is communicated with the accumulated incidence in the last 7
-days.
+incidence data and weekly aggregated incidence data. This version of the
+package also includes EpiInvertForecast, a learning method for the short
+time forecast of the restored incidence curve.
 
 ## Vignettes
 
@@ -27,6 +27,10 @@ days.
     [EpiEstim](https://CRAN.R-project.org/package=EpiEstim),
     [Wallinga-Teunis](https://academic.oup.com/aje/article/160/6/509/79472)
     and [EpiNow2](https://CRAN.R-project.org/package=EpiNow2).
+
+-   [EpiInvertForecast](https://ctim.ulpgc.es/covid19/EpiInvertForecast.html)
+    : a learning method for the short time forecast of the restored
+    incidence curve.
 
 ## EpiInvert Installation
 
