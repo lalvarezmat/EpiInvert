@@ -3,17 +3,17 @@
 \docType{data}
 \name{restored_incidence_database}
 \alias{restored_incidence_database}
-\title{A dataset including 20,000 samples of different
+\title{A dataset including 27,418  samples of different
 restored incidence curves computed by EpiInvert using real data. Each 
 restored incidence curve includes the last 56 values of the sequence.}
 \format{
-A 20,000 X 56 numeric matrix
+A 27,418  X 56 numeric matrix
 }
 \usage{
 restored_incidence_database
 }
 \description{
-A dataset including 20,000 samples of different
+A dataset including 27,418  samples of different
 restored incidence curves computed by EpiInvert using real data. Each 
 restored incidence curve includes the last 56 values of the sequence.
 }

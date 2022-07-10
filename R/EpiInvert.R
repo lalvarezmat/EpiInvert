@@ -247,10 +247,10 @@ EpiInvert <- function(incid,
 #' @param EpiInvert_result output list of the EpiInvert execution including, in particular,  
 #' the restored incidence curve and the seasonality. 
 #'
-#' @param restored_incidence_database a database including 20,000 samples of different
+#' @param restored_incidence_database a database including 27,418  samples of different
 #' restored incidence curves computed by EpiInvert using real data. Each 
 #' restored incidence curve includes the last 56 values of the sequence. That is
-#' this database can be viewed as a matrix of size 20,000 X 56
+#' this database can be viewed as a matrix of size 27,418  X 56
 #' 
 #'
 #' @return {
@@ -290,7 +290,7 @@ EpiInvert <- function(incid,
 #'
 #' @details
 #' EpiInvertForecast estimates a forecast of the restored incidence curve 
-#' using a weighted average of 20,000 restored incidence curves previously 
+#' using a weighted average of 27,418  restored incidence curves previously 
 #' estimated by EpiInvert and stored in the database "restored_incidence_database". 
 #' The weight, in the average computation, of each restored incidence curve 
 #' of the database depends on the similarity between the current curve in the last

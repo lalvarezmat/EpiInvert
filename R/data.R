@@ -63,10 +63,10 @@
 #' 
 "si_distr_data"
 
-#' A dataset including 20,000 samples of different
+#' A dataset including 27,418 samples of different
 #' restored incidence curves computed by EpiInvert using real data. Each 
 #' restored incidence curve includes the last 56 values of the sequence. 
 #'
-#' @format A 20,000 X 56 numeric matrix
+#' @format A 27,418 X 56 numeric matrix
 #' 
 "restored_incidence_database"

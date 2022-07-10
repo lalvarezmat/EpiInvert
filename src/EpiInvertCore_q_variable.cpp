@@ -58,10 +58,10 @@ vector<double> data_pre_processing(
   
   if(i.size()<20){
 #ifndef R_COMPILE
-    printf("The number of samples is too small : %d samples\n",(int) i.size());
+    //printf("The number of samples is too small : %d samples\n",(int) i.size());
     char mes[300];
     sprintf(mes,"The number of samples is too small : %d samples\n",(int) i.size());
-    printf("%s\n",mes);
+    //printf("%s\n",mes);
     fprintf_demo_failure(mes);
 #endif
     return vector<double>();
@@ -497,7 +497,7 @@ void Rt_estimation( //III
 #ifndef R_COMPILE
     char mes[300];
     sprintf(mes,"Problems computing Rt\n");
-    printf("%s\n",mes);
+    //printf("%s\n",mes);
     fprintf_demo_failure(mes);
 #endif
     return;
@@ -705,11 +705,11 @@ double Rt_q_estimation(
   /// ALTERNATE ALGORITHM TO OPTIMIZE R AND q
   double error_min=1e20;
 #ifndef R_COMPILE
-  printf("iter : ");
+  //printf("iter : ");
 #endif
   for(iter_alternate_optimization=1;iter_alternate_optimization<=MaxIter;iter_alternate_optimization++){
 #ifndef R_COMPILE
-    printf("%d,",iter_alternate_optimization);
+    //printf("%d,",iter_alternate_optimization);
 #endif
     
     /// COMPUTATION WEEKLY BIAS CORRECTION FACTORS
@@ -762,7 +762,7 @@ double Rt_q_estimation(
     Rt_estimation(iBiasCor,Pi,si_distr,f0,Rt_regularization_weight,nf,RenewalEquationModel,R,iBiasCor,NweeksToKeepIncidenceSum);
   }
 #ifndef R_COMPILE
-  printf("\n");
+  //printf("\n");
 #endif
   return error_min;
 }
@@ -829,15 +829,15 @@ void EpiInvertEstimate(
   iV0.push_back(i_original);
   
 #ifndef R_COMPILE
-  printf("-> NUMBER OF SAMPLES OF THE ORIGINAL INCIDENCE CURVE : %d \n",(int) i_original.size());
-  printf("-> PRE-PROCESSING OF THE ORIGINAL INCIDENCE CURVE\n");
+  //printf("-> NUMBER OF SAMPLES OF THE ORIGINAL INCIDENCE CURVE : %d \n",(int) i_original.size());
+  //printf("-> PRE-PROCESSING OF THE ORIGINAL INCIDENCE CURVE\n");
 #endif
   
   i_original=data_pre_processing(iV0,0,max_time_interval);
   
 #ifndef R_COMPILE
-  printf("-> NUMBER OF SAMPLES OF THE ORIGINAL INCIDENCE CURVE AFTER PRE-PROCESSING: %d \n",(int) i_original.size());
-  printf("-> NUMBER OF FESTIVE OR ANOMALOUS DAYS USED : %d \n",(int) festive_days.size());
+  //printf("-> NUMBER OF SAMPLES OF THE ORIGINAL INCIDENCE CURVE AFTER PRE-PROCESSING: %d \n",(int) i_original.size());
+  //printf("-> NUMBER OF FESTIVE OR ANOMALOUS DAYS USED : %d \n",(int) festive_days.size());
 #endif
   
   
@@ -865,7 +865,7 @@ void EpiInvertEstimate(
   vector<double> nf=back_percentil(i_festive,21);
   
 #ifndef R_COMPILE
-  printf("-> EpiInvert COMPUTATION\n");
+  //printf("-> EpiInvert COMPUTATION\n");
 #endif
   
   
@@ -875,7 +875,7 @@ void EpiInvertEstimate(
 #endif
   for(int m=0;m<NdaysEmpiricalVariability;m++){
 #ifndef R_COMPILE
-    printf("  -> current day - %d : ",m);
+    //printf("  -> current day - %d : ",m);
 #endif
     
     /// LOCAL VARIABLES
@@ -994,7 +994,7 @@ void EpiInvertEstimate(
   
   dates=vector<string>(i_original.size());
   festive=vector<bool>(i_original.size());
-  printf("daily_festive_day.size()=%d, festive.size()=%d\n",(int) daily_festive_day.size(),(int) festive.size());
+  //printf("daily_festive_day.size()=%d, festive.size()=%d\n",(int) daily_festive_day.size(),(int) festive.size());
   for(int k=0;k<(int) i_original.size();k++){
     time_t t2=current_day-(i_original.size()-1-k)*86400+86400/2;
     struct tm * timeinfo;
@@ -1027,20 +1027,17 @@ vector<double> IncidenceForecastByLearning(
   if( ir.size()<28 || q.size()!=ir.size() ) return vector<double>();
   
   /// REFERENCE 50% CONFIDENCE INTERVAL RADIUS FOLLOWING THE FORECAST DAY
-  double c50[28]={0.006255,0.013441,0.021658,0.030646,0.040409,0.050759,0.061361,0.072782,0.084843,0.097347,0.110639,0.124296,0.138374,0.152272,
-                  0.167945,0.184022,0.199685,0.217140,0.233783,0.251223,0.268179,0.285905,0.303078,0.320723,0.338981,0.356631,0.375061,0.395746};
-  
+  double c50[28]={0.042591,0.054872,0.068413,0.082221,0.096812,0.111412,0.125233,0.139380,0.153853,0.168150,0.182576,0.196703,0.210842,0.224357,
+                  0.237955,0.252526,0.267194,0.282423,0.298992,0.313297,0.330203,0.346120,0.362904,0.380441,0.397960,0.415194,0.434404,0.453715,};
   /// REFERENCE 75% CONFIDENCE INTERVAL RADIUS FOLLOWING THE FORECAST DAY
-  double c75[28]={0.011827,0.025595,0.041293,0.058500,0.076826,0.096090,0.116332,0.137250,0.158701,0.182011,0.205639,0.230744,0.255889,0.281989,
-                  0.309028,0.336673,0.364024,0.390530,0.415894,0.442384,0.469028,0.495365,0.521195,0.544986,0.569276,0.591013,0.613642,0.637042};
-  
+  double c75[28]={0.082105,0.105557,0.131342,0.158027,0.184816,0.211526,0.238394,0.263285,0.288519,0.312601,0.336708,0.358362,0.381109,0.403066,
+                  0.424867,0.445662,0.466512,0.489399,0.510747,0.532088,0.553870,0.574938,0.595686,0.615837,0.636507,0.657107,0.675992,0.693859};
   /// REFERENCE 90% CONFIDENCE INTERVAL RADIUS FOLLOWING THE FORECAST DAY
-  double c90[28]={0.019461,0.042687,0.068754,0.097876,0.130237,0.163747,0.199898,0.236341,0.273170,0.313294,0.352031,0.391994,0.430140,0.471201,
-                  0.510992,0.554118,0.594147,0.634548,0.675460,0.711945,0.744046,0.778956,0.814501,0.846532,0.875080,0.902681,0.930734,0.956083};
-  
+  double c90[28]={0.139263,0.179370,0.223699,0.269314,0.315799,0.361061,0.405605,0.446905,0.489228,0.527179,0.565308,0.599921,0.628647,0.658649,
+                  0.684528,0.710807,0.735078,0.756939,0.779535,0.798715,0.819998,0.843846,0.866384,0.886900,0.906013,0.924415,0.941563,0.962271};
   /// REFERENCE 95% CONFIDENCE INTERVAL RADIUS FOLLOWING THE FORECAST DAY
-  double c95[28]={0.026304,0.056940,0.091862,0.131132,0.173921,0.219955,0.268653,0.321681,0.375793,0.431855,0.487407,0.542593,0.605143,0.669764,
-                  0.732248,0.800724,0.872089,0.944823,1.022891,1.115960,1.209522,1.312310,1.414793,1.504112,1.601459,1.688496,1.817351,1.942769};
+  double c95[28]={0.194318,0.247818,0.306340,0.373216,0.440702,0.506512,0.571031,0.636636,0.697277,0.760606,0.824295,0.887003,0.951828,1.018389,
+                  1.077693,1.134772,1.201801,1.280326,1.332779,1.403787,1.477597,1.552813,1.636777,1.724316,1.803494,1.881784,1.949006,2.033826};
   
   /// NORMALIZATION OF THE LAST 28 DAYS OR THE RESTORED INCIDENCE
   vector<double> u(28);
@@ -1138,7 +1135,7 @@ int EpiInvert(
                                                                                                       double seasonality_regularization_weight /** weight of the regularization term for the seasonality q */
 ){
 #ifndef R_COMPILE
-  printf("-> READING THE SERIAL INTERVAL FROM %s\n",si_distr_filename);
+  //printf("-> READING THE SERIAL INTERVAL FROM %s\n",si_distr_filename);
 #endif
   
   vector<double> si_distr;
@@ -1154,7 +1151,7 @@ int EpiInvert(
   if(i0.size()>0) iV0.push_back(i0); /// the incidence is directly provided as parameter
   else{
 #ifndef R_COMPILE
-    printf("-> READING THE DATA FROM %s\n",incidence_filename);
+    //printf("-> READING THE DATA FROM %s\n",incidence_filename);
 #endif
     
     iV0=read_data_multiple(incidence_filename,current_day);
@@ -1205,7 +1202,7 @@ int EpiInvert(
   /// COMPUTATION OF THE PERCENTIL IN THE LAST 21 DAYS TO NORMALIZE THE INCIDENCE CURVE
   vector<double> nf=back_percentil(i0,21);
 #ifndef R_COMPILE
-  printf("-> EpiInvert COMPUTATION\n");
+  //printf("-> EpiInvert COMPUTATION\n");
 #endif
   
   

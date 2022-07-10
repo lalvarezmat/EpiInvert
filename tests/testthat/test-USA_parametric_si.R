@@ -40,6 +40,7 @@ test_that("EpiInvert using USA data", {
   res <-  EpiInvert(incidence$USA,
                     incidence$date[length(incidence$date)],
                     festives$USA, 
+                    
                     EpiInvert::select_params(list( mean_si = 11,sd_si=7,shift_si=-2))
                     )
   x <- round(res$power_a-0.003,digits=2)
@@ -63,7 +64,7 @@ test_that("EpiInvert using USA data", {
   # EpiInvertForecast function test
   data("restored_incidence_database")
   forecast <-  EpiInvertForecast(res,restored_incidence_database)
-  x <- round(forecast$i_restored_forecast[1]+0.18,digits=0)
-  expect_equal(x,35887)
+  x <- round(forecast$i_restored_forecast[1]-0.36,digits=0)
+  expect_equal(x,35991)
   
 })
