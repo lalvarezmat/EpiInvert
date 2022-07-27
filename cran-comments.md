@@ -9,6 +9,29 @@ accumulated incidence value is stored each week.
 * We include EpiInvertForecast, a procedure for the short time forecast of the 
 restored incidence curve.
 
+### R CMD check results
+* 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+
+### devtools::check_win_devel() results: 
+Status: success (1 NOTE) : 
+
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: 'Luis Alvarez <lalvarez@ulpgc.es>'
+
+
+### rhub::check()
+
+Option 1 (debian-clang-devel) : OK
+
+Option 10 (macos-highsierra-release-cran)) : OK
+
+Option 19 (windows-x86_64-release) : OK
+
+
+
+
+
+
 ## submission EpiInvert package version 0.1.1
 
 This is a submission of a new version of the EpiInvert package. The modifications
