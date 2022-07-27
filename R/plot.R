@@ -45,7 +45,7 @@ EpiInvert_plot <- function(x, what = "all",date_start="1000-01-01",date_end="300
       ggplot2::geom_line() + ggplot2::ylim(0, 1.02 * max(d$Rt)) + 
       ggplot2::scale_x_date(date_labels = "%Y-%m-%d") + 
       theme_graphs +
-      ggplot2::geom_ribbon(ggplot2::aes(ymin = Rt -  Rt_CI95, ymax = Rt + Rt_CI95), fill = I(rgb(0.7,  0.7, 0.7))) + 
+      ggplot2::geom_ribbon(ggplot2::aes(ymin = Rt -  Rt_CI95, ymax = Rt + Rt_CI95), fill = I(rgb(0.7,  0.7, 0.7)),colour = NA) + 
       ggplot2::geom_line(ggplot2::aes(y = Rt)) + 
       ggplot2::geom_hline(yintercept = 1) + ggplot2::geom_text(data=data.frame(1,1),x = -Inf, 
                                                                y = Inf, label = "Rt", hjust = -0.5, vjust = 1.5,inherit.aes = F)
@@ -118,7 +118,7 @@ EpiInvert_plot <- function(x, what = "all",date_start="1000-01-01",date_end="300
     
     g5 <- ggplot2::ggplot(d, ggplot2::aes(x = date, y = Rt)) + 
       ggplot2::ylim(0, 1.2 * max(d$Rt)) + ggplot2::geom_line() + 
-      theme_graphs_no_xlab + ggplot2::geom_ribbon(ggplot2::aes(ymin = Rt - Rt_CI95, ymax = Rt + Rt_CI95), fill = I(rgb(0.7, 0.7, 0.7))) + 
+      theme_graphs_no_xlab + ggplot2::geom_ribbon(ggplot2::aes(ymin = Rt - Rt_CI95, ymax = Rt + Rt_CI95), fill = I(rgb(0.7, 0.7, 0.7)), colour = NA) + 
       ggplot2::geom_line(ggplot2::aes(y = Rt)) + 
       ggplot2::geom_hline(yintercept = 1) + 
       ggplot2::geom_text(data=data.frame(1,1),x = -Inf,  y = Inf, label = "Rt", hjust = -0.9, vjust = 1.5,inherit.aes = F)
@@ -224,7 +224,7 @@ EpiInvertForecast_plot <- function(EpiInvert_results,Forecast,what = "CI95"){
   
                   
   g <- ggplot2::ggplot(dfr, ggplot2::aes(date2,incid2, col=legend))+ 
-       ggplot2::geom_ribbon(ggplot2::aes(ymin = ymi2, ymax = yma2), fill = I(rgb(0.95,  0.95, 0.95)))+ 
+       ggplot2::geom_ribbon(ggplot2::aes(ymin = ymi2, ymax = yma2), fill = I(rgb(0.9,  0.9, 0.9)), linetype = 0 )+ 
        ggplot2::geom_line(size = 0.7)+
        ggplot2::scale_color_manual(values = c("blue",  "green", "black", "red")) + 
        ggplot2::scale_x_date(date_labels = "%Y-%m-%d") + 

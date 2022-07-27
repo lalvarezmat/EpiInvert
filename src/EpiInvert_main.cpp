@@ -27,7 +27,8 @@ using namespace std;
    for(int k=0;k<(int) ir.size();k++) ir[k]=i_restored[k];
    for(int k=0;k<(int) q.size();k++) q[k]=q_bias[k];
    
-   double lambda=343;
+   double lambda=176.8;
+   double mu=0.035;
    vector <double> CI50,CI75,CI90,CI95,i0_forecast;
    vector<string> dates;
    
@@ -42,6 +43,7 @@ using namespace std;
      q,
      M,
      lambda,
+     mu,
      CI50,
      CI75,
      CI90,
