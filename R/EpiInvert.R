@@ -214,7 +214,18 @@ EpiInvert <- function(incid,
   if(length(festive_days2)==0){
     stop("festive_days must be in the format 'YYYY-MM-DD")
   }
-
+  
+  # COMPUTING THE LAST DAY
+  # i <- length(incid)
+  #  while (i >=0) {
+  #    if(incid[i]!=0){
+  #     break
+  #   }
+  #   last_incidence_date=as.Date(last_incidence_date)-1
+  #  i <- i - 1
+  #  }
+  #  last_incidence_date=toString(last_incidence_date)
+  
   # WE CALL THE MAIN Rcpp - C++ FUNCTION TO COMPUTE EpiInvert 
   results <- EpiInvertC(incid,
                         last_incidence_date,
@@ -240,7 +251,7 @@ EpiInvert <- function(incid,
 
 #' @title 
 #' \code{EpiInvertForecast} computes a 28-day forecast of the restored incidence 
-#' curve including confidence interval radius using the percentiles 50,75,90 and 95.
+#' curve including a 95% confidence interval 
 #' using the weekly seasonality, from the forecasted restored incidence curve we
 #' also estimate a  28-day forecast of the original incidence curve. 
 #'
@@ -252,6 +263,7 @@ EpiInvert <- function(incid,
 #' restored incidence curve includes the last 56 values of the sequence. That is
 #' this database can be viewed as a matrix of size 27,418  X 56
 #' 
+#' @param type string with the forecast option. It can be "mean" or "median". 
 #'
 #' @return {
 #'   a list with components:
@@ -346,7 +358,7 @@ EpiInvert <- function(incid,
 #' @useDynLib EpiInvert, .registration=TRUE
 #' @importFrom Rcpp evalCpp
 #' @export
-EpiInvertForecast <- function(EpiInvert_result,restored_incidence_database) {
+EpiInvertForecast <- function(EpiInvert_result,restored_incidence_database,type="median") {
   
   # CHECK IF restored_incidence_database IS NUMERIC 
   if(is.numeric(restored_incidence_database)!=TRUE){
@@ -361,7 +373,8 @@ EpiInvertForecast <- function(EpiInvert_result,restored_incidence_database) {
     EpiInvert_result$i_restored,
     str,
     EpiInvert_result$seasonality,
-    restored_incidence_database
+    restored_incidence_database,
+    type
   )
   
   return(results)

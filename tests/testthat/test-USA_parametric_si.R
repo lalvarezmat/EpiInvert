@@ -64,7 +64,7 @@ test_that("EpiInvert using USA data", {
   # EpiInvertForecast function test
   data("restored_incidence_database")
   forecast <-  EpiInvertForecast(res,restored_incidence_database)
-  x <- round(forecast$i_restored_forecast[1]-0.19,digits=0)
-  expect_equal(x,36024)
+  x <- round(forecast$i_restored_forecast[1]-0.24,digits=0)
+  expect_equal(x,35988)
   
 })

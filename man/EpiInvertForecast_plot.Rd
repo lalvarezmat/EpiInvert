@@ -4,26 +4,16 @@
 \alias{EpiInvertForecast_plot}
 \title{\code{EpiInvertForecast_plot} plot the restored incidence forecast}
 \usage{
-EpiInvertForecast_plot(EpiInvert_results, Forecast, what = "CI95")
+EpiInvertForecast_plot(EpiInvert_results, Forecast)
 }
 \arguments{
 \item{EpiInvert_results}{the list returned by the EpiInvert execution}
 
 \item{Forecast}{the list returned by the EpiInvertForecast execution}
-
-\item{what}{one of the following drawing options: 
-
- \itemize{
- \item{CI50}{: use confidence interval for the restored incidence forecast with percentil 50.}
- \item{CI75}{: use confidence interval for the restored incidence forecast with percentil 75. }
- \item{CI90}{: use confidence interval for the restored incidence forecast with percentil 90. }
- \item{CI95}{: use confidence interval for the restored incidence forecast with percentil 95. }
- 
-}}
 }
 \value{
 a plot with the last 28 days of the original and restored incidence curves and a 28-day 
-forecast of the same curves. It also includes a shaded area with an empiric confidence interval
+forecast of the same curves. It also includes a shaded area with a 95% empiric confidence interval
 of the restored incidence forecast estimation
 }
 \description{

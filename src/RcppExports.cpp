@@ -11,8 +11,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // EpiInvertForecastC
-List EpiInvertForecastC(NumericVector i_restored, String last_incidence_date, NumericVector q_bias, NumericMatrix i_restored_database);
-RcppExport SEXP _EpiInvert_EpiInvertForecastC(SEXP i_restoredSEXP, SEXP last_incidence_dateSEXP, SEXP q_biasSEXP, SEXP i_restored_databaseSEXP) {
+List EpiInvertForecastC(NumericVector i_restored, String last_incidence_date, NumericVector q_bias, NumericMatrix i_restored_database, String type);
+RcppExport SEXP _EpiInvert_EpiInvertForecastC(SEXP i_restoredSEXP, SEXP last_incidence_dateSEXP, SEXP q_biasSEXP, SEXP i_restored_databaseSEXP, SEXP typeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -20,7 +20,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< String >::type last_incidence_date(last_incidence_dateSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type q_bias(q_biasSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type i_restored_database(i_restored_databaseSEXP);
-    rcpp_result_gen = Rcpp::wrap(EpiInvertForecastC(i_restored, last_incidence_date, q_bias, i_restored_database));
+    Rcpp::traits::input_parameter< String >::type type(typeSEXP);
+    rcpp_result_gen = Rcpp::wrap(EpiInvertForecastC(i_restored, last_incidence_date, q_bias, i_restored_database, type));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -48,7 +49,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_EpiInvert_EpiInvertForecastC", (DL_FUNC) &_EpiInvert_EpiInvertForecastC, 4},
+    {"_EpiInvert_EpiInvertForecastC", (DL_FUNC) &_EpiInvert_EpiInvertForecastC, 5},
     {"_EpiInvert_EpiInvertC", (DL_FUNC) &_EpiInvert_EpiInvertC, 12},
     {NULL, NULL, 0}
 };

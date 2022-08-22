@@ -1,3 +1,8 @@
+# EpiInvert 0.2.1 (September 2022)
+
+* In the EpiInvertForecast we include the option of using the median, instead of
+a weighted mean of the incidence curve dataset. 
+
 # EpiInvert 0.2.0 (July 2022)
 
 * We include the management of weekly aggregated incidence data where every 

@@ -34,6 +34,12 @@
 
 using namespace std;
 
+/// EXTRACT SIMILAR CURVES IN THE DATABASE
+vector<int> extract_similar_from_database(vector<double> &i,vector< vector<double> > &ir,double mu,
+                                          int Nsimilar,int index_to_remove_from_database);
+/// EXTRAPOLATION OF THE RESTORED INCIDENCE USING A LEARNING PROCEDURE BASED ON THE MEDIAN
+vector<double> IncidenceExtrapolationByLearningMedian(vector<double> &i,vector< vector <double > > &ir,
+                                                      double mu,int NumberOfCurvesSelected,int index_to_remove_from_database);
 /// ESTIMATION OF THE INITIAL GROWTH OF THE INCIDENCE CURVE.
 vector <double> initial_incidence_growth_estimation(vector<double> &i);
 /// EVALUATION OF THE RENEWAL EQUATION FORMULA
@@ -83,13 +89,29 @@ vector<double> IncidenceForecastByLearning(
     vector<double> &q /** 7-DAY QUASI-PERIODIC WEKLY BIAS CORRECTION FACTORS */,
     vector< vector <double > > &ir_database,
     double lambda /** PARAMETER IN THE WEIGHTED AVERAGE OF INCIDENCE SEQUENCES (IF NEGATIVE WE USE THE PRE-ESTIMATED ONES */,
-    double mu /** PARAMETER TO ESTIMATE THE DISTANCE BETWEEN RESTORED INCIDENCE CURVES*/,
-    vector <double> &CI50 /** 50% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
-    vector <double> &CI75 /** 75% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
-    vector <double> &CI90 /** 90% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
-    vector <double> &CI95 /** 95% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
-    vector <double> &i0_forecast /** FORECAST OF THE ORIGINAL INCIDENCE */,
-    vector<string> &dates /** DATE ASSOCIATED TO EACH INCIDENCE DATUM */
+                                                                                double mu /** PARAMETER TO ESTIMATE THE DISTANCE BETWEEN RESTORED INCIDENCE CURVES*/,
+                                                                                vector <double> &CI50 /** 50% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
+                                                                                vector <double> &CI75 /** 75% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
+                                                                                vector <double> &CI90 /** 90% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
+                                                                                vector <double> &CI95 /** 95% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
+                                                                                vector <double> &i0_forecast /** FORECAST OF THE ORIGINAL INCIDENCE */,
+                                                                                vector<string> &dates /** DATE ASSOCIATED TO EACH INCIDENCE DATUM */
+);
+
+/// FORECAST OF THE RESTORED INCIDENCE USING A LEARNING PROCEDURE BASED ON THE MEDIAN
+vector<double> IncidenceForecastByLearningMedian(
+    vector<double> &ir /** RESTORED INCIDENCE TO BE FORECASTED */,
+    const string last_incidence_date /** DATE OF THE LAST DATA IN THE FORMAT YYYY-MM-DD */,
+    vector<double> &q /** 7-DAY QUASI-PERIODIC WEKLY BIAS CORRECTION FACTORS */,
+    vector< vector <double > > &ir_database,
+    int NpointMedian /** PARAMETER IN THE WEIGHTED AVERAGE OF INCIDENCE SEQUENCES (IF NEGATIVE WE USE THE PRE-ESTIMATED ONES */,
+                                                                                   double mu /** PARAMETER TO ESTIMATE THE DISTANCE BETWEEN RESTORED INCIDENCE CURVES*/,
+                                                                                   vector <double> &CI025 /** 50% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
+                                                                                   vector <double> &CI25 /** 75% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
+                                                                                   vector <double> &CI75 /** 90% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
+                                                                                   vector <double> &CI975 /** 95% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
+                                                                                   vector <double> &i0_forecast /** FORECAST OF THE ORIGINAL INCIDENCE */,
+                                                                                   vector<string> &dates /** DATE ASSOCIATED TO EACH INCIDENCE DATUM */
 );
 /// 14-DAY INCIDENCE EXTRAPOLATION USING A DATABASE OF COVID-19 SEQUENCES
 void IncidenceExtrapolationByLearning(vector<double> &i,const vector< vector <double > > &i42,const vector< vector <double > > &i56,const int NweeksToKeepIncidenceSumeeksBackToForeCast,double sigma,int COMPARISON_TYPE,int index);

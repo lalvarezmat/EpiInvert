@@ -10,10 +10,12 @@ using namespace std;
      NumericVector i_restored,
      String last_incidence_date,
      NumericVector q_bias,
-     NumericMatrix i_restored_database
+     NumericMatrix i_restored_database,
+     String type
  )
  {
    string last_incidence_dateC=string(last_incidence_date.get_cstring());/** DATE OF THE LAST DATA IN THE FORMAT YYYY-MM-DD */;
+   string typeC=string(type);
    
    vector< vector<double> > M(i_restored_database.nrow(),vector<double>(i_restored_database.ncol(),0.));
    //printf("%d %d\n",i_restored_database.ncol(),i_restored_database.nrow());
@@ -27,30 +29,50 @@ using namespace std;
    for(int k=0;k<(int) ir.size();k++) ir[k]=i_restored[k];
    for(int k=0;k<(int) q.size();k++) q[k]=q_bias[k];
    
-   double lambda=176.8;
-   double mu=0.035;
-   vector <double> CI50,CI75,CI90,CI95,i0_forecast;
+   
+   vector <double> CI025,CI25,CI75,CI975,i0_forecast,v;
    vector<string> dates;
    
    //printf("ir.size()=%d, q.size()=%d, M.size()=%d\n",ir.size(),q.size(),M.size()); 
    //printf("ir[0]=%lf,q[0]=%lf,M[0][0]=%lf\n",ir[0],q[0],M[0][0]); 
    
    //return List::create(); 
-   
-   vector<double> v=IncidenceForecastByLearning(
-     ir,
-     last_incidence_dateC,
-     q,
-     M,
-     lambda,
-     mu,
-     CI50,
-     CI75,
-     CI90,
-     CI95,
-     i0_forecast,
-     dates
-   );
+   if(typeC.compare(string("median"))==0){
+     double mu0=0.0475; 
+     int NpointMedian0=121;
+     v=IncidenceForecastByLearningMedian(
+       ir,
+       last_incidence_dateC,
+       q,
+       M,
+       NpointMedian0,
+       mu0,
+       CI025,
+       CI25,
+       CI75,
+       CI975,
+       i0_forecast,
+       dates
+     );
+   }
+   else{
+     double lambda=108; 
+     double mu=0.0675;
+     v=IncidenceForecastByLearning(
+       ir,
+       last_incidence_dateC,
+       q,
+       M,
+       lambda,
+       mu,
+       CI025,
+       CI25,
+       CI75,
+       CI975,
+       i0_forecast,
+       dates
+     );
+   }
    
    
    //printf("M[0][0]=%lf M[0][1]=%lf, M[1][0]=%lf\n",M[0][0],M[0][1],M[1][0]);
@@ -58,10 +80,10 @@ using namespace std;
    
    List results = List::create(
      Named("i_restored_forecast") = v ,
-     Named("i_restored_forecast_CI50") = CI50 ,
-     Named("i_restored_forecast_CI75") = CI75 ,
-     Named("i_restored_forecast_CI90") = CI90 ,
-     Named("i_restored_forecast_CI95") = CI95 ,
+     Named("i_restored_forecast_CI025") = CI025 ,
+     //Named("i_restored_forecast_CI25") = CI25 ,
+     //Named("i_restored_forecast_CI75") = CI75 ,
+     Named("i_restored_forecast_CI975") = CI975 ,
      Named("dates")  = dates,
      Named("i_original_forecast")  = i0_forecast
    );

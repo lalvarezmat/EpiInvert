@@ -3,11 +3,15 @@
 \name{EpiInvertForecast}
 \alias{EpiInvertForecast}
 \title{\code{EpiInvertForecast} computes a 28-day forecast of the restored incidence 
-curve including confidence interval radius using the percentiles 50,75,90 and 95.
+curve including a 95% confidence interval 
 using the weekly seasonality, from the forecasted restored incidence curve we
 also estimate a  28-day forecast of the original incidence curve.}
 \usage{
-EpiInvertForecast(EpiInvert_result, restored_incidence_database)
+EpiInvertForecast(
+  EpiInvert_result,
+  restored_incidence_database,
+  type = "median"
+)
 }
 \arguments{
 \item{EpiInvert_result}{output list of the EpiInvert execution including, in particular,
@@ -17,6 +21,8 @@ the restored incidence curve and the seasonality.}
 restored incidence curves computed by EpiInvert using real data. Each 
 restored incidence curve includes the last 56 values of the sequence. That is
 this database can be viewed as a matrix of size 27,418  X 56}
+
+\item{type}{string with the forecast option. It can be "mean" or "median".}
 }
 \value{
 {
@@ -56,7 +62,7 @@ this database can be viewed as a matrix of size 27,418  X 56}
 }
 \description{
 \code{EpiInvertForecast} computes a 28-day forecast of the restored incidence 
-curve including confidence interval radius using the percentiles 50,75,90 and 95.
+curve including a 95% confidence interval 
 using the weekly seasonality, from the forecasted restored incidence curve we
 also estimate a  28-day forecast of the original incidence curve.
 }
