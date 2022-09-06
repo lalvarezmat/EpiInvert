@@ -166,26 +166,57 @@ void lack_of_data_processing (vector<double> &c){
   /// WE REMOVE FROM THE SEQUENCE THE LAST NON-POSITIVE VALUES.
   while( c[c.size()-1]<=0. && c.size()>0) c.resize(c.size()-1);
   
-  /// IF AN INCIDENCE VALUE IS POSITIVE AND THE PREVIOUS ONES ARE ZERO
-  /// WE ASSIGN TO ALL AFECTED VALUES A CONSTANT VALUE PRESERVING THE TOTAL NUMBER OF CASES.
-  /// THE MAXIMUM NUMBER OF ALLOWED CONSECUTIVE ZERO VALUES ARE 7.
-  for(int k=(int) c.size()-1; k>0;k--){
-    if(c[k]<0 || !(c[k-1]==0) ) continue;
-    int m=1;
-    while(m<7){
-      if(k-m-1<0 || !(c[k-m-1]==0) ) break;
-      m++;
+  // WE REMOVE THE LAST VALUE IF THEY ARE TOO SMALL
+  for(int k=c.size()-8; k<(int) c.size()-1 ;k++){
+    int m;
+    for(m=k+1;m<(int) c.size();m++){
+      if(50*c[m]>c[k]){ break;}
     }
-    if(m==7) break;
-    double average=c[k]/(m+1);
-    for(int n=k;n>=k-m;n--) c[n]=average;
-    k=k-m+1;
+    if(m==(int) c.size()){
+      c.resize(k+1);
+      break; 
+    }
   }
   
   /// NEGATIVE INCIDENCE VALUES ARE NOT ALLOWED. WE REPLACE THEN BY 0.
   for(int k=0; k<(int) c.size();k++){
     if(c[k]<0) c[k]=0;
   }
+  
+  /// CONTROL ANOMALOUS VALUES TOO SMALL WITH RESPECT TO THE NEXT ONE
+  for(int k=c.size()-1; k>=0 ;k--){
+    if(c[k]<=1000) continue;
+    int m=k-1;
+    while(m>0){
+      if(50*c[m]>c[k]){ break;}
+      c[k]+=c[m];
+      c[m]=0;
+      m--;
+    }
+    k=m+1;
+    // if(c[k]>0 && c[k+1]>1000 && c[k+1]>50*c[k]){
+    //   //printf("%lf %lf\n",c[k],c[k+1]);
+    //   c[k]=0;
+    //   c[k+1]=c[k+1]+c[k]; 
+    // }
+  }
+  
+  /// IF AN INCIDENCE VALUE IS POSITIVE AND THE PREVIOUS ONES ARE ZERO
+  /// WE ASSIGN TO ALL AFECTED VALUES A CONSTANT VALUE PRESERVING THE TOTAL NUMBER OF CASES.
+  /// THE MAXIMUM NUMBER OF ALLOWED CONSECUTIVE ZERO VALUES ARE 21.
+  for(int k=(int) c.size()-1; k>0;k--){
+    if(c[k]<0 || !(c[k-1]==0) ) continue;
+    int m=1;
+    while(m<21){
+      if(k-m-1<0 || !(c[k-m-1]==0) ) break;
+      m++;
+    }
+    if(m==21) break;
+    double average=c[k]/(m+1);
+    for(int n=k;n>=k-m;n--) c[n]=average;
+    k=k-m+1;
+  }
+  
   
   return;
   

@@ -180,11 +180,13 @@ EpiInvertForecast_plot <- function(EpiInvert_results,Forecast){
   CImin <- pmax(Rf+Cf025,0)
   CImax <- Rf+Cf975
   
+  Nf <- length(Forecast$dates)
+  
   #utils::globalVariables(c("date", "incid", "legend", "ymi", "yma"))
   dfr <- data.frame(
         date = c(as.Date(Do),as.Date(Do),as.Date(Df),as.Date(Df)),
         incid = c(Oo,Ro,Of,Rf),
-        legend2 = c(rep("original incidence",28),rep("restored incidence",28),rep("forecast original incidence",28),rep("forecast restored incidence",28)),
+        legend2 = c(rep("original incidence",28),rep("restored incidence",28),rep("forecast original incidence",Nf),rep("forecast restored incidence",Nf)),
         ymi = c(Oo,Ro,Of,CImin),
         yma = c(Oo,Ro,Of,CImax)
   )
@@ -225,7 +227,7 @@ EpiInvertForecast_plot <- function(EpiInvert_results,Forecast){
 #' 
 
 #' @export
-EpiInvertForecast_plot_with_EpiInvertTrueValues <- function(EpiInvert_results,Forecast,EpiInvertTrueValues){
+EpiInvertForecast_plot_with_EpiInvertTrueValues <- function(EpiInvert_results,ForecastMean,ForecastMedian,EpiInvertTrueValues){
   
   dfr <- data.frame(ir = EpiInvertTrueValues$i_restored,date = EpiInvertTrueValues$dates)
   EpiITV <- dplyr::filter(dfr,date<=Forecast$dates[length(Forecast$dates)] & date>EpiInvert_results$dates[length(EpiInvert_results$dates)])
@@ -234,21 +236,32 @@ EpiInvertForecast_plot_with_EpiInvertTrueValues <- function(EpiInvert_results,Fo
   Oo <- utils::tail(EpiInvert_results$i_original,28)
   Ro <- utils::tail(EpiInvert_results$i_restored,28)
   
-  Df <- Forecast$dates
-  Of <- Forecast$i_original_forecast
-  Rf <- Forecast$i_restored_forecast
-  Cf025 <- Forecast$i_restored_forecast_CI025
-  Cf975 <- Forecast$i_restored_forecast_CI975
+  Df <- ForecastMean$dates
+  Of <- ForecastMean$i_original_forecast
+  Rf <- ForecastMean$i_restored_forecast
+  Cf025 <- ForecastMean$i_restored_forecast_CI025
+  Cf975 <- ForecastMean$i_restored_forecast_CI975
+  
+  Df2 <- ForecastMedian$dates
+  Of2 <- ForecastMedian$i_original_forecast
+  Rf2 <- ForecastMedian$i_restored_forecast
+  Cf0252 <- ForecastMedian$i_restored_forecast_CI025
+  Cf9752 <- ForecastMedian$i_restored_forecast_CI975
   
   CImin <- Rf+Cf025
   CImax <- Rf+Cf975
   
+  CImin2 <- Rf2+Cf0252
+  CImax2 <- Rf2+Cf9752
+  
   dfr <- data.frame(
-    date = c(as.Date(Do),as.Date(Do),as.Date(Df),as.Date(Df),as.Date(EpiITV$date)),
-    incid = c(Oo,Ro,Of,Rf,EpiITV$ir),
-    legend2 = c(rep("original incidence",28),rep("restored incidence",28),rep("forecast original incidence",28),rep("forecast restored incidence",28),rep("restored incidence computed 50 days later",28)),
-    ymi = c(Oo,Ro,Of,CImin,EpiITV$ir),
-    yma = c(Oo,Ro,Of,CImax,EpiITV$ir)
+    date = c(as.Date(Do),as.Date(Do),as.Date(Df),as.Date(Df),as.Date(Df2),as.Date(EpiITV$date)),
+    incid = c(Oo,Ro,Of,Rf,Rf2,EpiITV$ir),
+    legend2 = c(rep("original incidence",28),rep("restored incidence",28),rep("forecast original incidence",28),rep("forecast restored incidence \"mean\"",28),rep("forecast restored incidence \"median\"",28),rep("restored incidence computed 50 days later",28)),
+    ymi = c(Oo,Ro,Of,Of2,CImin,EpiITV$ir),
+    yma = c(Oo,Ro,Of,Of2,CImax,EpiITV$ir),
+    ymiMedian = c(Oo,Ro,Of,Of2,CImin2,EpiITV$ir),
+    ymaMedian = c(Oo,Ro,Of,Of2,CImax2,EpiITV$ir)
   )
   
   date2 <- dfr$date
@@ -259,9 +272,10 @@ EpiInvertForecast_plot_with_EpiInvertTrueValues <- function(EpiInvert_results,Fo
   
   
   g <- ggplot2::ggplot(dfr, ggplot2::aes(date2,incid2, col=legend))+ 
-    ggplot2::geom_ribbon(ggplot2::aes(ymin = ymi2, ymax = yma2), fill = I(rgb(0.9,  0.9, 0.9)), linetype = 0 )+ 
+    ggplot2::geom_ribbon(ggplot2::aes(ymin = ymi2, ymax = yma2), fill = I(rgb(1,  0.75, 0.80)), linetype = 0,alpha=0.4 )+ 
+    ggplot2::geom_ribbon(ggplot2::aes(ymin = ymiMedian, ymax = ymaMedian), fill = I(rgb(0,  1, 1)), linetype = 0,alpha=0.2 )+
     ggplot2::geom_line(size = 0.7)+
-    ggplot2::scale_color_manual(values = c("blue",  "green", "black", "red","magenta")) + 
+    ggplot2::scale_color_manual(values = c("blue",  "green","yellow", "black", "red","magenta")) + 
     ggplot2::scale_x_date(date_labels = "%Y-%m-%d") + 
     ggplot2::theme_bw()+
     ggplot2::theme(axis.title = ggplot2::element_blank() )+

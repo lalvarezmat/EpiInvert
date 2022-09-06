@@ -55,6 +55,8 @@ function \code{select_params}. The element of config are :
   \item{incidence_weekly_aggregated}{: a boolean value which determines if we use weekly aggregated 
  incidence. In such case  every week a single data is stored with the accumulated incidence in the last 
  7 days (the default value is FALSE).}
+  \item{NweeksToKeepIncidenceSum}{: number of weeks to keep the value of the incidence accumulation. 
+   The default is 2.}
 }}
 }
 \value{

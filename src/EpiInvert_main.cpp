@@ -11,7 +11,8 @@ using namespace std;
      String last_incidence_date,
      NumericVector q_bias,
      NumericMatrix i_restored_database,
-     String type
+     String type,
+     int NumberForecastAdditionalDays=0
  )
  {
    string last_incidence_dateC=string(last_incidence_date.get_cstring());/** DATE OF THE LAST DATA IN THE FORMAT YYYY-MM-DD */;
@@ -74,6 +75,30 @@ using namespace std;
      );
    }
    
+   if(NumberForecastAdditionalDays>0){
+     int N = v.size(); 
+     double der1 = (3.*v[N-1]/2.+v[N-5]/2.-2*v[N-3])/2; 
+     double der2 = (11*v[N-1]-18*v[N-5]+9*v[N-9]-2*v[N-13])/24.;
+     double der = 0.75*der2+0.25*der1;
+     for(int i=1;i<=NumberForecastAdditionalDays;i++){
+       double x=v[N-1]+i*der; 
+       v.push_back(x);
+       i0_forecast.push_back(x/q[q.size()-7+(i-1)%7]);//q[q.size()-7+k%7]
+       CI025.push_back(CI025[N-1]);
+       CI25.push_back(CI25[N-1]);
+       CI75.push_back(CI75[N-1]);
+       CI975.push_back(CI975[N-1]);
+       time_t current_day = string2date(dates[N-1].c_str());
+       time_t t2=current_day + i*86400+86400/2;
+       struct tm * timeinfo;
+       timeinfo = localtime (&t2);
+       char buffer [80];
+       strftime (buffer,80,"%Y-%m-%d",timeinfo);
+       dates.push_back(string(buffer));
+     }
+     
+   }
+   
    
    //printf("M[0][0]=%lf M[0][1]=%lf, M[1][0]=%lf\n",M[0][0],M[0][1],M[1][0]);
    //printf("%lf  %lf\n",N(0,0),N(0,1));
@@ -104,7 +129,8 @@ List EpiInvertC(
     double shift_si=-5.,
     double Rt_regularization_weight=5.,
     double seasonality_regularization_weight=5.,
-    bool incidence_weekly_aggregated=false
+    bool incidence_weekly_aggregated=false,
+    int NweeksToKeepIncidenceSum=2 
 ){
   clock_t t=clock();
   
@@ -133,8 +159,6 @@ List EpiInvertC(
   double power_a /** ESTIMATED POWER  IN THE RELATION i_bias_free[k] = i_restored[k] + epsilon[k]*i_restored[k]^a */;
   vector<double> epsilon /** ERROR DISTRIBUTION GIVEN BY  (i_bias_free[k] - i_restored[k])/i_restored[k]^a */;
   
-  /// FIXED INPUT PARAMETERS
-  int NweeksToKeepIncidenceSum=2 /** WE CONSTRAINT ALL THE ESTIMATED INCIDENCE CURVE TO KEEP THE ADDITION OF THE ORIGINAL INCIDENCE IN INTERVALS OF SIZE NweeksToKeepIncidenceSum*7 DAYS*/;
   
   Rprintf("EpiInvert parameters used: \n");
   Rprintf("Incidence tail : " );

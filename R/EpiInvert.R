@@ -44,6 +44,8 @@
 #'   \item{incidence_weekly_aggregated}{: a boolean value which determines if we use weekly aggregated 
 #'  incidence. In such case  every week a single data is stored with the accumulated incidence in the last 
 #'  7 days (the default value is FALSE).}
+#'   \item{NweeksToKeepIncidenceSum}{: number of weeks to keep the value of the incidence accumulation. 
+#'    The default is 2.}
 #' }
 #' 
 #'
@@ -238,7 +240,8 @@ EpiInvert <- function(incid,
                         config$shift_si,
                         config$Rt_regularization_weight,
                         config$seasonality_regularization_weight,
-                        config$incidence_weekly_aggregated
+                        config$incidence_weekly_aggregated,
+                        config$NweeksToKeepIncidenceSum
                       )
   
   class(results) <- "estimate_EpiInvert"
@@ -264,6 +267,9 @@ EpiInvert <- function(incid,
 #' this database can be viewed as a matrix of size 27,418  X 56
 #' 
 #' @param type string with the forecast option. It can be "mean" or "median". 
+#' 
+#' @param NumberForecastAdditionalDays The number of forecast days is 28. With this
+#' parameter you can add extra forecast days using linear extrapolation. 
 #'
 #' @return {
 #'   a list with components:
@@ -358,7 +364,7 @@ EpiInvert <- function(incid,
 #' @useDynLib EpiInvert, .registration=TRUE
 #' @importFrom Rcpp evalCpp
 #' @export
-EpiInvertForecast <- function(EpiInvert_result,restored_incidence_database,type="median") {
+EpiInvertForecast <- function(EpiInvert_result,restored_incidence_database,type="median",NumberForecastAdditionalDays=0) {
   
   # CHECK IF restored_incidence_database IS NUMERIC 
   if(is.numeric(restored_incidence_database)!=TRUE){
@@ -374,7 +380,8 @@ EpiInvertForecast <- function(EpiInvert_result,restored_incidence_database,type=
     str,
     EpiInvert_result$seasonality,
     restored_incidence_database,
-    type
+    type,
+    NumberForecastAdditionalDays
   )
   
   return(results)

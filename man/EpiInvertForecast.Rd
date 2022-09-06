@@ -10,7 +10,8 @@ also estimate a  28-day forecast of the original incidence curve.}
 EpiInvertForecast(
   EpiInvert_result,
   restored_incidence_database,
-  type = "median"
+  type = "median",
+  NumberForecastAdditionalDays = 0
 )
 }
 \arguments{
@@ -23,6 +24,9 @@ restored incidence curve includes the last 56 values of the sequence. That is
 this database can be viewed as a matrix of size 27,418  X 56}
 
 \item{type}{string with the forecast option. It can be "mean" or "median".}
+
+\item{NumberForecastAdditionalDays}{The number of forecast days is 28. With this
+parameter you can add extra forecast days using linear extrapolation.}
 }
 \value{
 {

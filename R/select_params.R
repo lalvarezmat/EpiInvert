@@ -19,7 +19,8 @@ select_params <- function(x=""){
                    shift_si=-5.,
                    Rt_regularization_weight=5.,
                    seasonality_regularization_weight=5.,
-                   incidence_weekly_aggregated=FALSE)
+                   incidence_weekly_aggregated=FALSE,
+                   NweeksToKeepIncidenceSum=2)
   
   class(defaults) <- "estimate_R_config"
 
