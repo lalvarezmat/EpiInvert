@@ -189,6 +189,9 @@ EpiInvert <- function(incid,
     stop("The first argument of EpiInvert() is not numeric")
   }
   
+  last_incidence_date <- format(as.Date(last_incidence_date), "%Y-%m-%d")
+  festive_days <- format(as.Date(festive_days), "%Y-%m-%d")
+  
   # CHECK IF last_incidence_date IS A DATE IN THE FORMAT YYYY-MM-DD
   if(is.character(last_incidence_date)!=TRUE){
     stop("last_incidence_date must be in the format 'YYYY-MM-DD'")
@@ -376,6 +379,7 @@ EpiInvertForecast <- function(EpiInvert_result,restored_incidence_database,type=
   
   # WE CALL THE MAIN Rcpp - C++ FUNCTION TO COMPUTE EpiInvertForeCast 
   results <- EpiInvertForecastC(
+    EpiInvert_result$i_original,
     EpiInvert_result$i_restored,
     str,
     EpiInvert_result$seasonality,

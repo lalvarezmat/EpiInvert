@@ -11,18 +11,19 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // EpiInvertForecastC
-List EpiInvertForecastC(NumericVector i_restored, String last_incidence_date, NumericVector q_bias, NumericMatrix i_restored_database, String type, int NumberForecastAdditionalDays);
-RcppExport SEXP _EpiInvert_EpiInvertForecastC(SEXP i_restoredSEXP, SEXP last_incidence_dateSEXP, SEXP q_biasSEXP, SEXP i_restored_databaseSEXP, SEXP typeSEXP, SEXP NumberForecastAdditionalDaysSEXP) {
+List EpiInvertForecastC(NumericVector i_original, NumericVector i_restored, String last_incidence_date, NumericVector q_bias, NumericMatrix i_restored_database, String type, int NumberForecastAdditionalDays);
+RcppExport SEXP _EpiInvert_EpiInvertForecastC(SEXP i_originalSEXP, SEXP i_restoredSEXP, SEXP last_incidence_dateSEXP, SEXP q_biasSEXP, SEXP i_restored_databaseSEXP, SEXP typeSEXP, SEXP NumberForecastAdditionalDaysSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type i_original(i_originalSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type i_restored(i_restoredSEXP);
     Rcpp::traits::input_parameter< String >::type last_incidence_date(last_incidence_dateSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type q_bias(q_biasSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type i_restored_database(i_restored_databaseSEXP);
     Rcpp::traits::input_parameter< String >::type type(typeSEXP);
     Rcpp::traits::input_parameter< int >::type NumberForecastAdditionalDays(NumberForecastAdditionalDaysSEXP);
-    rcpp_result_gen = Rcpp::wrap(EpiInvertForecastC(i_restored, last_incidence_date, q_bias, i_restored_database, type, NumberForecastAdditionalDays));
+    rcpp_result_gen = Rcpp::wrap(EpiInvertForecastC(i_original, i_restored, last_incidence_date, q_bias, i_restored_database, type, NumberForecastAdditionalDays));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -51,7 +52,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_EpiInvert_EpiInvertForecastC", (DL_FUNC) &_EpiInvert_EpiInvertForecastC, 6},
+    {"_EpiInvert_EpiInvertForecastC", (DL_FUNC) &_EpiInvert_EpiInvertForecastC, 7},
     {"_EpiInvert_EpiInvertC", (DL_FUNC) &_EpiInvert_EpiInvertC, 13},
     {NULL, NULL, 0}
 };

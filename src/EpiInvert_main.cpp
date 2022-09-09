@@ -7,6 +7,7 @@ using namespace std;
 
  // [[Rcpp::export]]
  List EpiInvertForecastC(
+     NumericVector i_original,
      NumericVector i_restored,
      String last_incidence_date,
      NumericVector q_bias,
@@ -22,13 +23,16 @@ using namespace std;
    //printf("%d %d\n",i_restored_database.ncol(),i_restored_database.nrow());
    for(int i=0;i<(int) M.size();i++){
      for(int j=0;j<(int) M[i].size();j++){
-       M[i][j]=i_restored_database(i,j); 
+       M[i][j]=i_restored_database(i,j);
      }
    }
    
-   vector<double> ir(i_restored.size()),q(q_bias.size());
+   vector<double> io(i_original.size()),ir(i_restored.size()),q(q_bias.size());
+   for(int k=0;k<(int) io.size();k++) io[k]=i_original[k];
    for(int k=0;k<(int) ir.size();k++) ir[k]=i_restored[k];
    for(int k=0;k<(int) q.size();k++) q[k]=q_bias[k];
+   vector<double> q2=q;
+   for(int k=q2.size()-1;k>7;k--) q2[k-7]=q2[k]; 
    
    
    vector <double> CI025,CI25,CI75,CI975,i0_forecast,v;
@@ -99,6 +103,14 @@ using namespace std;
      
    }
    
+   /// i0_forecast normalization
+   double sumr=0.,sumo=0.;
+   for(int k=(int) io.size()-1;k>=(int) io.size()-14;k--) sumo+=io[k];
+   for(int k=(int) ir.size()-1;k>=(int) ir.size()-14;k--) sumr+=ir[k]/q2[k];
+   double scale=sumo/sumr;
+   printf("scale=%lf\n",scale); 
+   for(int k=0;k<(int) i0_forecast.size();k++) i0_forecast[k]*=scale; 
+   
    
    //printf("M[0][0]=%lf M[0][1]=%lf, M[1][0]=%lf\n",M[0][0],M[0][1],M[1][0]);
    //printf("%lf  %lf\n",N(0,0),N(0,1));
@@ -141,8 +153,8 @@ List EpiInvertC(
   string last_incidence_dateC=string(last_incidence_date.get_cstring());/** DATE OF THE LAST DATA IN THE FORMAT YYYY-MM-DD */;
   vector <string> festive_daysC /** VECTOR OF FESTIVE OR ANOMALOUS DAYS IN THE FORMAT YYYY-MM-DD*/;
   for(int k=0;k<festive_days.size();k++) {
-    if(strlen(festive_days[k])==10 && (festive_days[k][0]=='2' || festive_days[k][0]=='1'))
-      festive_daysC.push_back(string(festive_days[k]));
+    if(strlen(festive_days[k])>=10 && (festive_days[k][0]=='2' || festive_days[k][0]=='1'))
+      festive_daysC.push_back(string(festive_days[k]).substr(0, 10));
   }
   
   /// OUTPUTS
