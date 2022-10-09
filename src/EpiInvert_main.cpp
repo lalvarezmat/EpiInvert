@@ -13,7 +13,8 @@ using namespace std;
      NumericVector q_bias,
      NumericMatrix i_restored_database,
      String type,
-     int NumberForecastAdditionalDays=0
+     int NumberForecastAdditionalDays=0,
+     double trend_sentiment=0
  )
  {
    string last_incidence_dateC=string(last_incidence_date.get_cstring());/** DATE OF THE LAST DATA IN THE FORMAT YYYY-MM-DD */;
@@ -57,7 +58,8 @@ using namespace std;
        CI75,
        CI975,
        i0_forecast,
-       dates
+       dates,
+       trend_sentiment
      );
    }
    else{

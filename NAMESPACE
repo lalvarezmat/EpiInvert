@@ -3,7 +3,6 @@
 export(EpiInvert)
 export(EpiInvertForecast)
 export(EpiInvertForecast_plot)
-export(EpiInvertForecast_plot_with_EpiInvertTrueValues)
 export(EpiInvert_plot)
 export(select_params)
 importFrom(Rcpp,evalCpp)

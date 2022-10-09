@@ -273,7 +273,19 @@ EpiInvert <- function(incid,
 #' 
 #' @param NumberForecastAdditionalDays The number of forecast days is 28. With this
 #' parameter you can add extra forecast days using linear extrapolation. 
+#' 
+#' @param trend_sentiment "a priori" knowledge about the future indicende evolution. 
+#'    == 0 means that you are neutral about the future trend 
+#'    > 0  means that you expect that the future trend is higher than the expected one 
+#'         using all database curves. the value represents the percentage of database 
+#'         curves removed before computing the forecast The curves removed are the ones 
+#'         with lowest growth in the last 28 days.  
+#'    < 0  means that you expect that the future trend is higher than the expected one 
+#'         using all database curves. the meaning of the value is similar to the previous 
+#'         case, but removing the curves with the highest growth in the last 28 days.
+#'    
 #'
+#' 
 #' @return {
 #'   a list with components:
 #'   \itemize{
@@ -367,7 +379,7 @@ EpiInvert <- function(incid,
 #' @useDynLib EpiInvert, .registration=TRUE
 #' @importFrom Rcpp evalCpp
 #' @export
-EpiInvertForecast <- function(EpiInvert_result,restored_incidence_database,type="median",NumberForecastAdditionalDays=0) {
+EpiInvertForecast <- function(EpiInvert_result,restored_incidence_database,type="median",trend_sentiment=0,NumberForecastAdditionalDays=0) {
   
   # CHECK IF restored_incidence_database IS NUMERIC 
   if(is.numeric(restored_incidence_database)!=TRUE){
@@ -385,7 +397,8 @@ EpiInvertForecast <- function(EpiInvert_result,restored_incidence_database,type=
     EpiInvert_result$seasonality,
     restored_incidence_database,
     type,
-    NumberForecastAdditionalDays
+    NumberForecastAdditionalDays,
+    trend_sentiment
   )
   
   return(results)

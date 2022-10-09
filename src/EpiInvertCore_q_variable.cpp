@@ -65,24 +65,80 @@ vector<int> extract_similar_from_database(
 }
 
 /// ----------------------------------------------------------------------------------------
+/// SUBSELECTION OF DATABASE CURVE SELECTION USING THE TREND SENTIMENT
+/// IT RETURNS THE DATABASE SELECTION UPDATED
+/// ----------------------------------------------------------------------------------------
+vector<int> trend_sentiment_database_curve_selection(
+    vector<int> &select /** ORIGINAL DATABASE SELECTION INDEXES */,
+    vector< vector <double > > &ir /** INCIDENCE DATABASE */,
+    double trend_sentiment  /** "A PRIORI" KNOWLEDGE ABOUT THE FUTURE INDICENDE EVOLUTION.*/
+){
+  
+  if(trend_sentiment==0) return select;
+  else if(trend_sentiment>0.9) trend_sentiment=0.9;
+  else if(trend_sentiment<-0.9) trend_sentiment=-0.9;
+  
+  vector<double> E(select.size());
+  
+  if(trend_sentiment>0){
+    for(int k=0;k<(int) E.size();k++) E[k]=ir[select[k]][55]-ir[select[k]][27];
+  }
+  else{
+    for(int k=0;k<(int) E.size();k++) E[k]=ir[select[k]][27]-ir[select[k]][55];
+  }
+  
+  double p=percentil((int) (E.size()*fabs(trend_sentiment)),E);
+  
+  vector<int> select2;
+  
+  for(int k=0;k<(int) E.size();k++){
+    if(E[k]>p) select2.push_back(select[k]);
+  }
+  
+  return select2;
+  
+}
+
+/// ----------------------------------------------------------------------------------------
 /// EXTRAPOLATION OF THE RESTORED INCIDENCE USING A LEARNING PROCEDURE BASED ON THE MEDIAN
 /// OF THE CLOSEST INCIDENCE CURVES IN THE DATABASE
 /// ----------------------------------------------------------------------------------------
 vector<double> IncidenceExtrapolationByLearningMedian(
     vector<double> &i /** RESTORED INCIDENCE TO BE EXTRAPOLATED */,
-    vector< vector <double > > &ir,
-    double mu,
-    int NumberOfCurvesSelected,
-    int index_to_remove_from_database /** INDEX TO REMOVE FROM THE DATASET OF INCIDENCE CURVE IN THE LEARNING STEP */
+    vector< vector <double > > &ir /** INCIDENCE DATABASE */,
+    double mu /** PARAMETER OF THE CURVE DISTANCE FUNCTION */,
+    int NumberOfCurvesSelected /** NUMBER OF CURVES USED TO ESTIMATE THE FORECAST*/,
+    int index_to_remove_from_database /** INDEX TO REMOVE FROM THE DATASET OF INCIDENCE CURVE IN THE LEARNING STEP */,
+    double trend_sentiment /** "A PRIORI" KNOWLEDGE ABOUT THE FUTURE INDICENDE EVOLUTION.
+ == 0 MEANS THAT YOU ARE NEUTRAL ABOUT THE FUTURE TREND
+ > 0 MEANS THAT YOU EXPECT THAT THE FUTURE TREND IS HIGHER THAN THE
+ EXPECTED ONE USING ALL DATABASE CURVES. THE VALUE REPRESENTS
+ THE PERCENTAGE OF DATABASE BASE CURVES REMOVED BEFORE COMPUTING THE
+ FORECAST. THE CURVES REMOVED ARE THE ONES WITH LOWEST GROWTH IN THE
+ LAST 28 DAYS.
+ < 0 MEANS THAT YOU EXPECT THAT THE FUTURE TREND IS HIGHER THAN THE
+ EXPECTED ONE USING ALL DATABASE CURVES. THE MEANING OF THE VALUE IS
+ SIMILAR TO THE PROVIOUS CASE, BUT REMOVING THE CURVES WITH THE HIGHEST
+ GROWTH IN THE LAST 28 DAYS.
+ */
 )
 {
+  
+  /// WE INCLUDE THE LAST 28 INCIDENCE VALUES IN THE FIRST POSITIONS OF THE OUTPUT VECTOR
   vector<double> v(56,0.);
   for(int k=0;k<28;k++){
     v[k]=i[i.size()-28+k];
   }
+  
+  /// WE EXTRACT THE MOST SIMILAR CURVES IN THE DATABASE TO THE CURRENT ONE.
   vector<int> select=extract_similar_from_database(i,ir,mu,NumberOfCurvesSelected,index_to_remove_from_database);
   
-  //printf("select.size()=%d\n",select.size()); system("pause");
+  /// WE REMOVE SOME SELECTED CURVES USING THE TREND SENTIMENT
+  if(trend_sentiment!=0){
+    select=trend_sentiment_database_curve_selection(select,ir,trend_sentiment);
+  }
+  
+  /// WE COMPUTE THE LAST 28 VALUES OF THE OUTPUT CURVES USING THE MEDIAN OF SELECTED CURVES.
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
@@ -174,7 +230,7 @@ void lack_of_data_processing (vector<double> &c){
     }
     if(m==(int) c.size()){
       c.resize(k+1);
-      break; 
+      break;
     }
   }
   
@@ -197,7 +253,7 @@ void lack_of_data_processing (vector<double> &c){
     // if(c[k]>0 && c[k+1]>1000 && c[k+1]>50*c[k]){
     //   //printf("%lf %lf\n",c[k],c[k+1]);
     //   c[k]=0;
-    //   c[k+1]=c[k+1]+c[k]; 
+    //   c[k+1]=c[k+1]+c[k];
     // }
   }
   
@@ -1074,6 +1130,8 @@ void EpiInvertEstimate(
   i_bias_free=vector<double>(i_festive.size());
   for(int k=0;k< (int) i_bias_free.size();k++) i_bias_free[k]=i_festive[k]*seasonality[k];
   
+  
+  
   //for(int k=0;k<i_restored.size();k++) printf("%lf\n",i_restored[k]);
   
   /// ERROR ANALYSIS
@@ -1083,21 +1141,24 @@ void EpiInvertEstimate(
     log_i_rest.push_back(log(i_restored[k]));
     log_abs_dif.push_back(log(fabs(i_bias_free[k]-i_restored[k])));
   }
-  double b;
-  linear_regression(log_i_rest,log_abs_dif,a,b);
-  //printf("a=%lf  b=%lf r=%lf size=%d\n",a,b,r, (int) log_i_rest.size());
+  double b=0;
   
-  vector<double> x,y,error(log_i_rest.size());
-  for(int k=0;k< (int) error.size();k++){ error[k]=fabs(a*log_i_rest[k]+b-log_abs_dif[k]);}
-  int perc=error.size()*0.95;
-  double Q95=percentil(perc,error);
-  for(int k=0;k< (int) error.size();k++){
-    if(error[k]<Q95){
-      x.push_back(log_i_rest[k]);
-      y.push_back(log_abs_dif[k]);
+  if(log_i_rest.size()>10){
+    linear_regression(log_i_rest,log_abs_dif,a,b);
+    //printf("a=%lf  b=%lf r=%lf size=%d\n",a,b,r, (int) log_i_rest.size());
+    
+    vector<double> x,y,error(log_i_rest.size());
+    for(int k=0;k< (int) error.size();k++){ error[k]=fabs(a*log_i_rest[k]+b-log_abs_dif[k]);}
+    int perc=error.size()*0.95;
+    double Q95=percentil(perc,error);
+    for(int k=0;k< (int) error.size();k++){
+      if(error[k]<Q95){
+        x.push_back(log_i_rest[k]);
+        y.push_back(log_abs_dif[k]);
+      }
     }
+    linear_regression(x,y,a,b);
   }
-  linear_regression(x,y,a,b);
   
   epsilon=vector<double>(i_bias_free.size(),0.);
   
@@ -1118,6 +1179,7 @@ void EpiInvertEstimate(
     dates[k]=string(buffer);
     festive[k]=daily_festive_day[k]==0?false:true;
   }
+  
 }
 
 /// ----------------------------------------------------------------------------------------
@@ -1242,7 +1304,8 @@ vector<double> IncidenceForecastByLearningMedian(
                                                                                    vector <double> &CI75 /** 90% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
                                                                                    vector <double> &CI975 /** 95% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
                                                                                    vector <double> &i0_forecast /** FORECAST OF THE ORIGINAL INCIDENCE */,
-                                                                                   vector<string> &dates /** DATE ASSOCIATED TO EACH INCIDENCE DATUM */
+                                                                                   vector<string> &dates /** DATE ASSOCIATED TO EACH INCIDENCE DATUM */,
+                                                                                   double trend_sentiment /** ==0 neutral */
 )
 {
   /// WE CHECK THE INPUT
@@ -1262,7 +1325,7 @@ vector<double> IncidenceForecastByLearningMedian(
                    2.125428,2.330880,2.549604,2.759963,3.014044,3.237459,3.493608,3.762829,4.028675,4.351678,4.689552,4.998785,5.398666,5.813771};
   
   
-  vector<double> v=IncidenceExtrapolationByLearningMedian(ir,ir_database,mu,NpointMedian,-20);
+  vector<double> v=IncidenceExtrapolationByLearningMedian(ir,ir_database,mu,NpointMedian,-20,trend_sentiment);
   
   /// WE STORE THE RESULTS
   vector<double> ir_forecast(28);

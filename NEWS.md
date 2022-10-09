@@ -1,7 +1,15 @@
-# EpiInvert 0.2.1 (September 2022)
+# EpiInvert 0.2.1 (October 2022)
 
 * In the EpiInvertForecast we include the option of using the median, instead of
 a weighted mean of the incidence curve dataset. 
+
+* In the EpiInvertForecast we add a "trend sentiment" parameter to 
+include "a priori" expectations about the incidence trend. The default value is 
+"neutral" which means that you do not have any reason to believe that the prediction 
+will be different to the initially predicted by the method. A positive "trend sentiment" 
+means that you believe that the true value will be higher than the predicted one, 
+and a negative value means the opposite (for instance, a lockdown has been implemented, 
+and the prediction does not reflect this fact)
 
 # EpiInvert 0.2.0 (July 2022)
 

@@ -39,7 +39,7 @@ vector<int> extract_similar_from_database(vector<double> &i,vector< vector<doubl
                                           int Nsimilar,int index_to_remove_from_database);
 /// EXTRAPOLATION OF THE RESTORED INCIDENCE USING A LEARNING PROCEDURE BASED ON THE MEDIAN
 vector<double> IncidenceExtrapolationByLearningMedian(vector<double> &i,vector< vector <double > > &ir,
-                                                      double mu,int NumberOfCurvesSelected,int index_to_remove_from_database);
+                                                      double mu,int NumberOfCurvesSelected,int index_to_remove_from_database,double trend_sentiment=0);
 /// ESTIMATION OF THE INITIAL GROWTH OF THE INCIDENCE CURVE.
 vector <double> initial_incidence_growth_estimation(vector<double> &i);
 /// EVALUATION OF THE RENEWAL EQUATION FORMULA
@@ -111,7 +111,8 @@ vector<double> IncidenceForecastByLearningMedian(
                                                                                    vector <double> &CI75 /** 90% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
                                                                                    vector <double> &CI975 /** 95% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
                                                                                    vector <double> &i0_forecast /** FORECAST OF THE ORIGINAL INCIDENCE */,
-                                                                                   vector<string> &dates /** DATE ASSOCIATED TO EACH INCIDENCE DATUM */
+                                                                                   vector<string> &dates /** DATE ASSOCIATED TO EACH INCIDENCE DATUM */,
+                                                                                   double trend_sentiment=0 /** ==0 neutral */
 );
 /// 14-DAY INCIDENCE EXTRAPOLATION USING A DATABASE OF COVID-19 SEQUENCES
 void IncidenceExtrapolationByLearning(vector<double> &i,const vector< vector <double > > &i42,const vector< vector <double > > &i56,const int NweeksToKeepIncidenceSumeeksBackToForeCast,double sigma,int COMPARISON_TYPE,int index);
