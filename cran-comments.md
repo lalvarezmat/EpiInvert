@@ -22,6 +22,16 @@ Status: success (1 NOTE) :
 * checking CRAN incoming feasibility ... NOTE
 Maintainer: 'Luis Alvarez <lalvarez@ulpgc.es>'
 
+### rhub::check()
+
+Option 1 (debian-clang-devel) : OK
+
+Option 10 (macos-highsierra-release-cran)) : OK
+
+Option 19 (windows-x86_64-release) : OK
+
+
+
 
 
 ## submission EpiInvert package version 0.2.0
