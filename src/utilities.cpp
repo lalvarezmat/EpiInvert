@@ -38,6 +38,7 @@ double linear_regression(
     vector<double> &y, /// INPUT VECTOR y
     double &m,double &n) /// PARAMETERS OF THE ESTIMATED LINEAR REGRESSION (y=mx+n)
 {
+  m=n=0.; 
   int N=x.size();
   if( ((int) y.size())!=N || N<2) return -1e10;
   

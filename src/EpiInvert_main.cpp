@@ -110,7 +110,7 @@ using namespace std;
    for(int k=(int) io.size()-1;k>=(int) io.size()-14;k--) sumo+=io[k];
    for(int k=(int) ir.size()-1;k>=(int) ir.size()-14;k--) sumr+=ir[k]/q2[k];
    double scale=sumo/sumr;
-   printf("scale=%lf\n",scale); 
+   //printf("scale=%lf\n",scale); 
    for(int k=0;k<(int) i0_forecast.size();k++) i0_forecast[k]*=scale; 
    
    
