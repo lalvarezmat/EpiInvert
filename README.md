@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# EpiInvert (version 0.2.1, September 2022)
+# EpiInvert (version 0.2.1, October 2022)
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -19,18 +19,18 @@ time forecast of the restored incidence curve.
 
 ## Vignettes
 
--   [EpiInvert](https://ctim.ulpgc.es/covid19/EpiInvertVignette.html) :
-    A detailed description of EpiInvert R package functionalities.
+- [EpiInvert](https://ctim.ulpgc.es/covid19/EpiInvertVignette.html) : A
+  detailed description of EpiInvert R package functionalities.
 
--   [Rt Comparison](https://ctim.ulpgc.es/covid19/RtComparison.html) : A
-    comparative analysis of the methods : EpiInvert,
-    [EpiEstim](https://CRAN.R-project.org/package=EpiEstim),
-    [Wallinga-Teunis](https://academic.oup.com/aje/article/160/6/509/79472)
-    and [EpiNow2](https://CRAN.R-project.org/package=EpiNow2).
+- [Rt Comparison](https://ctim.ulpgc.es/covid19/RtComparison.html) : A
+  comparative analysis of the methods : EpiInvert,
+  [EpiEstim](https://CRAN.R-project.org/package=EpiEstim),
+  [Wallinga-Teunis](https://academic.oup.com/aje/article/160/6/509/79472)
+  and [EpiNow2](https://CRAN.R-project.org/package=EpiNow2).
 
--   [EpiInvertForecast](https://ctim.ulpgc.es/covid19/EpiInvertForecast.html)
-    : a learning method for the short time forecast of the restored
-    incidence curve.
+- [EpiInvertForecast](https://ctim.ulpgc.es/covid19/EpiInvertForecast.html)
+  : a learning method for the short time forecast of the restored
+  incidence curve.
 
 ## EpiInvert Installation
 

@@ -11,6 +11,7 @@ EpiInvertForecast(
   EpiInvert_result,
   restored_incidence_database,
   type = "median",
+  trend_sentiment = 0,
   NumberForecastAdditionalDays = 0
 )
 }
@@ -24,6 +25,16 @@ restored incidence curve includes the last 56 values of the sequence. That is
 this database can be viewed as a matrix of size 27,418  X 56}
 
 \item{type}{string with the forecast option. It can be "mean" or "median".}
+
+\item{trend_sentiment}{"a priori" knowledge about the future indicende evolution. 
+== 0 means that you are neutral about the future trend 
+> 0  means that you expect that the future trend is higher than the expected one 
+     using all database curves. the value represents the percentage of database 
+     curves removed before computing the forecast. 
+     the curves removed are the ones with lowest growth in the last 28 days.  
+< 0  means that you expect that the future trend is higher than the expected one 
+     using all database curves. the meaning of the value is similar to the previous 
+     case, but removing the curves with the highest growth in the last 28 days.}
 
 \item{NumberForecastAdditionalDays}{The number of forecast days is 28. With this
 parameter you can add extra forecast days using linear extrapolation.}

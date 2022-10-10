@@ -1,7 +1,6 @@
 ## submission EpiInvert package version 0.2.1
 
-This is a submission of a new version of the EpiInvert package. The modifications
-in this new version are: 
+This is a submission of a new version of the EpiInvert package. The modifications in this new version are: 
 
 * In the EpiInvertForecast we include the option of using the median, instead of
 a weighted mean of the incidence curve dataset. 
@@ -14,7 +13,14 @@ means that you believe that the true value will be higher than the predicted one
 and a negative value means the opposite (for instance, a lockdown has been implemented, 
 and the prediction does not reflect this fact)
 
+### R CMD check results
+* 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
+### devtools::check_win_devel() results: 
+Status: success (1 NOTE) : 
+
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: 'Luis Alvarez <lalvarez@ulpgc.es>'
 
 
 
