@@ -1,3 +1,12 @@
+## update 1 of EpiInvert package version 0.2.1 submission
+
+Following the suggestions of the CRAN staff we have reduced the 
+length of the title to less than 65 characters and we wrote package names, 
+software names and API (application programming interface) names in single quotes 
+in title and description
+
+
+
 ## submission EpiInvert package version 0.2.1
 
 This is a submission of a new version of the EpiInvert package. The modifications in this new version are: 
