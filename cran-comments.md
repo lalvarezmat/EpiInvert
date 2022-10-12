@@ -1,3 +1,8 @@
+## update 2 of EpiInvert package version 0.2.1 submission
+
+Following the suggestions of the CRAN staff we have corrected the title to take 
+into account the "title case" format. 
+
 ## update 1 of EpiInvert package version 0.2.1 submission
 
 Following the suggestions of the CRAN staff we have reduced the 

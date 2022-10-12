@@ -1,7 +1,7 @@
 Package: EpiInvert
 Version: 0.2.1
 Type: Package
-Title: Incidence Curve Decomposition By Inverting the Renewal Equation
+Title: Incidence Curve Decomposition by Inverting the Renewal Equation
 Authors@R: c(person("Luis", "Alvarez", email = "lalvarez@ulpgc.es", role = c("aut", "cre"), 
   comment = c(ORCID = "0000-0002-6953-9587")), 
   person("Jean-David", "Morel", role = "ctb", comment = c(ORCID = "0000-0002-7122-9924")),
