@@ -9,7 +9,7 @@ Authors@R: c(person("Luis", "Alvarez", email = "lalvarez@ulpgc.es", role = c("au
   )
 Maintainer: Luis Alvarez <lalvarez@ulpgc.es>
 Description: Estimation,  by inverting a renewal equation,  
-  of time-varying reproduction numbers, 7-day stationality, and restored incidence 
+  of time-varying reproduction numbers, 7-day seasonality, and restored incidence 
   curves with festive days bias corrected as described in 
   Alvarez et al. (2021) <doi:10.1073/pnas.2105112118> and 
   Alvarez et al. (2022) <doi:10.3390/biology11040540>. 'EpiInvert' can manage 
