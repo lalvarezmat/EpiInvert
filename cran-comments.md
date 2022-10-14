@@ -1,3 +1,16 @@
+## update 3 of EpiInvert package version 0.2.1 submission
+
+Following the suggestions of the CRAN staff we have fixed the test to work with the 
+Mac Compilers. 
+
+### rhub::check()
+
+Option 9 (macos-highsierra-release) : OK 
+Option 10 (macos-highsierra-release-cran)) : OK
+
+
+
+
 ## update 2 of EpiInvert package version 0.2.1 submission
 
 Following the suggestions of the CRAN staff we have corrected the title to take 

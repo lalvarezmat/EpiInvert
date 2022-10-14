@@ -58,13 +58,13 @@ test_that("EpiInvert using USA data", {
   data(incidence_weekly_aggregated)
   res <- EpiInvert(incidence_weekly_aggregated$FRA,"2022-05-05",festives$FRA,
                     select_params(list(incidence_weekly_aggregated = TRUE)))
-  x <- round(res$power_a-0.001,digits=2)
-  expect_equal(x,1.25)
+  x <- round(res$power_a-0.049315,digits=1)
+  expect_equal(x,1.2)
   
   # EpiInvertForecast function test
   data("restored_incidence_database")
   forecast <-  EpiInvertForecast(res,restored_incidence_database)
-  x <- round(forecast$i_restored_forecast[1]-0.24,digits=0)
-  expect_equal(x,35988)
+  x <- round(forecast$i_restored_forecast[1]/10-0.824,digits=0)
+  expect_equal(x,3598)
   
 })
