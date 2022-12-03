@@ -10,6 +10,41 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// EpiIndicatorsC
+DataFrame EpiIndicatorsC(CharacterVector date, NumericVector f, NumericVector g, int s_min, int s_max, double wr, double ws, double r_init, double r_end, double s_init, double s_end);
+RcppExport SEXP _EpiInvert_EpiIndicatorsC(SEXP dateSEXP, SEXP fSEXP, SEXP gSEXP, SEXP s_minSEXP, SEXP s_maxSEXP, SEXP wrSEXP, SEXP wsSEXP, SEXP r_initSEXP, SEXP r_endSEXP, SEXP s_initSEXP, SEXP s_endSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type date(dateSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type f(fSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type g(gSEXP);
+    Rcpp::traits::input_parameter< int >::type s_min(s_minSEXP);
+    Rcpp::traits::input_parameter< int >::type s_max(s_maxSEXP);
+    Rcpp::traits::input_parameter< double >::type wr(wrSEXP);
+    Rcpp::traits::input_parameter< double >::type ws(wsSEXP);
+    Rcpp::traits::input_parameter< double >::type r_init(r_initSEXP);
+    Rcpp::traits::input_parameter< double >::type r_end(r_endSEXP);
+    Rcpp::traits::input_parameter< double >::type s_init(s_initSEXP);
+    Rcpp::traits::input_parameter< double >::type s_end(s_endSEXP);
+    rcpp_result_gen = Rcpp::wrap(EpiIndicatorsC(date, f, g, s_min, s_max, wr, ws, r_init, r_end, s_init, s_end));
+    return rcpp_result_gen;
+END_RCPP
+}
+// joint_indicators_by_dateC
+DataFrame joint_indicators_by_dateC(CharacterVector date0, NumericVector i0, CharacterVector date1, NumericVector i1);
+RcppExport SEXP _EpiInvert_joint_indicators_by_dateC(SEXP date0SEXP, SEXP i0SEXP, SEXP date1SEXP, SEXP i1SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type date0(date0SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type i0(i0SEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type date1(date1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type i1(i1SEXP);
+    rcpp_result_gen = Rcpp::wrap(joint_indicators_by_dateC(date0, i0, date1, i1));
+    return rcpp_result_gen;
+END_RCPP
+}
 // EpiInvertForecastC
 List EpiInvertForecastC(NumericVector i_original, NumericVector i_restored, String last_incidence_date, NumericVector q_bias, NumericMatrix i_restored_database, String type, int NumberForecastAdditionalDays, double trend_sentiment);
 RcppExport SEXP _EpiInvert_EpiInvertForecastC(SEXP i_originalSEXP, SEXP i_restoredSEXP, SEXP last_incidence_dateSEXP, SEXP q_biasSEXP, SEXP i_restored_databaseSEXP, SEXP typeSEXP, SEXP NumberForecastAdditionalDaysSEXP, SEXP trend_sentimentSEXP) {
@@ -53,6 +88,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_EpiInvert_EpiIndicatorsC", (DL_FUNC) &_EpiInvert_EpiIndicatorsC, 11},
+    {"_EpiInvert_joint_indicators_by_dateC", (DL_FUNC) &_EpiInvert_joint_indicators_by_dateC, 4},
     {"_EpiInvert_EpiInvertForecastC", (DL_FUNC) &_EpiInvert_EpiInvertForecastC, 8},
     {"_EpiInvert_EpiInvertC", (DL_FUNC) &_EpiInvert_EpiInvertC, 13},
     {NULL, NULL, 0}

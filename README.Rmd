@@ -13,38 +13,30 @@ knitr::opts_chunk$set(
 )
 ```
 
-# EpiInvert (version 0.2.1, October 2022)
+### EpiInvert (version 0.3.0, December 2022)
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-EpiInvert estimates time varying epidemic reproduction numbers and restored 
-incidence curves by inverting a renewal equation through a variational model as 
-described in 
-[PNAS, 2021](https://www.pnas.org/doi/10.1073/pnas.2105112118) and 
-[Biology, 2022](https://www.mdpi.com/2079-7737/11/4/540). 
-EpiInvert also corrects the administrative weekly bias in the daily registration 
-of cases and the bias introduced by the festive days.  EpiInvert can manage 
-daily incidence data and weekly aggregated incidence data. This version of the
-package also includes EpiInvertForecast, a learning method for the short time 
-forecast of the restored incidence curve. 
+Using variational techniques we address some epidemiological problems as the incidence curve decomposition or the estimation of the functional relationship between epidemiological indicators. We also propose a learning method for the short time forecast of the trend incidence curve. 
 
-## Vignettes
+#### Vignettes of the main package functionalities 
 
-* [EpiInvert](https://ctim.ulpgc.es/covid19/EpiInvertVignette.html) :
-A detailed description of EpiInvert R package functionalities.
+* [`EpiInvert`](https://ctim.ulpgc.es/covid19/EpiInvertVignette.html) : an incidence curve decomposition by inverting the renewal equation.
 
-* [Rt Comparison](https://ctim.ulpgc.es/covid19/RtComparison.html) : 
-A comparative analysis of the methods : EpiInvert, 
+* [`EpiInvertForecast`](https://ctim.ulpgc.es/covid19/EpiInvertForecast.html) :  a 
+learning method for the short time forecast of the trend incidence curve. 
+
+* [`EpiIndicators`](https://ctim.ulpgc.es/covid19/EpiIndicators.html) : estimation of the delay and ratio between epidemiological indicators. 
+
+We also present in [Rt Comparison](https://ctim.ulpgc.es/covid19/RtComparison.html) 
+a comparative analysis of the methods : EpiInvert, 
 [EpiEstim]( https://CRAN.R-project.org/package=EpiEstim), 
 [Wallinga-Teunis](https://academic.oup.com/aje/article/160/6/509/79472)
 and 
 [EpiNow2]( https://CRAN.R-project.org/package=EpiNow2).
 
-* [EpiInvertForecast](https://ctim.ulpgc.es/covid19/EpiInvertForecast.html) :  a 
-learning method for the short time forecast of the restored incidence curve. 
-
-## EpiInvert Installation
+#### EpiInvert Installation
 
 You can install the development version of EpiInvert from [GitHub](https://github.com/) with:
 
@@ -53,9 +45,9 @@ You can install the development version of EpiInvert from [GitHub](https://githu
  devtools::install_github("lalvarezmat/EpiInvert")
 ```
 
-## Example
+#### Example
 We attach some required packages
-```{r, echo = TRUE,message = FALSE }
+```{r, echo = TRUE,message = FALSE,warning=FALSE }
 library(EpiInvert)
 library(ggplot2)
 library(dplyr)

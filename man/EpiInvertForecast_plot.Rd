@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{EpiInvertForecast_plot}
 \alias{EpiInvertForecast_plot}
-\title{\code{EpiInvertForecast_plot} plot the restored incidence forecast}
+\title{\code{EpiInvertForecast_plot}}
 \usage{
 EpiInvertForecast_plot(EpiInvert_results, Forecast)
 }
@@ -17,5 +17,5 @@ forecast of the same curves. It also includes a shaded area with a 95% empiric c
 of the restored incidence forecast estimation
 }
 \description{
-\code{EpiInvertForecast_plot} plot the restored incidence forecast
+EpiInvertForecast_plot() plot the restored incidence forecast
 }

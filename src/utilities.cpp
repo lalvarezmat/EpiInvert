@@ -15,8 +15,95 @@
 #define R_COMPILE
 #endif // R_COMPILE
 
-
+#include <bits/stdc++.h>
 #include "utilities.h"
+
+
+/// GAUSS CONVOLUTION
+void gauss_conv(
+    vector<double> &v /** input/output data vector */,
+    double sigma /** standard deviation of the Gaussian */,
+    int BoundaryCondition /** ==0 (DIRICHLET) !=0 (NEUMANN) */)
+{
+  if(sigma<=0.) return;
+  vector<double> K((int) 5*sigma+2);
+  double aux=sigma*sqrt(2*acos(-1.));
+  for(size_t k=0;k<K.size();k++){
+    K[k]=exp(-0.5*(k/sigma)*(k/sigma))/aux;
+  }
+  double suma=K[0];
+  for(size_t k=1;k<K.size();k++) suma+=2.*K[k];
+  //printf("suma=%lf\n",suma); system("pause");
+  
+  vector<double> v0=v;
+  // DIRICHLET BOUNDARY CONDITION
+  if(BoundaryCondition==0){
+    for(size_t m=0;m<v.size();m++){
+      v[m]=v0[m]*K[0];
+      for(size_t k=1;k<K.size();k++){
+        int i= (int) m-k;
+        if(i>=0) v[m]+=K[k]*v0[i];
+        // IF THE FOLLOWING SENTENCE IS COMMENTED WE USE DIRICHLET CONDITION
+        //else v[m]+=K[k]*v0[0];
+        i=m+k;
+        if((size_t) i<v.size()) v[m]+=K[k]*v0[i];
+        // IF THE FOLLOWING SENTENCE IS COMMENTED WE USE DIRICHLET CONDITION
+        //else v[m]+=K[k]*v0[v.size()-1];
+      }
+    }
+  }
+  // NEUMANN BOUNDARY CONDITION
+  else{
+    for(size_t m=0;m<v.size();m++){
+      v[m]=v0[m]*K[0];
+      for(size_t k=1;k<K.size();k++){
+        int i=(int) m-k;
+        if(i>=0) v[m]+=K[k]*v0[i];
+        else v[m]+=K[k]*v0[0];
+        i=m+k;
+        if((size_t) i<v.size()) v[m]+=K[k]*v0[i];
+        else v[m]+=K[k]*v0[v.size()-1];
+      }
+    }
+  }
+}
+
+/// WEIGHTED MEDIAN OF A VECTOR x WITH WEIGHTS W
+double weightedMedian(vector<double> x,vector<double> W)
+{
+  
+  vector<tuple<double, double>> xW(x.size());
+  
+  for(int k = 0; k<(int) x.size();k++) xW[k]={x[k],W[k]};
+  
+  sort(xW.begin(), xW.end());
+  
+  /// N odd
+  if (x.size() % 2 != 0)
+  {
+    double sum = 0;
+    for(int k = 0; k<(int) x.size();k++){
+      sum += get<1>(xW[k]);
+      if (sum > 0.5) return(get<0>(xW[k]));
+    }
+  }
+  
+  /// N even
+  else{
+    double sum = 0;
+    for(int k = 0; k<(int) x.size();k++){
+      sum += get<1>(xW[k]);
+      if (sum > 0.5){
+        if(k==0) return(get<0>(xW[k]));
+        else return((get<0>(xW[k])+get<0>(xW[k-1]))*0.5);
+      }
+    }
+  }
+  
+  return 0;
+}
+
+
 
 /// LOG-NORMAL EVALUATION
 double log_normal(
@@ -38,7 +125,7 @@ double linear_regression(
     vector<double> &y, /// INPUT VECTOR y
     double &m,double &n) /// PARAMETERS OF THE ESTIMATED LINEAR REGRESSION (y=mx+n)
 {
-  m=n=0.; 
+  m=n=0;
   int N=x.size();
   if( ((int) y.size())!=N || N<2) return -1e10;
   
@@ -328,8 +415,10 @@ vector< double > linear_system_solution(
 /// RETURN  A VECTOR WITH THE NEW CASES AND THE DATE OF THE FINAL AVAILABLE DATA
 vector<double>  read_country(
     const char C[] /** INPUT. ACRONIM OF THE COUNTRY IN THE FILE owid-covid-data.csv**/,
-                char date[] /** OUTPUT. LAST DATE OF AVAILABLE DATA */){
+                char date[] /** OUTPUT. LAST DATE OF AVAILABLE DATA */,
+                vector<double> &death){
   vector<double> i;
+  death.clear();
   //printf("%s\n",C);
   FILE *f;
   f=fopen ("owid-covid-data.csv", "r");
@@ -401,6 +490,23 @@ vector<double>  read_country(
     else i.push_back(0.);
     k=0;
     
+    /// ADDING THE NEW NUMBER OF DEATHS VALUE
+    c=getc(f);
+    while(c!=',')  c=getc(f);
+    c=getc(f);
+    while(c!=',')  c=getc(f);
+    c=getc(f);
+    k=0;
+    while(c!=','){
+      s[k++]=c;
+      c=getc(f);
+    }
+    s[k]='\0';
+    
+    if(k>0) death.push_back(atof(s));
+    else death.push_back(0.);
+    k=0;
+    
   }
 #ifndef R_COMPILE
   printf("last date : %s, last incidence : %1.0lf\n",date,i[i.size()-1]);
@@ -430,7 +536,8 @@ vector<double>  read_country(
 ///      SEPARATED BY BLANK SPACES. EpiInvert USES THE CUMULATIVE VALUE OF THE INCIDENCE FOR ALL REGIONS.
 vector< vector<double> > read_data_multiple(
     const char name[] /** FILE NAME OR ACRONIM OF THE COUNTRY IN THE FILE owid-covid-data.csv*/,
-                   time_t &current_day /** OUTPUT LAST DATE OF AVAILABLE DATA */)
+                   time_t &current_day /** OUTPUT LAST DATE OF AVAILABLE DATA */,
+                   bool death)
 {
   
   vector< vector<double> > cV /** OUTPUT MATRIX WITH THE DATA INFORMATION*/;
@@ -441,7 +548,9 @@ vector< vector<double> > read_data_multiple(
   /// IF THE FILE DOES NOT EXIST WE TRY TO GET THE DATA FROM THE FILE owid-covid-data.csv
   if(f==NULL){
     char date[300];
-    vector<double> c=read_country(name,date);
+    vector<double> d;
+    vector<double> c=read_country(name,date,d);
+    if(death==true) c=d;
     current_day = string2date(date);
     //printf("%s %d \n",date,(int)current_time ); system("pause");
     /// WE CHECK THE SIZE OF THE INCIDENCE DATA
@@ -630,6 +739,17 @@ vector<double> back_percentil(vector<double> &i,int radius){
   }
   return nf;
 }
+
+///--------------------------------------------------------------------------------
+/// FUNCTION TO CONVERT time_t TO STRING FORMAT "YYYY-MM-DD"
+string date2string(time_t time){
+  struct tm * timeinfo;
+  timeinfo = localtime (&time);
+  char buffer [80];
+  strftime (buffer,80,"%Y-%m-%d",timeinfo);
+  return string(buffer);
+}
+
 
 ///--------------------------------------------------------------------------------
 /// FUNCTION TO CONVERT A CHAR ARRAY WITH THE FORMAT "YYYY-MM-DD" TO time_t

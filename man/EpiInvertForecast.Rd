@@ -30,8 +30,8 @@ this database can be viewed as a matrix of size 27,418  X 56}
 == 0 means that you are neutral about the future trend 
 > 0  means that you expect that the future trend is higher than the expected one 
      using all database curves. the value represents the percentage of database 
-     curves removed before computing the forecast. 
-     the curves removed are the ones with lowest growth in the last 28 days.  
+     curves removed before computing the forecast The curves removed are the ones 
+     with lowest growth in the last 28 days.  
 < 0  means that you expect that the future trend is higher than the expected one 
      using all database curves. the meaning of the value is similar to the previous 
      case, but removing the curves with the highest growth in the last 28 days.}

@@ -59,6 +59,27 @@ using namespace std;
        CI975,
        i0_forecast,
        dates,
+       false,
+       trend_sentiment
+     );
+   }
+   else if(typeC.compare(string("weightedmedian"))==0){
+     double mu0=0.0475; 
+     int NpointMedian0=121;
+     v=IncidenceForecastByLearningMedian(
+       ir,
+       last_incidence_dateC,
+       q,
+       M,
+       NpointMedian0,
+       mu0,
+       CI025,
+       CI25,
+       CI75,
+       CI975,
+       i0_forecast,
+       dates,
+       true,
        trend_sentiment
      );
    }

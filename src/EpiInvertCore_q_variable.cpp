@@ -23,8 +23,10 @@ vector<int> extract_similar_from_database(
     vector< vector<double> > &ir,
     double mu,
     int Nsimilar,
-    int index_to_remove_from_database)
+    int index_to_remove_from_database,
+    vector<double> &W)
 {
+  W.clear();
   vector<double> u(28);
   double sum=0;
   for(int k=0;k<28;k++){
@@ -57,7 +59,10 @@ vector<int> extract_similar_from_database(
   
   vector<int> select;
   for(int k=0;k<(int) ir.size();k++){
-    if(error[k]<per) select.push_back(k);
+    if(error[k]<per){
+      select.push_back(k);
+      W.push_back(error[k]);
+    }
   }
   
   return select;
@@ -71,7 +76,8 @@ vector<int> extract_similar_from_database(
 vector<int> trend_sentiment_database_curve_selection(
     vector<int> &select /** ORIGINAL DATABASE SELECTION INDEXES */,
     vector< vector <double > > &ir /** INCIDENCE DATABASE */,
-    double trend_sentiment  /** "A PRIORI" KNOWLEDGE ABOUT THE FUTURE INDICENDE EVOLUTION.*/
+    double trend_sentiment  /** "A PRIORI" KNOWLEDGE ABOUT THE FUTURE INDICENDE EVOLUTION.*/,
+    vector<double> &W
 ){
   
   if(trend_sentiment==0) return select;
@@ -90,11 +96,16 @@ vector<int> trend_sentiment_database_curve_selection(
   double p=percentil((int) (E.size()*fabs(trend_sentiment)),E);
   
   vector<int> select2;
+  vector<double> W2;
   
   for(int k=0;k<(int) E.size();k++){
-    if(E[k]>p) select2.push_back(select[k]);
+    if(E[k]>p){
+      select2.push_back(select[k]);
+      W2.push_back(W[k]);
+    }
   }
   
+  W=W2;
   return select2;
   
 }
@@ -109,6 +120,7 @@ vector<double> IncidenceExtrapolationByLearningMedian(
     double mu /** PARAMETER OF THE CURVE DISTANCE FUNCTION */,
     int NumberOfCurvesSelected /** NUMBER OF CURVES USED TO ESTIMATE THE FORECAST*/,
     int index_to_remove_from_database /** INDEX TO REMOVE FROM THE DATASET OF INCIDENCE CURVE IN THE LEARNING STEP */,
+    bool UseWeightedMedian,
     double trend_sentiment /** "A PRIORI" KNOWLEDGE ABOUT THE FUTURE INDICENDE EVOLUTION.
  == 0 MEANS THAT YOU ARE NEUTRAL ABOUT THE FUTURE TREND
  > 0 MEANS THAT YOU EXPECT THAT THE FUTURE TREND IS HIGHER THAN THE
@@ -131,11 +143,19 @@ vector<double> IncidenceExtrapolationByLearningMedian(
   }
   
   /// WE EXTRACT THE MOST SIMILAR CURVES IN THE DATABASE TO THE CURRENT ONE.
-  vector<int> select=extract_similar_from_database(i,ir,mu,NumberOfCurvesSelected,index_to_remove_from_database);
+  vector<double> W;
+  vector<int> select=extract_similar_from_database(i,ir,mu,NumberOfCurvesSelected,index_to_remove_from_database,W);
   
   /// WE REMOVE SOME SELECTED CURVES USING THE TREND SENTIMENT
   if(trend_sentiment!=0){
-    select=trend_sentiment_database_curve_selection(select,ir,trend_sentiment);
+    select=trend_sentiment_database_curve_selection(select,ir,trend_sentiment,W);
+  }
+  
+  /// WEIGHT NORAMLIZATION
+  if(W.size()>0){
+    double sum=0;
+    for(int k=0;k<(int) W.size();k++) sum+=W[k];
+    for(int k=0;k<(int) W.size();k++) W[k]/=sum;
   }
   
   /// WE COMPUTE THE LAST 28 VALUES OF THE OUTPUT CURVES USING THE MEDIAN OF SELECTED CURVES.
@@ -147,7 +167,8 @@ vector<double> IncidenceExtrapolationByLearningMedian(
     for(int m=0;m<(int) E.size();m++){
       E[m]=ir[select[m]][k]*v[27]/ir[select[m]][27];
     }
-    v[k]=percentil((int) (E.size()*0.5),E);
+    if(UseWeightedMedian==false) v[k]=percentil((int) (E.size()*0.5),E);
+    else v[k]=weightedMedian(E,W);
   }
   
   return v;
@@ -1305,7 +1326,9 @@ vector<double> IncidenceForecastByLearningMedian(
                                                                                    vector <double> &CI975 /** 95% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
                                                                                    vector <double> &i0_forecast /** FORECAST OF THE ORIGINAL INCIDENCE */,
                                                                                    vector<string> &dates /** DATE ASSOCIATED TO EACH INCIDENCE DATUM */,
+                                                                                   bool UseWeightedMedian /** if true we use Weighted Median instead of median */,
                                                                                    double trend_sentiment /** ==0 neutral */
+  
 )
 {
   /// WE CHECK THE INPUT
@@ -1325,7 +1348,7 @@ vector<double> IncidenceForecastByLearningMedian(
                    2.125428,2.330880,2.549604,2.759963,3.014044,3.237459,3.493608,3.762829,4.028675,4.351678,4.689552,4.998785,5.398666,5.813771};
   
   
-  vector<double> v=IncidenceExtrapolationByLearningMedian(ir,ir_database,mu,NpointMedian,-20,trend_sentiment);
+  vector<double> v=IncidenceExtrapolationByLearningMedian(ir,ir_database,mu,NpointMedian,-20,UseWeightedMedian,trend_sentiment);
   
   /// WE STORE THE RESULTS
   vector<double> ir_forecast(28);

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{EpiInvert_plot}
 \alias{EpiInvert_plot}
-\title{\code{EpiInvert_plot} plots the results obtained by EpiInvert}
+\title{\code{EpiInvert_plot}}
 \usage{
 EpiInvert_plot(
   x,
@@ -32,7 +32,7 @@ EpiInvert_plot(
 a plot.
 }
 \description{
-\code{EpiInvert_plot} plots the results obtained by EpiInvert
+EpiInvert_plot() plots the results obtained by EpiInvert
 }
 \seealso{
 \code{\link{EpiInvert}}

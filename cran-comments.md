@@ -1,3 +1,10 @@
+## submission EpiInvert package version 0.3.0
+
+This is a submission of a new version of the EpiInvert package. The modifications in this new version are: 
+
+* We include EpiIndicators, a procedure for the estimation of the delay and ratio between epidemiological indicators.
+
+
 ## update 3 of EpiInvert package version 0.2.1 submission
 
 Following the suggestions of the CRAN staff we have fixed the test to work with the 
@@ -7,8 +14,6 @@ Mac Compilers.
 
 Option 9 (macos-highsierra-release) : OK 
 Option 10 (macos-highsierra-release-cran)) : OK
-
-
 
 
 ## update 2 of EpiInvert package version 0.2.1 submission

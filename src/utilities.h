@@ -32,9 +32,12 @@ using namespace std;
 #define CORRELATION 1
 #define L_ONE 0
 
+/// GAUSS CONVOLUTION
+void gauss_conv(vector<double> &v,double sigma,int BoundaryCondition=1);
+/// WEIGHTED MEDIAN OF A VECTOR x WITH WEIGHTS W
+double weightedMedian(vector<double> x,vector<double> W);
 /// LOG-NORMAL EVALUATION
 double log_normal(double x,double mu,double sigma,double shift);
-
 /// FUNCTION TO COMPUTE THE LINEAR REGRESSION (y=mx+n) BETWEEN VECTORS x AND y
 /// IT RETURNS THE CORRELATION FACTOR
 double linear_regression(vector<double> &x,vector<double> &y,double &m,double &n);
@@ -55,9 +58,9 @@ double last_week_polynomial_evaluation(const int pos,const vector<double> &d, co
 /// STANDARD GAUSS METHOD FOR SOLVING A LINEAR SYSTEM Au=b
 vector< double > linear_system_solution(vector< vector<long double> > &A,vector< long double > &b);
 /// FUNCTION TO READ COUNTRY DATA FROM THE FILE "owid-covid-data.csv". RETURNS  A VECTOR WITH THE NEW CASES.
-vector<double>  read_country(const char C[],char date[]);
+vector<double>  read_country(const char C[],char date[],vector<double> &death);
 /// FUNCTION TO READ MULTIPLE DATA FROM THE FILE name[]
-vector< vector<double> > read_data_multiple(const char name[],time_t &current_time);
+vector< vector<double> > read_data_multiple(const char name[],time_t &current_time,bool death=false);
 /// READING THE SERIAL INTERVAL FROM A FILE. IT RETURNS f0 (THE POSITION O ZERO IN THE SERIAL INTERVAL)
 int read_si_distr(const char name[],vector<double> &si_distr);
 /// BUILD A PARAMETRIC SERIAL INTERVAL FROM A SHIFTED LOG-NORMAL
@@ -72,6 +75,8 @@ void read_data_single(char name[],vector<double> &c);
 vector<double> back_percentil(vector<double> &i,int radius);
 /// FUNCTION TO CONVERT A CHAR ARRAY WITH THE FORMAT "YYYY-MM-DD" TO time_t
 time_t string2date(const char *date);
+/// FUNCTION TO CONVERT time_t TO STRING FORMAT "YYYY-MM-DD"
+string date2string(time_t time);
 /// FUNCTION TO READ DATA CONTAINING THE DATE AND THE INCIDENCE VALUE
 vector<double>  read_data_single_and_date(const char filename[],time_t &current_time);
 /// FUNCTION TO READ THE FILE WITH THE FESTIVE DAYS

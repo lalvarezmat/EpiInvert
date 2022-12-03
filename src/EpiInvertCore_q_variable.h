@@ -27,6 +27,7 @@
 #endif
 //#include <random>
 #include "utilities.h"
+#include "EpiIndicators.h"
 
 #define CASE false
 #define INST true
@@ -36,10 +37,10 @@ using namespace std;
 
 /// EXTRACT SIMILAR CURVES IN THE DATABASE
 vector<int> extract_similar_from_database(vector<double> &i,vector< vector<double> > &ir,double mu,
-                                          int Nsimilar,int index_to_remove_from_database);
+                                          int Nsimilar,int index_to_remove_from_database,vector<double> &W);
 /// EXTRAPOLATION OF THE RESTORED INCIDENCE USING A LEARNING PROCEDURE BASED ON THE MEDIAN
 vector<double> IncidenceExtrapolationByLearningMedian(vector<double> &i,vector< vector <double > > &ir,
-                                                      double mu,int NumberOfCurvesSelected,int index_to_remove_from_database,double trend_sentiment=0);
+                                                      double mu,int NumberOfCurvesSelected,int index_to_remove_from_database,bool UseWeightedMedian=false,double trend_sentiment=0);
 /// ESTIMATION OF THE INITIAL GROWTH OF THE INCIDENCE CURVE.
 vector <double> initial_incidence_growth_estimation(vector<double> &i);
 /// EVALUATION OF THE RENEWAL EQUATION FORMULA
@@ -112,6 +113,7 @@ vector<double> IncidenceForecastByLearningMedian(
                                                                                    vector <double> &CI975 /** 95% CONFIDENCE INTERVAL RADIUS FOR THE FORECAST OF THE RESTORED INCIDENCE */,
                                                                                    vector <double> &i0_forecast /** FORECAST OF THE ORIGINAL INCIDENCE */,
                                                                                    vector<string> &dates /** DATE ASSOCIATED TO EACH INCIDENCE DATUM */,
+                                                                                   bool UseWeightedMedian=false /** if true we use Weighted Median instead of median */,
                                                                                    double trend_sentiment=0 /** ==0 neutral */
 );
 /// 14-DAY INCIDENCE EXTRAPOLATION USING A DATABASE OF COVID-19 SEQUENCES

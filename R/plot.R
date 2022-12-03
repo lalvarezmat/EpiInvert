@@ -1,5 +1,7 @@
 #' @title 
-#' \code{EpiInvert_plot} plots the results obtained by EpiInvert
+#' \code{EpiInvert_plot} 
+#' 
+#' @description EpiInvert_plot() plots the results obtained by EpiInvert
 #'
 #' @param x an object of class \code{estimate_EpiInvert}.
 #'
@@ -151,7 +153,9 @@ EpiInvert_plot <- function(x, what = "all",date_start="1000-01-01",date_end="300
 }
 
 #' @title 
-#' \code{EpiInvertForecast_plot} plot the restored incidence forecast
+#' \code{EpiInvertForecast_plot} 
+#' 
+#' @description EpiInvertForecast_plot() plot the restored incidence forecast
 #'
 #' @param EpiInvert_results the list returned by the EpiInvert execution
 #'
@@ -210,6 +214,74 @@ EpiInvertForecast_plot <- function(EpiInvert_results,Forecast){
   p <- ggplot2::ggplotGrob(g)
   grid::grid.draw(rbind(p))
  
+}
+
+#' @title 
+#' \code{EpiIndicators_plot} 
+#' 
+#' @description EpiIndicators_plot() plots the results obtained by EpiIndicators()
+#'
+#' @param df : a dataframe obtained as the outcome of executing EpiIndicators()
+#'
+#' 
+#' @return a combination of 3 plots: (A) the indicator f(t) (in green in the main
+#' y-axis) and the indicator g(t) (in red in the secondary axis). (B) r(t)*f(t) 
+#' (in green in the main y-axis) and g(t+s(t)) (in red in the secondary axis) and  
+#' (C) r(t) (in green in the main y-axis) and s(t) (in red in the secondary axis)
+#' 
+
+#' @export
+EpiIndicators_plot <- function(df){
+  
+  df$date<-as.Date(df$date)
+  df[,2]<-as.numeric(df[,2])
+  df[,3]<-as.numeric(df[,3])
+  df[,4]<-as.numeric(df[,4])
+  df[,5]<-as.numeric(df[,5])
+  df[,6]<-as.numeric(df[,6])
+  df[,7]<-as.numeric(df[,7])
+  
+  f_color <- rgb(0,191/255, 196/255, 1)
+  g_color <- rgb(248/255,120/255, 111/255, 1)
+  
+  
+  y1<-min(df[,2])
+  x1<-min(df[,3])
+  m1<-(max(df[,2])-min(df[,2]))/(max(df[,3])-min(df[,3]))
+  
+  g0<-ggplot2::ggplot(df, ggplot2::aes(x=date)) + ggplot2::theme_bw() + 
+    ggplot2::geom_line( ggplot2::aes(y=df[,2]),color=f_color) + 
+    ggplot2::geom_line( ggplot2::aes(y=y1+(df[,3]-x1)*m1),color=g_color) + 
+    ggplot2::scale_y_continuous(name = "indicator f(t)",sec.axis = ggplot2::sec_axis(~ (. - y1)/m1+x1, name="indicator g(t)"))+
+    ggplot2::theme(axis.title.y = ggplot2::element_text(color = f_color),axis.title.y.right = ggplot2::element_text(color = g_color))+
+    ggplot2::theme(legend.position = "none",axis.title.x = ggplot2::element_blank())
+  
+  
+  g1<-ggplot2::ggplot(df, ggplot2::aes(x=date)) + ggplot2::theme_bw() + 
+    ggplot2::geom_line( ggplot2::aes(y=df[,6]),color=f_color) + 
+    ggplot2::geom_line( ggplot2::aes(y=df[,7]),color=g_color) + 
+    ggplot2::scale_y_continuous(name = "r(t)*f(t)",sec.axis = ggplot2::sec_axis(~., name="g(t+s(t))"))+
+    ggplot2::theme(axis.title.y = ggplot2::element_text(color = f_color),axis.title.y.right = ggplot2::element_text(color = g_color))+
+    ggplot2::theme(legend.position = "none",axis.title.x = ggplot2::element_blank())
+  
+  y0<-min(df[,4])
+  x0<-min(df[,5])
+  m<-(max(df[,4])-min(df[,4]))/(max(df[,5])-min(df[,5]))
+  
+  g2<-ggplot2::ggplot(df, ggplot2::aes(x=date)) + ggplot2::theme_bw() + 
+    ggplot2::geom_line( ggplot2::aes(y=df[,4]),color=f_color) + 
+    ggplot2::geom_line( ggplot2::aes(y=y0+(df[,5]-x0)*m),color=g_color) + 
+    ggplot2::scale_y_continuous(name = "ratio r(t)",sec.axis = ggplot2::sec_axis(~ (. - y0)/m+x0, name="shift s(t)"))+
+    ggplot2::theme(axis.title.y = ggplot2::element_text(color = f_color),axis.title.y.right = ggplot2::element_text(color = g_color))+
+    ggplot2::theme(legend.position = "none",axis.title.x = ggplot2::element_blank())
+  
+  ggpubr::ggarrange(ggpubr::ggarrange(g0, ncol = 1, labels = c("A")),
+                    ggpubr::ggarrange(g1, ncol = 1, labels = c("B")),
+                    ggpubr::ggarrange(g2, ncol = 1, labels = c("C")),
+                    nrow = 3
+                   )
+  
+  
 }
 
 
