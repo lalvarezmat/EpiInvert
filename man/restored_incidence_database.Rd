@@ -3,9 +3,7 @@
 \docType{data}
 \name{restored_incidence_database}
 \alias{restored_incidence_database}
-\title{A dataset including 27,418 samples of different
-restored incidence curves computed by EpiInvert using real data. Each 
-restored incidence curve includes the last 56 values of the sequence.}
+\title{A dataset of restored daily incidence trend curves}
 \format{
 A 27,418 X 56 numeric matrix
 }
