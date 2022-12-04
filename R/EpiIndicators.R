@@ -109,11 +109,11 @@ EpiIndicators_params <- function(x=""){
 #' @examples
 #' ## load data of epidemiological indicators obtained from the World in data
 #' ## organization
-#' data("owid_data")
+#' data("owid")
 #'
 #' ## Filter the data to get France epidemiological indicators
 #' library(dplyr)
-#' sel <- filter(owid_data,iso_code=="FRA")
+#' sel <- filter(owid,iso_code=="FRA")
 #' 
 #' ## Generate a dataframe with the dates and the cases and deaths restored 
 #' ## using EpiInvert()
@@ -169,7 +169,34 @@ EpiIndicators <- function(df,
   
 }
 
-
+#' @title 
+#' \code{joint_indicators_by_date} 
+#' 
+#' @description generates a dataframe joining the dates and values
+#' of 2 indicators
+#'
+#' @param date0 the dates of the first indicator.
+#' 
+#' @param i0 the values of the first indicator.
+#' 
+#' @param date1 the dates of the second indicator.
+#' 
+#' @param i1 the values of the second indicator.
+#' 
+#' @return { 
+#'   A dataframe with the following columns :
+#'   \itemize{
+#'
+#'   \item{date}{: all dates presented in any of the indicators. }
+#'
+#'   \item{f}{: the values of the first indicator. We assign 0
+#'   in the case the data is not available for a given day.}
+#'   
+#'   \item{g}{: the values of the second indicator. We assign 0
+#'   in the case the data is not available for a given day }
+#' 
+#'   }
+#' }
 #' @useDynLib EpiInvert, .registration=TRUE
 #' @importFrom Rcpp evalCpp
 #' @export

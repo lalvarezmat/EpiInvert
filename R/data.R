@@ -101,6 +101,6 @@
 #'hospitals in a given week (reporting date and the preceeding 6 days)}
 #'  
 #' }
-"owid_data"
+"owid"
 
 

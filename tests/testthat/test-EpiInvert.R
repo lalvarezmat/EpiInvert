@@ -69,10 +69,10 @@ test_that("EpiInvert", {
   expect_equal(x,3594)
   
   # test EpiIndicators
-  data("owid_data")
-  sel <- filter(owid_data,iso_code=="FRA")
+  data("owid")
+  sel <- dplyr::filter(owid,iso_code=="FRA")
   df<-data.frame(sel$date,sel$new_cases_restored_EpiInvert,sel$new_deaths_restored_EpiInvert)
   res <- EpiIndicators(df)
-  x <- round(res$r[1]*10000-0.2317,digits=0)
-  expect_equal(x,232)
+  x <- round(res$r[1]*10000-0.7778,digits=0)
+  expect_equal(x,192)
 })

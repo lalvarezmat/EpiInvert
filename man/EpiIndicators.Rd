@@ -73,11 +73,11 @@ estimates of r(t) and s(t).
 \examples{
 ## load data of epidemiological indicators obtained from the World in data
 ## organization
-data("owid_data")
+data("owid")
 
 ## Filter the data to get France epidemiological indicators
 library(dplyr)
-sel <- filter(owid_data,iso_code=="FRA")
+sel <- filter(owid,iso_code=="FRA")
 
 ## Generate a dataframe with the dates and the cases and deaths restored 
 ## using EpiInvert()
