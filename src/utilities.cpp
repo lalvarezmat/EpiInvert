@@ -15,7 +15,6 @@
 #define R_COMPILE
 #endif // R_COMPILE
 
-#include <bits/stdc++.h>
 #include "utilities.h"
 
 
@@ -71,20 +70,27 @@ void gauss_conv(
 /// WEIGHTED MEDIAN OF A VECTOR x WITH WEIGHTS W
 double weightedMedian(vector<double> x,vector<double> W)
 {
-  
-  vector<tuple<double, double>> xW(x.size());
-  
-  for(int k = 0; k<(int) x.size();k++) xW[k]={x[k],W[k]};
-  
-  sort(xW.begin(), xW.end());
+  for(int k = 0; k<(int) x.size();k++){
+    for(int m=k+1;m<(int) x.size();m++){
+      if(x[k]>x[m]){
+        double temp=x[k];
+        x[k]=x[m];
+        x[m]=temp;
+        temp=W[k];
+        W[k]=W[m];
+        W[m]=temp;
+      }
+    }
+    
+  }
   
   /// N odd
   if (x.size() % 2 != 0)
   {
     double sum = 0;
     for(int k = 0; k<(int) x.size();k++){
-      sum += get<1>(xW[k]);
-      if (sum > 0.5) return(get<0>(xW[k]));
+      sum += W[k];
+      if (sum > 0.5) return(x[k]);
     }
   }
   
@@ -92,10 +98,10 @@ double weightedMedian(vector<double> x,vector<double> W)
   else{
     double sum = 0;
     for(int k = 0; k<(int) x.size();k++){
-      sum += get<1>(xW[k]);
+      sum += W[k];
       if (sum > 0.5){
-        if(k==0) return(get<0>(xW[k]));
-        else return((get<0>(xW[k])+get<0>(xW[k-1]))*0.5);
+        if(k==0) return (x[k]);
+        else return((x[k]+x[k-1])*0.5);
       }
     }
   }
