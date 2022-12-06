@@ -4,6 +4,29 @@ This is a submission of a new version of the EpiInvert package. The modification
 
 * We include EpiIndicators, a procedure for the estimation of the delay and ratio between epidemiological indicators.
 
+### R CMD check results
+* 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+
+### devtools::check_win_devel() results: 
+Status: success (1 NOTE) : 
+
+* Possibly misspelled words in DESCRIPTION:
+  Variational (4:8)
+  variational (11:20)
+
+### rhub::check()
+
+Option 1 (debian-clang-devel) : OK
+
+Option 9 (macos-highsierra-release) : OK
+
+Option 10 (macos-highsierra-release-cran)) : OK
+
+Option 19 (windows-x86_64-release) : OK
+
+
+
+
 
 ## update 3 of EpiInvert package version 0.2.1 submission
 

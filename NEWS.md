@@ -1,3 +1,7 @@
+# EpiInvert 0.3.0 
+
+* We include EpiIndicators, a procedure for the estimation of the delay and ratio between epidemiological indicators.
+
 # EpiInvert 0.2.1 (October 2022)
 
 * In the EpiInvertForecast we include the option of using the median, instead of
