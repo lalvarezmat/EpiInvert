@@ -1,7 +1,7 @@
 ## update 1 of EpiInvert package version 0.3.0 submission
 
 Following the suggestions of the CRAN staff the Description field starts now 
-with a capital letter and we have included in the Description some refrerences
+with a capital letter and we have included in the Description some references
 about our work. 
 
 ## submission EpiInvert package version 0.3.0
