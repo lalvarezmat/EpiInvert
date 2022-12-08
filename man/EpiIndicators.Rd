@@ -22,8 +22,8 @@ s_min = -10,
 \itemize{
  \item{s_min}{: min value allowed for the shift s(t) (default value -10)}
  \item{s_max}{: max value allowed for the shift s(t) (default value 25)}
- \item{wr}{: energy regularization parameter for the ratio  r(t) (default value 10000)}
- \item{ws}{: energy regularization parameter for the shift  s(t) (default value 100)}
+ \item{wr}{: energy regularization parameter for the ratio  r(t) (default value 1000)}
+ \item{ws}{: energy regularization parameter for the shift  s(t) (default value 10)}
  \item{s_init}{: manually fixed initial value (at time t=0) for s(t) (default value -1e6)
  by default s_init is not fixed and it is automatically estimated }
  \item{s_end}{: manually fixed final value (at the last time) for s(t) 

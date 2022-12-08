@@ -45,6 +45,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// apply_shiftC
+NumericVector apply_shiftC(NumericVector g, NumericVector s);
+RcppExport SEXP _EpiInvert_apply_shiftC(SEXP gSEXP, SEXP sSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type g(gSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type s(sSEXP);
+    rcpp_result_gen = Rcpp::wrap(apply_shiftC(g, s));
+    return rcpp_result_gen;
+END_RCPP
+}
 // EpiInvertForecastC
 List EpiInvertForecastC(NumericVector i_original, NumericVector i_restored, String last_incidence_date, NumericVector q_bias, NumericMatrix i_restored_database, String type, int NumberForecastAdditionalDays, double trend_sentiment);
 RcppExport SEXP _EpiInvert_EpiInvertForecastC(SEXP i_originalSEXP, SEXP i_restoredSEXP, SEXP last_incidence_dateSEXP, SEXP q_biasSEXP, SEXP i_restored_databaseSEXP, SEXP typeSEXP, SEXP NumberForecastAdditionalDaysSEXP, SEXP trend_sentimentSEXP) {
@@ -90,6 +102,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_EpiInvert_EpiIndicatorsC", (DL_FUNC) &_EpiInvert_EpiIndicatorsC, 11},
     {"_EpiInvert_joint_indicators_by_dateC", (DL_FUNC) &_EpiInvert_joint_indicators_by_dateC, 4},
+    {"_EpiInvert_apply_shiftC", (DL_FUNC) &_EpiInvert_apply_shiftC, 2},
     {"_EpiInvert_EpiInvertForecastC", (DL_FUNC) &_EpiInvert_EpiInvertForecastC, 8},
     {"_EpiInvert_EpiInvertC", (DL_FUNC) &_EpiInvert_EpiInvertC, 13},
     {NULL, NULL, 0}

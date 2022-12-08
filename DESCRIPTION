@@ -8,11 +8,15 @@ Authors@R: c(person("Luis", "Alvarez", email = "lalvarez@ulpgc.es", role = c("au
   person("Jean-Michel", "Morel", role = "ctb", comment = c(ORCID = "0000-0002-6108-897X"))
   )
 Maintainer: Luis Alvarez <lalvarez@ulpgc.es>
-Description: using variational techniques we address some epidemiological
+Description: Using variational techniques we address some epidemiological
     problems as the incidence curve decomposition by inverting the renewal 
-    equation or the estimation of the functional relationship between 
-    epidemiological indicators. We also propose a learning method for the 
-    short time forecast of the trend incidence curve. 
+    equation as described in 
+    Alvarez et al. (2021) <doi:10.1073/pnas.2105112118> and 
+    Alvarez et al. (2022) <doi:10.3390/biology11040540> or the estimation of 
+    the functional relationship between epidemiological indicators. We also 
+    propose a learning method for the short time forecast of the trend 
+    incidence curve  as described in Morel et al. (2022) 
+    <doi:10.1101/2022.11.05.22281904>
 URL: https://github.com/lalvarezmat/EpiInvert
 License: GPL (>= 2)
 Encoding: UTF-8

@@ -12,8 +12,8 @@ EpiIndicators_params <- function(x=""){
   ## SET DEFAULTS
   defaults <- list(s_min = -10,
                    s_max = 25,
-                   wr = 10000,
-                   ws = 100,
+                   wr = 1000,
+                   ws = 10,
                    s_init = -1e6,
                    s_end=-1e6,
                    r_init = -1e6,
@@ -59,8 +59,8 @@ EpiIndicators_params <- function(x=""){
 #' \itemize{
 #'  \item{s_min}{: min value allowed for the shift s(t) (default value -10)}
 #'  \item{s_max}{: max value allowed for the shift s(t) (default value 25)}
-#'  \item{wr}{: energy regularization parameter for the ratio  r(t) (default value 10000)}
-#'  \item{ws}{: energy regularization parameter for the shift  s(t) (default value 100)}
+#'  \item{wr}{: energy regularization parameter for the ratio  r(t) (default value 1000)}
+#'  \item{ws}{: energy regularization parameter for the shift  s(t) (default value 10)}
 #'  \item{s_init}{: manually fixed initial value (at time t=0) for s(t) (default value -1e6)
 #'  by default s_init is not fixed and it is automatically estimated }
 #'  \item{s_end}{: manually fixed final value (at the last time) for s(t) 
@@ -225,6 +225,33 @@ joint_indicators_by_date <- function(date0,i0,date1,i1)
   results <- as.data.frame(results)
   
   return(results)
+  
+}
+
+#' @title 
+#' \code{apply_delay} 
+#' 
+#' @description apply a delay vector, s(t), to an indicator, g(t)
+#'
+#' @param g indicator.
+#' 
+#' @param s delay to apply.
+#' 
+#' 
+#' @return { 
+#'   A numeric vector with the result of apply the cevtor delay s to g. 
+#' }
+#' @useDynLib EpiInvert, .registration=TRUE
+#' @importFrom Rcpp evalCpp
+#' @export
+apply_delay <- function(g,s)
+{
+  
+  g<-as.numeric(g)
+  s<-as.numeric(s)
+  
+  # WE CALL the C++ function 
+  return(apply_shiftC(g,s))
   
 }
 

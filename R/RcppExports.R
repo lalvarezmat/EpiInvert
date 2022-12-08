@@ -9,6 +9,10 @@ joint_indicators_by_dateC <- function(date0, i0, date1, i1) {
     .Call(`_EpiInvert_joint_indicators_by_dateC`, date0, i0, date1, i1)
 }
 
+apply_shiftC <- function(g, s) {
+    .Call(`_EpiInvert_apply_shiftC`, g, s)
+}
+
 EpiInvertForecastC <- function(i_original, i_restored, last_incidence_date, q_bias, i_restored_database, type, NumberForecastAdditionalDays = 0L, trend_sentiment = 0) {
     .Call(`_EpiInvert_EpiInvertForecastC`, i_original, i_restored, last_incidence_date, q_bias, i_restored_database, type, NumberForecastAdditionalDays, trend_sentiment)
 }

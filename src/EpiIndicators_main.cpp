@@ -109,5 +109,25 @@ DataFrame joint_indicators_by_dateC(
   
 }
 
+// [[Rcpp::export]]
+NumericVector apply_shiftC(
+    NumericVector g,
+    NumericVector s
+){
+  
+  if(g.size()!=s.size()){
+    stop("vectors g and s have different size"); 
+  }
+  
+  vector<double> g2(g.size()),s2(g.size());
+  for(int k=0;k<(int) g.size();k++){
+    g2[k]=g[k];
+    s2[k]=s[k]; 
+  }
+  vector<double> v=apply_shift(g2,s2); 
+  NumericVector v2( v.begin(), v.end() );
+  return v2; 
+  
+}
 
 
