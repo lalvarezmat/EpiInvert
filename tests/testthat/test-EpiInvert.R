@@ -65,8 +65,8 @@ test_that("EpiInvert", {
   # test EpiInvertForecast
   data("restored_incidence_database")
   forecast <-  EpiInvertForecast(res,restored_incidence_database)
-  x <- round(forecast$i_restored_forecast[1]/10-0.492,digits=0)
-  expect_equal(x,3594)
+  x <- round(forecast$i_restored_forecast[1]/100-0.5,digits=0)
+  expect_equal(x,359)
   
   # test EpiIndicators
   data("owid")

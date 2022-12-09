@@ -1,3 +1,13 @@
+## update 2 of EpiInvert package version 0.3.0 submission
+
+I have received a message from the CRAN staff signaling an error when 
+compiling the package in "r-release-macos-arm64" due to  differences 
+in the quality of floating point arithmetic operations. I have amplified the 
+margin of error in the estimated number to avoid this problem. 
+
+I had not detected this problem when using rhub::check() with macOS 10.13.6
+compilers. 
+
 ## update 1 of EpiInvert package version 0.3.0 submission
 
 Following the suggestions of the CRAN staff the Description field starts now 
