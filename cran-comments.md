@@ -1,11 +1,11 @@
-## update 2 of EpiInvert package version 0.3.0 submission
+## submission EpiInvert package version 0.3.1
 
-I have received a message from the CRAN staff signaling an error when 
-compiling the package in "r-release-macos-arm64" due to  differences 
-in the quality of floating point arithmetic operations. I have amplified the 
-margin of error in the estimated number to avoid this problem. 
+* I have received a message from the CRAN staff pointed out  an error running 
+‘testthat.R’ in "r-release-macos-arm64" and "r-oldrel-macos-arm64" in version 
+0.3.0  due to  differences in the quality of floating point arithmetic operations. 
+I have amplified the  margin of error in the estimated number to avoid this problem. 
 
-I had not detected this problem when using rhub::check() with macOS 10.13.6
+* I had not detected this problem when using rhub::check() with macOS 10.13.6
 compilers. 
 
 ## update 1 of EpiInvert package version 0.3.0 submission
