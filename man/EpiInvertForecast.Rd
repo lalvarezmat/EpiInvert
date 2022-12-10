@@ -26,7 +26,7 @@ this database can be viewed as a matrix of size 27,418  X 56}
 
 \item{type}{string with the forecast option. It can be "mean" or "median".}
 
-\item{trend_sentiment}{"a priori" knowledge about the future indicende evolution. 
+\item{trend_sentiment}{"a priori" knowledge about the future incidence evolution. 
 == 0 means that you are neutral about the future trend 
 > 0  means that you expect that the future trend is higher than the expected one 
      using all database curves. the value represents the percentage of database 

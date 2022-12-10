@@ -239,7 +239,7 @@ joint_indicators_by_date <- function(date0,i0,date1,i1)
 #' 
 #' 
 #' @return { 
-#'   A numeric vector with the result of apply the cevtor delay s to g. 
+#'   A numeric vector with the result of apply the vector delay s to g. 
 #' }
 #' @useDynLib EpiInvert, .registration=TRUE
 #' @importFrom Rcpp evalCpp

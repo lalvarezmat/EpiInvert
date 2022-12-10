@@ -13,7 +13,7 @@ apply_delay(g, s)
 }
 \value{
 { 
-  A numeric vector with the result of apply the cevtor delay s to g. 
+  A numeric vector with the result of apply the vector delay s to g. 
 }
 }
 \description{

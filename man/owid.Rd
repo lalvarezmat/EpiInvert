@@ -3,7 +3,7 @@
 \docType{data}
 \name{owid}
 \alias{owid}
-\title{A datased with COVID-19 indicators}
+\title{A dataset with COVID-19 indicators}
 \format{
 A dataframe with 13 variables:
 \describe{
@@ -20,10 +20,10 @@ A dataframe with 13 variables:
   on a given day}
   \item{hosp_patients}{number of COVID-19 patients in hospital on a given day}
   \item{weekly_icu_admissions}{number of COVID-19 patients newly admitted to 
-  intensive care units (ICUs) in a given week (reporting date and the preceeding 
+  intensive care units (ICUs) in a given week (reporting date and the preceding 
   6 days)}
   \item{weekly_hosp_admissions}{number of COVID-19 patients newly admitted to 
-hospitals in a given week (reporting date and the preceeding 6 days)}
+hospitals in a given week (reporting date and the preceding 6 days)}
  
 }
 }
@@ -34,7 +34,7 @@ owid
 A dataset containing COVID-19 epidemiological indicators for Canada, France, 
 Germany, Italy, UK and the USA from Our World in data organization
 https://github.com/owid/covid-19-data/tree/master/public/data up to 2022-11-28. 
-In the case a data value is not avalaible for a given day we assign the value 0 
+In the case a data value is not available for a given day we assign the value 0 
 to the indicator
 }
 \keyword{datasets}

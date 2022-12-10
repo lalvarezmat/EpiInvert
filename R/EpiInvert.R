@@ -274,7 +274,7 @@ EpiInvert <- function(incid,
 #' @param NumberForecastAdditionalDays The number of forecast days is 28. With this
 #' parameter you can add extra forecast days using linear extrapolation. 
 #' 
-#' @param trend_sentiment "a priori" knowledge about the future indicende evolution. 
+#' @param trend_sentiment "a priori" knowledge about the future incidence evolution. 
 #'    == 0 means that you are neutral about the future trend 
 #'    > 0  means that you expect that the future trend is higher than the expected one 
 #'         using all database curves. the value represents the percentage of database 
