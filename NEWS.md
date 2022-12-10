@@ -1,9 +1,8 @@
 # EpiInvert 0.3.1 (December 2022)
 
-* I have received a message from the CRAN staff pointed out  an error running 
-‘testthat.R’ in "r-release-macos-arm64" and "r-oldrel-macos-arm64"  due to  
-differences in the quality of floating point arithmetic operations. I have 
-amplified the  margin of error in the estimated number to avoid this problem. 
+* We fixed an error running ‘testthat.R’ in "r-release-macos-arm64" and 
+"r-oldrel-macos-arm64"  due to  differences in the quality of floating point 
+arithmetic operations. 
 
 # EpiInvert 0.3.0 (December 2022)
 
