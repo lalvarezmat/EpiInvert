@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-### EpiInvert (version 0.3.0, December 2022)
+### EpiInvert (version 0.3.1, December 2022)
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -24,8 +24,7 @@ Using variational techniques we address some epidemiological problems as the inc
 
 * [`EpiInvert`](https://ctim.ulpgc.es/covid19/EpiInvertVignette.html) : an incidence curve decomposition by inverting the renewal equation.
 
-* [`EpiInvertForecast`](https://ctim.ulpgc.es/covid19/EpiInvertForecast.html) :  a 
-learning method for the short time forecast of the trend incidence curve. 
+* [`EpiInvertForecast`](https://ctim.ulpgc.es/covid19/EpiInvertForecast.html) : a learning method for the short time forecast of the trend incidence curve. 
 
 * [`EpiIndicators`](https://ctim.ulpgc.es/covid19/EpiIndicators.html) : estimation of the delay and ratio between epidemiological indicators. 
 
