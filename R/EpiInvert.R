@@ -402,7 +402,5 @@ EpiInvertForecast <- function(EpiInvert_result,restored_incidence_database,type=
   )
   
   return(results)
-  
-  
 }
 
