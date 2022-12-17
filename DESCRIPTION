@@ -1,5 +1,5 @@
 Package: EpiInvert
-Version: 0.3.1
+Version: 0.3.2
 Type: Package
 Title: Variational Techniques in Epidemiology 
 Authors@R: c(person("Luis", "Alvarez", email = "lalvarez@ulpgc.es", role = c("aut", "cre"), 
