@@ -73,6 +73,6 @@ test_that("EpiInvert", {
   sel <- dplyr::filter(owid,iso_code=="FRA")
   df<-data.frame(sel$date,sel$new_cases_restored_EpiInvert,sel$new_deaths_restored_EpiInvert)
   res <- EpiIndicators(df)
-  x <- round(res$r[1]*10000-0.0588,digits=0)
-  expect_equal(x,374)
+  x <- round(res$r[1]*10000-0.5935,digits=0)
+  expect_equal(x,371)
 })

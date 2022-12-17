@@ -10,10 +10,12 @@
 #' @export
 EpiIndicators_params <- function(x=""){
   ## SET DEFAULTS
-  defaults <- list(s_min = -10,
+  defaults <- list(s_min = -25,
                    s_max = 25,
                    wr = 1000,
                    ws = 10,
+                   tail = 0,
+                   tail_mu = 0,
                    s_init = -1e6,
                    s_end=-1e6,
                    r_init = -1e6,
@@ -57,10 +59,15 @@ EpiIndicators_params <- function(x=""){
 #' function EpiIndicators_params(): 
 #' s_min = -10,
 #' \itemize{
-#'  \item{s_min}{: min value allowed for the shift s(t) (default value -10)}
+#'  \item{s_min}{: min value allowed for the shift s(t) (default value -25)}
 #'  \item{s_max}{: max value allowed for the shift s(t) (default value 25)}
 #'  \item{wr}{: energy regularization parameter for the ratio  r(t) (default value 1000)}
 #'  \item{ws}{: energy regularization parameter for the shift  s(t) (default value 10)}
+#'  \item{tail}{: size of the temporal tail to increase the weight in the energy of 
+#'  the agreement between r(t)*f(t) and g(t+s(t)) in [T-tail,T] (default value 0)}
+#'  \item{tail_mu}{: exponential parameter to increase the weight in the energy of 
+#'  the agreement between r(t)*f(t) and g(t+s(t)). We use as new weight in the energy
+#'  e^(tail_mu*(T-t+tail)) for t in [T-tail,T] (default value 0)}
 #'  \item{s_init}{: manually fixed initial value (at time t=0) for s(t) (default value -1e6)
 #'  by default s_init is not fixed and it is automatically estimated }
 #'  \item{s_end}{: manually fixed final value (at the last time) for s(t) 
@@ -158,6 +165,8 @@ EpiIndicators <- function(df,
                         config$s_max,
                         config$wr,
                         config$ws,
+                        config$tail,
+                        config$tail_mu,
                         config$r_init,
                         config$r_end,
                         config$s_init,

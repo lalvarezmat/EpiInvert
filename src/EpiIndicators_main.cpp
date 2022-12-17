@@ -12,10 +12,12 @@ DataFrame EpiIndicatorsC(
     CharacterVector date,
     NumericVector f,
     NumericVector g,
-    int s_min=-10,
+    int s_min=-25,
     int s_max=25,
-    double wr=5000,
-    double ws=50,
+    double wr=1000,
+    double ws=10,
+    int tail=0,
+    double tail_mu=0, 
     double r_init=-1e6,
     double r_end=-1e6,
     double s_init=-1e6,
@@ -46,7 +48,8 @@ DataFrame EpiIndicatorsC(
   vector<double> s;
   
   
-  double result=shift_and_ratio_optimization(dateC,c,d,r,s,s_min,s_max,wr,ws,r_init,r_end,s_init,s_end);
+  double result=shift_and_ratio_optimization(dateC,c,d,r,s,s_min,s_max,wr,ws,tail,tail_mu,
+                                             r_init,r_end,s_init,s_end);
   
   if(result<0){
     stop("Unexpected problem using EpiIndicators()");

@@ -11,7 +11,6 @@
  * @author Luis Alvarez <lalvarez@ulpgc.es>
  */
 
-#define R_COMPILE
 
 #include "EpiInvertCore_q_variable.h"
 

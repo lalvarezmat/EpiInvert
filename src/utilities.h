@@ -26,12 +26,17 @@
 #include <omp.h>
 #endif
 
+#define R_COMPILE
+
 using namespace std;
 
 ///  MACROS TO FIT THE SIMILARITY MEASURE BETWEEN INCIDENCE CURVE FOR FORECASTING
 #define CORRELATION 1
 #define L_ONE 0
-
+/// FUNCTION TO READ FROM DISK A DATAFRAME IN A STRING FORM
+vector< vector<string> > read_dataframe(char filename[],char sep);
+/// HERMITE EXTRAPOLATION
+void HermiteInterpolation(vector<double> &r,double r1,int NNewDays,int NNewDaysDerivative);
 /// GAUSS CONVOLUTION
 void gauss_conv(vector<double> &v,double sigma,int BoundaryCondition=1);
 /// WEIGHTED MEDIAN OF A VECTOR x WITH WEIGHTS W

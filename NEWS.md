@@ -1,3 +1,8 @@
+# EpiInvert 0.3.2 (December 2022)
+
+We include in EpiIndicators the option to add more weight for the last dates to
+the agreement bewteen r(t)*f(t) and g(t+s(t))
+
 # EpiInvert 0.3.1 (December 2022)
 
 * We fixed an error running ‘testthat.R’ in "r-release-macos-arm64" and 

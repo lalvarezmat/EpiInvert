@@ -11,8 +11,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // EpiIndicatorsC
-DataFrame EpiIndicatorsC(CharacterVector date, NumericVector f, NumericVector g, int s_min, int s_max, double wr, double ws, double r_init, double r_end, double s_init, double s_end);
-RcppExport SEXP _EpiInvert_EpiIndicatorsC(SEXP dateSEXP, SEXP fSEXP, SEXP gSEXP, SEXP s_minSEXP, SEXP s_maxSEXP, SEXP wrSEXP, SEXP wsSEXP, SEXP r_initSEXP, SEXP r_endSEXP, SEXP s_initSEXP, SEXP s_endSEXP) {
+DataFrame EpiIndicatorsC(CharacterVector date, NumericVector f, NumericVector g, int s_min, int s_max, double wr, double ws, int tail, double tail_mu, double r_init, double r_end, double s_init, double s_end);
+RcppExport SEXP _EpiInvert_EpiIndicatorsC(SEXP dateSEXP, SEXP fSEXP, SEXP gSEXP, SEXP s_minSEXP, SEXP s_maxSEXP, SEXP wrSEXP, SEXP wsSEXP, SEXP tailSEXP, SEXP tail_muSEXP, SEXP r_initSEXP, SEXP r_endSEXP, SEXP s_initSEXP, SEXP s_endSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -23,11 +23,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type s_max(s_maxSEXP);
     Rcpp::traits::input_parameter< double >::type wr(wrSEXP);
     Rcpp::traits::input_parameter< double >::type ws(wsSEXP);
+    Rcpp::traits::input_parameter< int >::type tail(tailSEXP);
+    Rcpp::traits::input_parameter< double >::type tail_mu(tail_muSEXP);
     Rcpp::traits::input_parameter< double >::type r_init(r_initSEXP);
     Rcpp::traits::input_parameter< double >::type r_end(r_endSEXP);
     Rcpp::traits::input_parameter< double >::type s_init(s_initSEXP);
     Rcpp::traits::input_parameter< double >::type s_end(s_endSEXP);
-    rcpp_result_gen = Rcpp::wrap(EpiIndicatorsC(date, f, g, s_min, s_max, wr, ws, r_init, r_end, s_init, s_end));
+    rcpp_result_gen = Rcpp::wrap(EpiIndicatorsC(date, f, g, s_min, s_max, wr, ws, tail, tail_mu, r_init, r_end, s_init, s_end));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -100,7 +102,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_EpiInvert_EpiIndicatorsC", (DL_FUNC) &_EpiInvert_EpiIndicatorsC, 11},
+    {"_EpiInvert_EpiIndicatorsC", (DL_FUNC) &_EpiInvert_EpiIndicatorsC, 13},
     {"_EpiInvert_joint_indicators_by_dateC", (DL_FUNC) &_EpiInvert_joint_indicators_by_dateC, 4},
     {"_EpiInvert_apply_shiftC", (DL_FUNC) &_EpiInvert_apply_shiftC, 2},
     {"_EpiInvert_EpiInvertForecastC", (DL_FUNC) &_EpiInvert_EpiInvertForecastC, 8},

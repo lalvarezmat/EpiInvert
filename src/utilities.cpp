@@ -11,12 +11,103 @@
  * @author Luis Alvarez <lalvarez@ulpgc.es>
  */
 
-#ifndef R_COMPILE
-#define R_COMPILE
-#endif // R_COMPILE
+//#ifndef R_COMPILE
+//#define R_COMPILE
+//#endif // R_COMPILE
 
 #include "utilities.h"
 
+/// ------------------------------------------------------------------------------------------
+/// FUNCTION TO READ A DATAFRAME IN A STRING FORM
+/// ------------------------------------------------------------------------------------------
+vector< vector<string> > read_dataframe(
+    char filename[] /** name of the file to read*/,
+                 char sep
+)
+{
+  /// DATA SEQUENCE
+  vector< vector<string> > sV;
+  
+  /// READING THE DATA SEQUENCE
+  FILE *f;
+  f=fopen (filename , "r");
+  
+  if(f==NULL) {
+    printf("\nproblems reading file %s\n",filename);
+    return vector< vector<string> >();
+  }
+  
+  int comment=0;
+  char c='0';
+  char s[200];
+  int k=0;
+  int cont=0;
+  while(! feof (f) ){
+    c=getc(f);
+    if(c=='"') comment=(comment+1)%2;
+    if(c==sep && comment==0){
+      s[k]='\0';
+      if((int) sV.size()<cont+1) sV.resize(cont+1);
+      sV[cont++].push_back(string(s));
+      k=0;
+      //printf("cont=%d %s\n",cont,s);
+      //system("pause");
+      continue;
+    }
+    else if(c=='\n'){
+      s[k]='\0';
+      if((int) sV.size()<cont+1) sV.resize(cont+1);
+      sV[cont].push_back(string(s));
+      //printf("cont=%d %s\n",cont,s);
+      k=0;
+      cont=0;
+      continue;
+    }
+    else {
+      s[k++]=c;
+      s[k]='\0';
+      //printf("cont=%d %s\n",cont,s);
+      //system("pause");
+    }
+  }
+  
+  return sV;
+}
+
+///--------------------------------------------------------------------------------------
+/// HERMITE EXTRAPOLATION
+void HermiteInterpolation(
+    vector<double> &r /** VECTOR TO EXTRAPOLATE */,
+    double r1 /** FINAL VALUE FOR r */,
+    int NNewDays /** NUMBER OF DAYS TO REACH THE FINAL VALUE */,
+    int NNewDaysDerivative /** NUMBER OF DAYS FOR THE DERIVATIVE HERMITE EXTRAPOLATION */
+){
+  
+  double r0=r[r.size()-1];
+  double B=(r[r.size()-1]-r[r.size()-5])/4. ;
+  double d=NNewDays;
+  double d2=NNewDaysDerivative;
+  double aux=B*d2*4./27.;
+  double Rmin=r0<r1?r0:r1;
+  if(Rmin+aux<=1e-5){
+    d2=(1e-5-Rmin)/(B*4./27.);
+    if(d2>d) d2=d;
+    if(d2<0.) d2=0;
+  }
+  for(int k=1;k<=NNewDays;k++){
+    if(k>=d) r.push_back(r1);
+    else if(k<d2){
+      double a1=(double) k/d;
+      double a2=(double) k/d2;
+      r.push_back(r1+(r0-r1)*(a1-1)*(a1-1)*(1+2.*a1)+B*(a2-1)*(a2-1)*k);
+    }
+    else{
+      double a1=(double) k/d;
+      r.push_back(r1+(r0-r1)*(a1-1)*(a1-1)*(1+2.*a1));
+    }
+    //printf("  %1.2lf",R[R.size()-1]);
+  }
+}
 
 /// GAUSS CONVOLUTION
 void gauss_conv(
@@ -1280,13 +1371,13 @@ int read_si_distr(
   fclose(f);
   
   if(si_distr.size()<5){
-#ifndef R_COMPILE
+  #ifndef R_COMPILE
     printf("The size of the serial interval is : %d (too small)\n",(int) si_distr.size());
     char mes[300];
     sprintf(mes,"The size of the serial interval is : %d (too small) \n",(int) si_distr.size());
     printf("%s\n",mes);
     fprintf_demo_failure(mes);
-#endif
+  #endif
     
     return -10000;
   }
