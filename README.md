@@ -14,18 +14,18 @@ curve.
 
 #### Vignettes of the main package functionalities
 
-- [`EpiInvert`](https://ctim.ulpgc.es/covid19/EpiInvertVignette.html) :
+- [`EpiInvert`](https://lalvarezmat.github.io/EpiInvert/EpiInvertVignette.html) :
   an incidence curve decomposition by inverting the renewal equation.
 
-- [`EpiInvertForecast`](https://ctim.ulpgc.es/covid19/EpiInvertForecast.html)
+- [`EpiInvertForecast`](https://lalvarezmat.github.io/EpiInvert/EpiInvertForecastVignette.html)
   : a learning method for the short time forecast of the trend incidence
   curve.
 
-- [`EpiIndicators`](https://ctim.ulpgc.es/covid19/EpiIndicators.html) :
+- [`EpiIndicators`](https://lalvarezmat.github.io/EpiInvert/EpiIndicatorsVignette.html) :
   estimation of the delay and ratio between epidemiological indicators.
 
 We also present in [Rt
-Comparison](https://ctim.ulpgc.es/covid19/RtComparison.html) a
+Comparison](https://lalvarezmat.github.io/EpiInvert/RtComparisonVignette.html) a
 comparative analysis of the methods : EpiInvert,
 [EpiEstim](https://CRAN.R-project.org/package=EpiEstim),
 [Wallinga-Teunis](https://academic.oup.com/aje/article/160/6/509/79472)
