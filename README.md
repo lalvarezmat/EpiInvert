@@ -7,8 +7,8 @@
 <!-- badges: end -->
 
 Using variational techniques we address some epidemiological problems as
-the incidence curve decomposition or the estimation of the functional
-relationship between epidemiological indicators. We also propose a
+the seasonal-trend daily incidence curve decomposition or the estimation of the functional
+relationship between epidemiological time series. We also propose a
 learning method for the short time forecast of the trend incidence
 curve.
 
